@@ -325,5 +325,13 @@ namespace GameOfLife
             // Disable File > Pause
             pauseToolStripMenuItem.Enabled = false;
         }
+
+        private void toolStripButtonNext_Click(object sender, EventArgs e)
+        {
+            // Pause
+            pauseToolStripMenuItem_Click(sender, e);
+
+            NextGeneration();
+        }
     }
 }
