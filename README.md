@@ -1,7 +1,7 @@
 # <center>Project: Game of Life</center>
 **Author:** Charles Holdren<br>
 **Email:** CFHoldren@student.fullsail.edu<br>
-**Education:** Full Sail University<br>
+**Education:** Full Sail University <br>
 ![Degree Program](https://img.shields.io/badge/certificate-Application%20Development%20Fundamentals-darkgreen.svg)<br>
 ![Degree Program](https://img.shields.io/badge/degree-Computer%20Science%20Bachelor's-blue.svg)<br>
 
@@ -15,6 +15,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Create a GitHub repository.
 - Push the project onto the repository.
 - Smoother window scaling, updated cell width and height to be calculated as floats.
+- Added functionality to the "New" option.
 
 ## Requirements
 ### Cell Behavior (Rules)
