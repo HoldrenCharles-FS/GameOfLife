@@ -31,7 +31,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [ ] Add functionality to the Start button.
 - [ ] Add functionality to the Pause button.
 - [ ] Add functionality to the Next button.
-- [ ] Add functionality to the New button.
+- [X] Add functionality to the New button.
 ### Additional Project Requirements
 - [ ] Implement a HUD that displays current generation, cell count, boundary type, and universe size.
 - [ ] Add functionality to the Open button.
