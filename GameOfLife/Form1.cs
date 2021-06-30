@@ -16,7 +16,7 @@ namespace GameOfLife
         Timer timer = new Timer();       // The Timer class
 
         private int _generations = 0;    // Generation count
-        
+
         // Constructor
         public Form1()
         {
@@ -28,7 +28,6 @@ namespace GameOfLife
 
             // Setup the timer
             timer.Interval = 100; // milliseconds
-            timer.Tick += Timer_Tick;
         }
 
         // Load settings from file
@@ -95,15 +94,72 @@ namespace GameOfLife
         // Calculate the next generation of cells
         private void NextGeneration()
         {
-            int[,] future = new int[_universe.GetLength(0), _universe.GetLength(1)];
+            bool[,] nextUniverse = new bool[_universe.GetLength(0), _universe.GetLength(1)];
+
+            // Iterate through the universe in the y, top to bottom
+            for (int y = 1; y < _universe.GetLength(1) - 1; y++)
+            {
+                // Iterate through the universe in the x, left to right
+                for (int x = 1; x < _universe.GetLength(0) - 1; x++)
+                {
+                    // Count neighbors
+                    int neighbors = 0;
+
+                    // Iterate each adjacent space next to the current cell
+                    for (int i = -1; i <= 1; i++)
+                    {
+                        for (int j = -1; j <= 1; j++)
+                        {
+                            // Ignore borders for now
+                            if (x == 0 || y == 0 || x == _universe.GetLength(0) - 1 || x == _universe.GetLength(1) - 1)
+                            {
+                                nextUniverse[x, y] = _universe[x, y];
+                            }
+                            else if (_universe[x + i, y + j] == true)
+                            {
+                                // Increment neighbors if the cell is alive
+                                neighbors++;
+                            }
+                        }
+                    }
+
+                    // Decrement the count for the current cell
+                    if (_universe[x, y] == true)
+                    {
+                        neighbors--;
+                    }
 
 
+                    // Game of Life Rules
+                    // Cell is alive but has less than 2 neighbors or more than 3 neighbors
+                    if ((_universe[x, y] == true) && (neighbors < 2 || (neighbors > 3)))
+                    {
+                        nextUniverse[x, y] = false;
+                    }
+                    // Cell is dead but has 3 alive neighbors will live next generation
+                    else if ((_universe[x, y] == false) && (neighbors == 3))
+                    {
+                        nextUniverse[x, y] = true;
+                    }
+                    // Else nothing has changed
+                    else
+                    {
+                        nextUniverse[x, y] = _universe[x, y];
+                    }
+                }
+            }
+
+            // Update the universe to the next generation
+            _universe = nextUniverse;
 
             // Increment generation count
             _generations++;
 
             // Update status strip generations
             toolStripStatusLabelGenerations.Text = "Generations = " + _generations.ToString();
+
+            // Tell Windows you need to repaint
+            graphicsPanel1.Invalidate();
         }
 
         // The event called by the timer every Interval milliseconds.
@@ -192,6 +248,9 @@ namespace GameOfLife
         // New button
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Pause in the case that it is running
+            pauseToolStripMenuItem_Click(sender, e);
+
             // Iterate through the universe in the y, top to bottom
             for (int y = 0; y < _universe.GetLength(1); y++)
             {
@@ -220,6 +279,7 @@ namespace GameOfLife
             {
                 // Start timer
                 timer.Enabled = true;
+                timer.Tick += Timer_Tick;
 
                 // Change the display name
                 toolStripStart.Text = Properties.Resources.pause;
@@ -238,7 +298,7 @@ namespace GameOfLife
                 // Pause
                 pauseToolStripMenuItem_Click(sender, e);
             }
-            
+
         }
 
         // Tool strip version of the Start Button
