@@ -14,6 +14,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Create the root markdown file.
 - Create a GitHub repository.
 - Push the project onto the repository.
+- Smoother window scaling, updated cell width and height to be calculated as floats.
 
 ## Requirements
 ### Cell Behavior (Rules)
