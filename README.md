@@ -12,6 +12,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 ### 06/30/2021
 - Created Icons for Play, Pause and Next. Added Play and Next to tool strip.
 - Created a method for loading user settings and one for creating a new file if it doesn't exist.
+- Start / Pause options toggle states in GUI.
 ### 06/29/2021
 - Installed project template to Visual Studio.
 - Create the root markdown file.
