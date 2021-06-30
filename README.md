@@ -18,7 +18,6 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Push the project onto the repository.
 - Smoother window scaling, updated cell width and height to be calculated as floats.
 - Added functionality to the "New" option.
-- Created Icons for Play, Pause and Next. Added Play and Next to tool strip.
 
 ## Requirements
 ### Cell Behavior (Rules)
