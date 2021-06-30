@@ -70,11 +70,29 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ColumnCount.
+        /// </summary>
+        internal static string labelColumnCount {
+            get {
+                return ResourceManager.GetString("labelColumnCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Grid Color.
         /// </summary>
         internal static string labelGridColor {
             get {
                 return ResourceManager.GetString("labelGridColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Row Count.
+        /// </summary>
+        internal static string labelRowCount {
+            get {
+                return ResourceManager.GetString("labelRowCount", resourceCulture);
             }
         }
         

@@ -13,19 +13,15 @@ namespace GameOfLife
 {
     public partial class Form1 : Form
     {
-        //Fields
-        // The universe array
-        private bool[,] _universe = new bool[5, 5];
+        // Fields
+        private bool[,] _universe;      // The universe array
 
-        // Drawing colors
-        private Color _gridColor;
-        private Color _cellColor;
+        private Color _gridColor;       // Grid color
+        private Color _cellColor;       // Cell color
 
-        // The Timer class
-        Timer timer = new Timer();
+        Timer timer = new Timer();       // The Timer class
 
-        // Generation count
-        int generations = 0;
+        private int _generations = 0;    // Generation count
 
         public Form1()
         {
@@ -41,7 +37,7 @@ namespace GameOfLife
 
         private void LoadConfig()
         {
-            string[] data = new string[2];
+            string[] data = new string[4];
 
             int i = 0;
 
@@ -64,6 +60,7 @@ namespace GameOfLife
 
             _gridColor = Color.FromName(data[0]);
             _cellColor = Color.FromName(data[1]);
+            _universe = new bool[Int32.Parse(data[2]), Int32.Parse(data[3])];
         }
 
         private void CreateConfig()
@@ -75,17 +72,27 @@ namespace GameOfLife
 
                 sw.WriteLine("// " + Properties.Resources.labelCellColor);
                 sw.WriteLine(Color.Gray.Name);
+
+                sw.WriteLine("// " + Properties.Resources.labelRowCount);
+                sw.WriteLine(10);
+
+                sw.WriteLine("// " + Properties.Resources.labelColumnCount);
+                sw.WriteLine(10);
             }
         }
 
         // Calculate the next generation of cells
         private void NextGeneration()
         {
+            int[,] future = new int[_universe.GetLength(0), _universe.GetLength(1)];
+
+
+
             // Increment generation count
-            generations++;
+            _generations++;
 
             // Update status strip generations
-            toolStripStatusLabelGenerations.Text = "Generations = " + generations.ToString();
+            toolStripStatusLabelGenerations.Text = "Generations = " + _generations.ToString();
         }
 
         // The event called by the timer every Interval milliseconds.
@@ -192,12 +199,17 @@ namespace GameOfLife
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            timer.Enabled = true;
 
+            toolStripStart.Name = pauseToolStripMenuItem.Name;
+            toolStripStart.Image = Properties.Resources.pauseIcon;
+            startToolStripMenuItem.Enabled = false;
+            pauseToolStripMenuItem.Enabled = true;
         }
 
         private void toolStripButtonStart(object sender, EventArgs e)
         {
-
+            startToolStripMenuItem_Click(sender, e);
         }
     }
 }

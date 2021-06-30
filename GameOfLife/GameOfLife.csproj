@@ -85,15 +85,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ico\768px-OOjs_UI_icon_play-ltr.svg.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ico\1024px-Controls_chapter_next.svg.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ico\pause-button.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ico\playIcon.png" />
   </ItemGroup>
   <ItemGroup>

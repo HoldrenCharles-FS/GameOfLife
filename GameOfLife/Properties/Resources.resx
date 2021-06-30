@@ -121,9 +121,17 @@
     <value>Cell Color</value>
     <comment>Label for Cell Color</comment>
   </data>
+  <data name="labelColumnCount" xml:space="preserve">
+    <value>ColumnCount</value>
+    <comment>Label for Column Count</comment>
+  </data>
   <data name="labelGridColor" xml:space="preserve">
     <value>Grid Color</value>
     <comment>Label for Grid Color</comment>
+  </data>
+  <data name="labelRowCount" xml:space="preserve">
+    <value>Row Count</value>
+    <comment>Label for Row Count</comment>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="nextIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
