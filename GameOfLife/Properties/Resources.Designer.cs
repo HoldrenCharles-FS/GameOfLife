@@ -61,6 +61,24 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cell Color.
+        /// </summary>
+        internal static string labelCellColor {
+            get {
+                return ResourceManager.GetString("labelCellColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid Color.
+        /// </summary>
+        internal static string labelGridColor {
+            get {
+                return ResourceManager.GetString("labelGridColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap nextIcon {
@@ -87,6 +105,15 @@ namespace GameOfLife.Properties {
             get {
                 object obj = ResourceManager.GetObject("playIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to settings.cfg.
+        /// </summary>
+        internal static string settings {
+            get {
+                return ResourceManager.GetString("settings", resourceCulture);
             }
         }
     }

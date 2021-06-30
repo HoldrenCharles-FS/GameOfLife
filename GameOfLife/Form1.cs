@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,12 +13,13 @@ namespace GameOfLife
 {
     public partial class Form1 : Form
     {
+        //Fields
         // The universe array
-        bool[,] universe = new bool[5, 5];
+        private bool[,] _universe = new bool[5, 5];
 
         // Drawing colors
-        Color gridColor = Color.Black;
-        Color cellColor = Color.Gray;
+        private Color _gridColor;
+        private Color _cellColor;
 
         // The Timer class
         Timer timer = new Timer();
@@ -27,12 +29,53 @@ namespace GameOfLife
 
         public Form1()
         {
+            LoadConfig();
+
             InitializeComponent();
 
             // Setup the timer
             timer.Interval = 100; // milliseconds
             timer.Tick += Timer_Tick;
             timer.Enabled = false; // start timer running
+        }
+
+        private void LoadConfig()
+        {
+            string[] data = new string[2];
+
+            int i = 0;
+
+            if (!File.Exists(Properties.Resources.settings))
+            {
+                CreateConfig();
+            }
+            using (StreamReader sr = new StreamReader(Properties.Resources.settings))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if (!(line.StartsWith("//")))
+                    {
+                        data[i] = line;
+                        i++;
+                    }
+                }
+            }
+
+            _gridColor = Color.FromName(data[0]);
+            _cellColor = Color.FromName(data[1]);
+        }
+
+        private void CreateConfig()
+        {
+            using (StreamWriter sw = File.CreateText(Properties.Resources.settings))
+            {
+                sw.WriteLine("// " + Properties.Resources.labelGridColor);
+                sw.WriteLine(Color.Black.Name);
+
+                sw.WriteLine("// " + Properties.Resources.labelCellColor);
+                sw.WriteLine(Color.Gray.Name);
+            }
         }
 
         // Calculate the next generation of cells
@@ -54,8 +97,8 @@ namespace GameOfLife
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
             // Covert to floats
-            float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = universe.GetLength(0),
-                clientHeight = graphicsPanel1.ClientSize.Height, oneCount = universe.GetLength(1);
+            float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = _universe.GetLength(0),
+                clientHeight = graphicsPanel1.ClientSize.Height, oneCount = _universe.GetLength(1);
             // Calculate the width and height of each cell in pixels
             // CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
             float cellWidth = clientWidth / zeroCount;
@@ -63,16 +106,16 @@ namespace GameOfLife
             float cellHeight = clientHeight / oneCount;
 
             // A Pen for drawing the grid lines (color, width)
-            Pen gridPen = new Pen(gridColor, 1);
+            Pen gridPen = new Pen(_gridColor, 1);
 
             // A Brush for filling living cells interiors (color)
-            Brush cellBrush = new SolidBrush(cellColor);
+            Brush cellBrush = new SolidBrush(_cellColor);
 
             // Iterate through the universe in the y, top to bottom
-            for (int y = 0; y < universe.GetLength(1); y++)
+            for (int y = 0; y < _universe.GetLength(1); y++)
             {
                 // Iterate through the universe in the x, left to right
-                for (int x = 0; x < universe.GetLength(0); x++)
+                for (int x = 0; x < _universe.GetLength(0); x++)
                 {
                     // A rectangle to represent each cell in pixels
                     RectangleF cellRect = RectangleF.Empty;
@@ -84,7 +127,7 @@ namespace GameOfLife
                     cellRect.Height = cellHeight;
 
                     // Fill the cell with a brush if alive
-                    if (universe[x, y] == true)
+                    if (_universe[x, y] == true)
                     {
                         e.Graphics.FillRectangle(cellBrush, cellRect);
                     }
@@ -105,8 +148,8 @@ namespace GameOfLife
             if (e.Button == MouseButtons.Left)
             {
                 // Covert to floats
-                float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = universe.GetLength(0),
-                clientHeight = graphicsPanel1.ClientSize.Height, oneCount = universe.GetLength(1),
+                float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = _universe.GetLength(0),
+                clientHeight = graphicsPanel1.ClientSize.Height, oneCount = _universe.GetLength(1),
                 eX = e.X, eY = e.Y;
                 // Calculate the width and height of each cell in pixels
                 float cellWidth = clientWidth / zeroCount;
@@ -119,7 +162,7 @@ namespace GameOfLife
                 float y = eY / cellHeight;
 
                 // Toggle the cell's state
-                universe[(int)x, (int)y] = !universe[(int)x, (int)y];
+                _universe[(int)x, (int)y] = !_universe[(int)x, (int)y];
 
                 // Tell Windows you need to repaint
                 graphicsPanel1.Invalidate();
@@ -129,12 +172,12 @@ namespace GameOfLife
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Iterate through the universe in the y, top to bottom
-            for (int y = 0; y < universe.GetLength(1); y++)
+            for (int y = 0; y < _universe.GetLength(1); y++)
             {
                 // Iterate through the universe in the x, left to right
-                for (int x = 0; x < universe.GetLength(0); x++)
+                for (int x = 0; x < _universe.GetLength(0); x++)
                 {
-                    universe[x, y] = false;
+                    _universe[x, y] = false;
 
                 }
             }
