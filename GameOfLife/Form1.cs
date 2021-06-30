@@ -55,11 +55,14 @@ namespace GameOfLife
 
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
+            // Covert to floats
+            float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = universe.GetLength(0),
+                clientHeight = graphicsPanel1.ClientSize.Height, oneCount = universe.GetLength(1);
             // Calculate the width and height of each cell in pixels
             // CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
-            int cellWidth = graphicsPanel1.ClientSize.Width / universe.GetLength(0);
+            float cellWidth = clientWidth / zeroCount;
             // CELL HEIGHT = WINDOW HEIGHT / NUMBER OF CELLS IN Y
-            int cellHeight = graphicsPanel1.ClientSize.Height / universe.GetLength(1);
+            float cellHeight = clientHeight / oneCount;
 
             // A Pen for drawing the grid lines (color, width)
             Pen gridPen = new Pen(gridColor, 1);
@@ -74,9 +77,11 @@ namespace GameOfLife
                 for (int x = 0; x < universe.GetLength(0); x++)
                 {
                     // A rectangle to represent each cell in pixels
-                    Rectangle cellRect = Rectangle.Empty;
-                    cellRect.X = x * cellWidth;
-                    cellRect.Y = y * cellHeight;
+                    RectangleF cellRect = RectangleF.Empty;
+                    //Rectangle cellRect = Rectangle.Empty;
+                    float fX = x, fY = y;
+                    cellRect.X = fX * cellWidth;
+                    cellRect.Y = fY * cellHeight;
                     cellRect.Width = cellWidth;
                     cellRect.Height = cellHeight;
 
@@ -101,18 +106,20 @@ namespace GameOfLife
             // If the left mouse button was clicked
             if (e.Button == MouseButtons.Left)
             {
+                float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = universe.GetLength(0),
+                clientHeight = graphicsPanel1.ClientSize.Height, oneCount = universe.GetLength(1);
                 // Calculate the width and height of each cell in pixels
-                int cellWidth = graphicsPanel1.ClientSize.Width / universe.GetLength(0);
-                int cellHeight = graphicsPanel1.ClientSize.Height / universe.GetLength(1);
+                float cellWidth = clientWidth / zeroCount;
+                float cellHeight = clientHeight / oneCount;
 
                 // Calculate the cell that was clicked in
                 // CELL X = MOUSE X / CELL WIDTH
-                int x = e.X / cellWidth;
+                float x = e.X / cellWidth;
                 // CELL Y = MOUSE Y / CELL HEIGHT
-                int y = e.Y / cellHeight;
+                float y = e.Y / cellHeight;
 
                 // Toggle the cell's state
-                universe[x, y] = !universe[x, y];
+                universe[(int)x, (int)y] = !universe[(int)x, (int)y];
 
                 // Tell Windows you need to repaint
                 graphicsPanel1.Invalidate();
