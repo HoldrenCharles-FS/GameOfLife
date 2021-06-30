@@ -111,9 +111,9 @@ namespace GameOfLife.Properties {
         /// <summary>
         ///   Looks up a localized string similar to settings.cfg.
         /// </summary>
-        internal static string settings {
+        internal static string settingsFile {
             get {
-                return ResourceManager.GetString("settings", resourceCulture);
+                return ResourceManager.GetString("settingsFile", resourceCulture);
             }
         }
     }

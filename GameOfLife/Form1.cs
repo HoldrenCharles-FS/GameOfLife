@@ -45,11 +45,11 @@ namespace GameOfLife
 
             int i = 0;
 
-            if (!File.Exists(Properties.Resources.settings))
+            if (!File.Exists(Properties.Resources.settingsFile))
             {
                 CreateConfig();
             }
-            using (StreamReader sr = new StreamReader(Properties.Resources.settings))
+            using (StreamReader sr = new StreamReader(Properties.Resources.settingsFile))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)
@@ -68,7 +68,7 @@ namespace GameOfLife
 
         private void CreateConfig()
         {
-            using (StreamWriter sw = File.CreateText(Properties.Resources.settings))
+            using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
             {
                 sw.WriteLine("// " + Properties.Resources.labelGridColor);
                 sw.WriteLine(Color.Black.Name);
