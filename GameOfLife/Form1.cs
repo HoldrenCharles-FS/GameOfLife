@@ -146,5 +146,15 @@ namespace GameOfLife
         {
             newToolStripMenuItem_Click(sender, e);
         }
+
+        private void startToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButtonStart(object sender, EventArgs e)
+        {
+
+        }
     }
 }
