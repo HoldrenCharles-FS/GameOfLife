@@ -13,6 +13,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Created Icons for Play, Pause and Next. Added Play and Next to tool strip.
 - Created a method for loading user settings and one for creating a new file if it doesn't exist.
 - Start / Pause options toggle states in GUI.
+- Added the basic logic for the game rules.
 ### 06/29/2021
 - Installed project template to Visual Studio.
 - Create the root markdown file.
@@ -23,17 +24,17 @@ This project was created for the course Project and Portfolio I: Online at Full 
 
 ## Requirements
 ### Cell Behavior (Rules)
-- [ ] Living cells with less than 2 living neighbors die in the next generation.
-- [ ] Living cells with more than 3 living neighbors die in the next generation.
-- [ ] Living cells with 2 or 3 living neighbors live in the next generation.
-- [ ] Dead cells with exactly 3 living neighbors live in the next generation.
+- [X] Living cells with less than 2 living neighbors die in the next generation.
+- [X] Living cells with more than 3 living neighbors die in the next generation.
+- [X] Living cells with 2 or 3 living neighbors live in the next generation.
+- [X] Dead cells with exactly 3 living neighbors live in the next generation.
 ### Minimum Requirements for Milestone 1
-- [ ] Render Conway’s Game of Life in a .NET application.
-- [ ] Grid and cells displaying correctly.
-- [ ] Cells can be toggled (on/off) by clicking with the mouse.
-- [ ] Cells live or die according to the four rules listed above.
-- [ ] Add functionality to the Start button.
-- [ ] Add functionality to the Pause button.
+- [X] Render Conway’s Game of Life in a .NET application.
+- [X] Grid and cells displaying correctly.
+- [X] Cells can be toggled (on/off) by clicking with the mouse.
+- [X] Cells live or die according to the four rules listed above.
+- [X] Add functionality to the Start button.
+- [X] Add functionality to the Pause button.
 - [ ] Add functionality to the Next button.
 - [X] Add functionality to the New button.
 ### Additional Project Requirements
