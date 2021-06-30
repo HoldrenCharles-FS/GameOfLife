@@ -1,12 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GameOfLife
@@ -22,34 +16,44 @@ namespace GameOfLife
         Timer timer = new Timer();       // The Timer class
 
         private int _generations = 0;    // Generation count
-
+        
+        // Constructor
         public Form1()
         {
-            LoadConfig();
+            // Load settings from file
+            LoadSettings();
 
+            // Initialize components for Windows Form (avoid editing)
             InitializeComponent();
 
             // Setup the timer
             timer.Interval = 100; // milliseconds
             timer.Tick += Timer_Tick;
-            timer.Enabled = false; // start timer running
         }
 
-        private void LoadConfig()
+        // Load settings from file
+        private void LoadSettings()
         {
+            // An array to store data from each line
             string[] data = new string[4];
 
+            // Array index #
             int i = 0;
 
+            // Check if the file does not exist
             if (!File.Exists(Properties.Resources.settingsFile))
             {
-                CreateConfig();
+                // If not create new settings file
+                CreateSettings();
             }
+
+            // Read data from file
             using (StreamReader sr = new StreamReader(Properties.Resources.settingsFile))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
+                    // Ignore labels within settings.cfg
                     if (!(line.StartsWith("//")))
                     {
                         data[i] = line;
@@ -58,24 +62,31 @@ namespace GameOfLife
                 }
             }
 
+            // Initialize data members here
             _gridColor = Color.FromName(data[0]);
             _cellColor = Color.FromName(data[1]);
             _universe = new bool[Int32.Parse(data[2]), Int32.Parse(data[3])];
         }
 
-        private void CreateConfig()
+        // Create new settings file
+        private void CreateSettings()
         {
+            // Label and write each property to file
             using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
             {
+                // Grid Color
                 sw.WriteLine("// " + Properties.Resources.labelGridColor);
                 sw.WriteLine(Color.Black.Name);
 
+                // Cell Color
                 sw.WriteLine("// " + Properties.Resources.labelCellColor);
                 sw.WriteLine(Color.Gray.Name);
 
+                // Row Count
                 sw.WriteLine("// " + Properties.Resources.labelRowCount);
                 sw.WriteLine(10);
 
+                // Column Count
                 sw.WriteLine("// " + Properties.Resources.labelColumnCount);
                 sw.WriteLine(10);
             }
@@ -106,9 +117,11 @@ namespace GameOfLife
             // Covert to floats
             float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = _universe.GetLength(0),
                 clientHeight = graphicsPanel1.ClientSize.Height, oneCount = _universe.GetLength(1);
+
             // Calculate the width and height of each cell in pixels
             // CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
             float cellWidth = clientWidth / zeroCount;
+
             // CELL HEIGHT = WINDOW HEIGHT / NUMBER OF CELLS IN Y
             float cellHeight = clientHeight / oneCount;
 
@@ -176,6 +189,7 @@ namespace GameOfLife
             }
         }
 
+        // New button
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Iterate through the universe in the y, top to bottom
@@ -184,49 +198,71 @@ namespace GameOfLife
                 // Iterate through the universe in the x, left to right
                 for (int x = 0; x < _universe.GetLength(0); x++)
                 {
+                    // Set each element to false
                     _universe[x, y] = false;
-
                 }
             }
             // Tell Windows you need to repaint
             graphicsPanel1.Invalidate();
         }
 
+        // Tool strip version of the New Button
         private void newToolStripButton_Click(object sender, EventArgs e)
         {
             newToolStripMenuItem_Click(sender, e);
         }
 
+        // Start button
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Toggle between Start / Pause states 
             if (timer.Enabled == false)
             {
+                // Start timer
                 timer.Enabled = true;
 
-                toolStripStart.Name = pauseToolStripMenuItem.Name;
+                // Change the display name
+                toolStripStart.Text = Properties.Resources.pause;
+
+                // Toggle tool strip Start icon to the Pause icon
                 toolStripStart.Image = Properties.Resources.pauseIcon;
+
+                // Disable File > Start
                 startToolStripMenuItem.Enabled = false;
+
+                // Enable File > Pause
                 pauseToolStripMenuItem.Enabled = true;
             }
             else
             {
+                // Pause
                 pauseToolStripMenuItem_Click(sender, e);
             }
             
         }
 
+        // Tool strip version of the Start Button
         private void toolStripButtonStart(object sender, EventArgs e)
         {
             startToolStripMenuItem_Click(sender, e);
         }
 
+        // Pause button
         private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Stop timer
             timer.Enabled = false;
 
-            pauseToolStripMenuItem.Name = toolStripStart.Name;
+            // Change the display name
+            toolStripStart.Text = Properties.Resources.start;
+
+            // Toggle tool strip Start icon to the Pause icon
             toolStripStart.Image = Properties.Resources.startIcon;
+
+            // Enable File > Start
             startToolStripMenuItem.Enabled = true;
+
+            // Disable File > Pause
             pauseToolStripMenuItem.Enabled = false;
         }
     }
