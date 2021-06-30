@@ -13,7 +13,8 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Created Icons for Play, Pause and Next. Added Play and Next to tool strip.
 - Created a method for loading user settings and one for creating a new file if it doesn't exist.
 - Start / Pause options toggle states in GUI.
-- Added the basic logic for the game rules.
+- Added the basic logic for the game rules, Start / Pause work correctly.
+- Added functionality to the next button.
 ### 06/29/2021
 - Installed project template to Visual Studio.
 - Create the root markdown file.
@@ -35,7 +36,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [X] Cells live or die according to the four rules listed above.
 - [X] Add functionality to the Start button.
 - [X] Add functionality to the Pause button.
-- [ ] Add functionality to the Next button.
+- [X] Add functionality to the Next button.
 - [X] Add functionality to the New button.
 ### Additional Project Requirements
 - [ ] Implement a HUD that displays current generation, cell count, boundary type, and universe size.
