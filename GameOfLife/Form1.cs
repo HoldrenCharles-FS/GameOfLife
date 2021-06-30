@@ -32,14 +32,12 @@ namespace GameOfLife
             // Setup the timer
             timer.Interval = 100; // milliseconds
             timer.Tick += Timer_Tick;
-            timer.Enabled = true; // start timer running
+            timer.Enabled = false; // start timer running
         }
 
         // Calculate the next generation of cells
         private void NextGeneration()
         {
-
-
             // Increment generation count
             generations++;
 
@@ -106,17 +104,19 @@ namespace GameOfLife
             // If the left mouse button was clicked
             if (e.Button == MouseButtons.Left)
             {
+                // Covert to floats
                 float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = universe.GetLength(0),
-                clientHeight = graphicsPanel1.ClientSize.Height, oneCount = universe.GetLength(1);
+                clientHeight = graphicsPanel1.ClientSize.Height, oneCount = universe.GetLength(1),
+                eX = e.X, eY = e.Y;
                 // Calculate the width and height of each cell in pixels
                 float cellWidth = clientWidth / zeroCount;
                 float cellHeight = clientHeight / oneCount;
 
                 // Calculate the cell that was clicked in
                 // CELL X = MOUSE X / CELL WIDTH
-                float x = e.X / cellWidth;
+                float x = eX / cellWidth;
                 // CELL Y = MOUSE Y / CELL HEIGHT
-                float y = e.Y / cellHeight;
+                float y = eY / cellHeight;
 
                 // Toggle the cell's state
                 universe[(int)x, (int)y] = !universe[(int)x, (int)y];
@@ -124,6 +124,27 @@ namespace GameOfLife
                 // Tell Windows you need to repaint
                 graphicsPanel1.Invalidate();
             }
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Iterate through the universe in the y, top to bottom
+            for (int y = 0; y < universe.GetLength(1); y++)
+            {
+                // Iterate through the universe in the x, left to right
+                for (int x = 0; x < universe.GetLength(0); x++)
+                {
+                    universe[x, y] = false;
+
+                }
+            }
+            // Tell Windows you need to repaint
+            graphicsPanel1.Invalidate();
+        }
+
+        private void newToolStripButton_Click(object sender, EventArgs e)
+        {
+            newToolStripMenuItem_Click(sender, e);
         }
     }
 }
