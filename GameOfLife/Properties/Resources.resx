@@ -140,11 +140,11 @@
   <data name="pauseIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ico\pauseIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="playIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\ico\playIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="settingsFile" xml:space="preserve">
     <value>settings.cfg</value>
     <comment>Configuration file for settings</comment>
+  </data>
+  <data name="startIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\ico\starticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

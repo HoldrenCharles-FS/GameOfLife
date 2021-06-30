@@ -117,21 +117,21 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap playIcon {
-            get {
-                object obj = ResourceManager.GetObject("playIcon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to settings.cfg.
         /// </summary>
         internal static string settingsFile {
             get {
                 return ResourceManager.GetString("settingsFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap startIcon {
+            get {
+                object obj = ResourceManager.GetObject("startIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

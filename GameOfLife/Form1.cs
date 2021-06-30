@@ -211,5 +211,15 @@ namespace GameOfLife
         {
             startToolStripMenuItem_Click(sender, e);
         }
+
+        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            timer.Enabled = false;
+
+            pauseToolStripMenuItem.Name = toolStripStart.Name;
+            toolStripStart.Image = Properties.Resources.startIcon;
+            startToolStripMenuItem.Enabled = true;
+            pauseToolStripMenuItem.Enabled = false;
+        }
     }
 }
