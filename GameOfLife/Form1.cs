@@ -199,12 +199,20 @@ namespace GameOfLife
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            timer.Enabled = true;
+            if (timer.Enabled == false)
+            {
+                timer.Enabled = true;
 
-            toolStripStart.Name = pauseToolStripMenuItem.Name;
-            toolStripStart.Image = Properties.Resources.pauseIcon;
-            startToolStripMenuItem.Enabled = false;
-            pauseToolStripMenuItem.Enabled = true;
+                toolStripStart.Name = pauseToolStripMenuItem.Name;
+                toolStripStart.Image = Properties.Resources.pauseIcon;
+                startToolStripMenuItem.Enabled = false;
+                pauseToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                pauseToolStripMenuItem_Click(sender, e);
+            }
+            
         }
 
         private void toolStripButtonStart(object sender, EventArgs e)
