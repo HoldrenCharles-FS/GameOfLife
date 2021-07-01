@@ -15,6 +15,8 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Start / Pause options toggle states in GUI.
 - Added the basic logic for the game rules, Start / Pause work correctly.
 - Added functionality to the next button.
+- Mousewheel scroll now changes grid size.
+- HUD now displays cell count.
 ### 06/29/2021
 - Installed project template to Visual Studio.
 - Create the root markdown file.
@@ -22,7 +24,6 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Push the project onto the repository.
 - Smoother window scaling, updated cell width and height to be calculated as floats.
 - Added functionality to the "New" option.
-- Mousewheel scroll now changes grid size.
 
 ## Requirements
 ### Cell Behavior (Rules)
