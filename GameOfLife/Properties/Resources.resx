@@ -117,12 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="commentPrefix" xml:space="preserve">
+    <value>// </value>
+    <comment>To indicate a comment within cfg files</comment>
+  </data>
+  <data name="labelBoundry" xml:space="preserve">
+    <value>Boundry</value>
+    <comment>Label for Boundry</comment>
+  </data>
   <data name="labelCellColor" xml:space="preserve">
     <value>Cell Color</value>
     <comment>Label for Cell Color</comment>
   </data>
   <data name="labelColumnCount" xml:space="preserve">
-    <value>ColumnCount</value>
+    <value>Column Count</value>
     <comment>Label for Column Count</comment>
   </data>
   <data name="labelGridColor" xml:space="preserve">
@@ -132,6 +140,10 @@
   <data name="labelRowCount" xml:space="preserve">
     <value>Row Count</value>
     <comment>Label for Row Count</comment>
+  </data>
+  <data name="labelUniverseSize" xml:space="preserve">
+    <value>Universe Size</value>
+    <comment>Label for Universe Size</comment>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="nextIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">

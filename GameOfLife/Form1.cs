@@ -20,6 +20,8 @@ namespace GameOfLife
         private int _rows;              // Rows count
         private int _columns;           // Column Count
 
+        private bool _boundry;          // Boundry type : True = Torodial, False = Finite
+
         // Constructor
         public Form1()
         {
@@ -29,7 +31,7 @@ namespace GameOfLife
             // Initialize components for Windows Form (avoid editing)
             InitializeComponent();
 
-            this.MouseWheel += Form_MouseWheel;
+            MouseWheel += Form_MouseWheel;
 
             // Setup the timer
             timer.Interval = 100; // milliseconds
@@ -40,7 +42,7 @@ namespace GameOfLife
         private void LoadSettings()
         {
             // An array to store data from each line
-            string[] data = new string[4];
+            string[] data = new string[6];
 
             // Array index #
             int i = 0;
@@ -73,6 +75,7 @@ namespace GameOfLife
             _rows = Int32.Parse(data[2]);
             _columns = Int32.Parse(data[3]);
             _universe = new bool[_rows, _columns];
+            _boundry = bool.Parse(data[4]);
         }
 
         // Create new settings file
@@ -82,36 +85,51 @@ namespace GameOfLife
             using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
             {
                 // Grid Color
-                sw.WriteLine("// " + Properties.Resources.labelGridColor);
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridColor);
                 sw.WriteLine(Color.Black.Name);
 
                 // Cell Color
-                sw.WriteLine("// " + Properties.Resources.labelCellColor);
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelCellColor);
                 sw.WriteLine(Color.Gray.Name);
 
                 // Row Count
-                sw.WriteLine("// " + Properties.Resources.labelRowCount);
-                sw.WriteLine(5);
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelRowCount);
+                sw.WriteLine(10);
 
                 // Column Count
-                sw.WriteLine("// " + Properties.Resources.labelColumnCount);
-                sw.WriteLine(5);
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelColumnCount);
+                sw.WriteLine(10);
+
+                // Boundry
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundry);
+                sw.WriteLine(false);
+
+                // Universe Size
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelUniverseSize);
+                sw.Write("10 x 10");
             }
         }
 
-        void Form_MouseWheel(object sender, MouseEventArgs e)
+        private void Form_MouseWheel(object sender, MouseEventArgs e)
         {
+
             // Scroll down (zoom out)
             if (e.Delta < 0)
             {
-                _rows++;
-                _columns++;
+                if (_rows <= 300 && _columns <= 300)
+                {
+                    _rows++;
+                    _columns++;
+                }
             }
             // Scroll up (zoom in)
             else
             {
-                _rows--;
-                _columns--;
+                if (_rows > 5 && _columns > 5)
+                {
+                    _rows--;
+                    _columns--;
+                }
             }
 
             bool[,] tempUniverse = _universe;
@@ -134,6 +152,9 @@ namespace GameOfLife
 
                 }
             }
+            // Update status strip universe size
+            toolStripStatusLabelUniverseSize.Text = $"Universe Size = {_rows} x {_columns}";
+
             // Tell Windows you need to repaint
             graphicsPanel1.Invalidate();
         }
@@ -217,8 +238,28 @@ namespace GameOfLife
                 }
             }
 
-            // Update status strip cell count
-            toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
+            if (_cellCount > 0)
+            {
+
+                nextToolStripMenuItem.Enabled = true;
+                toolStripButtonNext.Enabled = true;
+            }
+            else
+            {
+                nextToolStripMenuItem.Enabled = false;
+                toolStripButtonNext.Enabled = false;
+            }
+
+                // Update status strip cell count
+                toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
+
+            string boundry = (_boundry == true) ? "Torodial" : "Finite";
+
+            // Update status strip boundry
+            toolStripStatusLabelBoundry.Text = "Boundry = " + boundry;
+
+            // Update status strip universe size
+            toolStripStatusLabelUniverseSize.Text = $"Universe Size = {_rows} x {_columns}";
 
             // Tell Windows you need to repaint
             graphicsPanel1.Invalidate();
@@ -237,7 +278,7 @@ namespace GameOfLife
                 // Else keep going
                 NextGeneration();
             }
-            
+
         }
 
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
@@ -324,6 +365,18 @@ namespace GameOfLife
                     _cellCount--;
                 }
 
+                if (_cellCount > 0)
+                {
+
+                    nextToolStripMenuItem.Enabled = true;
+                    toolStripButtonNext.Enabled = true;
+                }
+                else
+                {
+                    nextToolStripMenuItem.Enabled = false;
+                    toolStripButtonNext.Enabled = false;
+                }
+
                 toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
 
                 // Tell Windows you need to repaint
@@ -334,6 +387,11 @@ namespace GameOfLife
         // New button
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Reset universe size
+            _rows = 10;
+            _columns = 10;
+            _universe = new bool[_rows, _columns];
+
             // Update status strip generations
             _generations = 0;
             toolStripStatusLabelGenerations.Text = "Generations = " + _generations;
@@ -341,6 +399,9 @@ namespace GameOfLife
             // Update status strip Cell count
             _cellCount = 0;
             toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
+
+            // Update status strip universe size
+            toolStripStatusLabelUniverseSize.Text = $"Universe Size = {_rows} x {_columns}";
 
             // Pause in the case that it is running
             pauseToolStripMenuItem_Click(sender, e);
@@ -421,13 +482,23 @@ namespace GameOfLife
 
         private void toolStripButtonNext_Click(object sender, EventArgs e)
         {
-            // Pause
-            pauseToolStripMenuItem_Click(sender, e);
+            if (_cellCount > 0)
+            {
+                
+                nextToolStripMenuItem.Enabled = true;
+                toolStripButtonNext.Enabled = true;
 
-            // Step forward one generation
-            NextGeneration();
+                // Pause
+                pauseToolStripMenuItem_Click(sender, e);
+
+                // Step forward one generation
+                NextGeneration();
+            }
+            else
+            {
+                nextToolStripMenuItem.Enabled = false;
+                toolStripButtonNext.Enabled = false;
+            }
         }
-
-
     }
 }

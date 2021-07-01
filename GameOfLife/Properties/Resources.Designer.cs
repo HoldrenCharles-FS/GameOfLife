@@ -61,6 +61,24 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to // .
+        /// </summary>
+        internal static string commentPrefix {
+            get {
+                return ResourceManager.GetString("commentPrefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boundry.
+        /// </summary>
+        internal static string labelBoundry {
+            get {
+                return ResourceManager.GetString("labelBoundry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cell Color.
         /// </summary>
         internal static string labelCellColor {
@@ -70,7 +88,7 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ColumnCount.
+        ///   Looks up a localized string similar to Column Count.
         /// </summary>
         internal static string labelColumnCount {
             get {
@@ -93,6 +111,15 @@ namespace GameOfLife.Properties {
         internal static string labelRowCount {
             get {
                 return ResourceManager.GetString("labelRowCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Universe Size.
+        /// </summary>
+        internal static string labelUniverseSize {
+            get {
+                return ResourceManager.GetString("labelUniverseSize", resourceCulture);
             }
         }
         
