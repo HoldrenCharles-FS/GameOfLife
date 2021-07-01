@@ -133,6 +133,10 @@
     <value>Column Count</value>
     <comment>Label for Column Count</comment>
   </data>
+  <data name="labelGenerations" xml:space="preserve">
+    <value>Generations</value>
+    <comment>Label for Generations</comment>
+  </data>
   <data name="labelGridColor" xml:space="preserve">
     <value>Grid Color</value>
     <comment>Label for Grid Color</comment>

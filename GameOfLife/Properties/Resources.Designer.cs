@@ -97,6 +97,15 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generations.
+        /// </summary>
+        internal static string labelGenerations {
+            get {
+                return ResourceManager.GetString("labelGenerations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Grid Color.
         /// </summary>
         internal static string labelGridColor {

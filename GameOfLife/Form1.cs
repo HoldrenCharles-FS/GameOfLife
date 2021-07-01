@@ -12,15 +12,14 @@ namespace GameOfLife
 
         private Color _gridColor;       // Grid color
         private Color _cellColor;       // Cell color
-
-        Timer timer = new Timer();      // The Timer class
-
-        private int _generations = 0;   // Generation count
-        private int _cellCount = 0;     // Cell count
         private int _rows;              // Rows count
         private int _columns;           // Column Count
-
+        private int _generations;   // Generation count
         private bool _boundry;          // Boundry type : True = Torodial, False = Finite
+        Timer timer = new Timer();      // The Timer class
+
+        
+        private int _cellCount = 0;     // Cell count
 
         // Constructor
         public Form1()
@@ -61,7 +60,7 @@ namespace GameOfLife
                 while ((line = sr.ReadLine()) != null)
                 {
                     // Ignore labels within settings.cfg
-                    if (!(line.StartsWith("//")))
+                    if (!(line.StartsWith(Properties.Resources.commentPrefix)))
                     {
                         data[i] = line;
                         i++;
@@ -75,13 +74,14 @@ namespace GameOfLife
             _rows = Int32.Parse(data[2]);
             _columns = Int32.Parse(data[3]);
             _universe = new bool[_rows, _columns];
-            _boundry = bool.Parse(data[4]);
+            _generations = Int32.Parse(data[4]);
+            _boundry = bool.Parse(data[5]);
         }
 
         // Create new settings file
         private void CreateSettings()
         {
-            // Label and write each property to file
+            // Label and write default properties to file
             using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
             {
                 // Grid Color
@@ -100,13 +100,13 @@ namespace GameOfLife
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelColumnCount);
                 sw.WriteLine(10);
 
+                // Generations
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGenerations);
+                sw.WriteLine(0);
+
                 // Boundry
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundry);
                 sw.WriteLine(false);
-
-                // Universe Size
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelUniverseSize);
-                sw.Write("10 x 10");
             }
         }
 
@@ -116,7 +116,7 @@ namespace GameOfLife
             // Scroll down (zoom out)
             if (e.Delta < 0)
             {
-                if (_rows <= 300 && _columns <= 300)
+                if (_rows < 300 && _columns < 300)
                 {
                     _rows++;
                     _columns++;
