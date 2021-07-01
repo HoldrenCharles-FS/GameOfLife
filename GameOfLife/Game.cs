@@ -5,23 +5,24 @@ using System.Windows.Forms;
 
 namespace GameOfLife
 {
-    public partial class Game : Form
+    public partial class Form1 : Form
     {
-        #region Fields
-        private bool[,] _universe;      // Universe
+        // Fields
+        private bool[,] _universe;      // The universe array
+
         private Color _gridColor;       // Grid color
         private Color _cellColor;       // Cell color
         private int _rows;              // Rows count
         private int _columns;           // Column Count
-        private int _generations;       // Generation count
+        private int _generations;   // Generation count
         private bool _boundry;          // Boundry type : True = Torodial, False = Finite
-
-        private int _cellCount = 0;     // Cell count
         Timer timer = new Timer();      // The Timer class
-        #endregion
+
+        
+        private int _cellCount = 0;     // Cell count
 
         // Constructor
-        public Game()
+        public Form1()
         {
             // Load settings from file
             LoadSettings();
@@ -29,7 +30,7 @@ namespace GameOfLife
             // Initialize components for Windows Form (avoid editing)
             InitializeComponent();
 
-            MouseWheel += Zoom_MouseWheel;
+            MouseWheel += Form_MouseWheel;
 
             // Setup the timer
             timer.Interval = 100; // milliseconds
@@ -109,13 +110,12 @@ namespace GameOfLife
             }
         }
 
-        // Enables scroll scaling with Mouse wheel
-        private void Zoom_MouseWheel(object sender, MouseEventArgs e)
+        private void Form_MouseWheel(object sender, MouseEventArgs e)
         {
+
             // Scroll down (zoom out)
             if (e.Delta < 0)
             {
-                // Stop growing at 300
                 if (_rows < 300 && _columns < 300)
                 {
                     _rows++;
@@ -125,7 +125,6 @@ namespace GameOfLife
             // Scroll up (zoom in)
             else
             {
-                // Stop shrinking at 5
                 if (_rows > 5 && _columns > 5)
                 {
                     _rows--;
@@ -163,7 +162,6 @@ namespace GameOfLife
         // Calculate the next generation of cells
         private void NextGeneration()
         {
-            // Temporary array for the next generation
             bool[,] nextUniverse = new bool[_universe.GetLength(0), _universe.GetLength(1)];
 
             // Iterate through the universe in the y, top to bottom
@@ -273,7 +271,7 @@ namespace GameOfLife
             // Pause if there are no living cells
             if (_cellCount == 0)
             {
-                Pause(sender, e);
+                pauseToolStripMenuItem_Click(sender, e);
             }
             else
             {
@@ -283,8 +281,7 @@ namespace GameOfLife
 
         }
 
-        // Paint the graphics panel
-        private void GraphicsPanel_Paint(object sender, PaintEventArgs e)
+        private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
             // Covert to floats
             float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = _universe.GetLength(0),
@@ -335,8 +332,7 @@ namespace GameOfLife
 
         }
 
-        // When the graphics panel is clicked
-        private void GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
+        private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)
         {
             // If the left mouse button was clicked
             if (e.Button == MouseButtons.Left)
@@ -389,7 +385,7 @@ namespace GameOfLife
         }
 
         // New button
-        private void New(object sender, EventArgs e)
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Reset universe size
             _rows = 10;
@@ -408,7 +404,7 @@ namespace GameOfLife
             toolStripStatusLabelUniverseSize.Text = $"Universe Size = {_rows} x {_columns}";
 
             // Pause in the case that it is running
-            Pause(sender, e);
+            pauseToolStripMenuItem_Click(sender, e);
 
             // Iterate through the universe in the y, top to bottom
             for (int y = 0; y < _universe.GetLength(1); y++)
@@ -424,8 +420,14 @@ namespace GameOfLife
             graphicsPanel1.Invalidate();
         }
 
+        // Tool strip version of the New Button
+        private void newToolStripButton_Click(object sender, EventArgs e)
+        {
+            newToolStripMenuItem_Click(sender, e);
+        }
+
         // Start button
-        private void Start(object sender, EventArgs e)
+        private void startToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Toggle between Start / Pause states 
             if (timer.Enabled == false)
@@ -434,10 +436,10 @@ namespace GameOfLife
                 timer.Enabled = true;
 
                 // Change the display name
-                toolStripStart.Text = Properties.Resources.pause;
+                toolStripButtonStart.Text = Properties.Resources.pause;
 
                 // Toggle tool strip Start icon to the Pause icon
-                toolStripStart.Image = Properties.Resources.pauseIcon;
+                toolStripButtonStart.Image = Properties.Resources.pauseIcon;
 
                 // Disable File > Start
                 startToolStripMenuItem.Enabled = false;
@@ -448,22 +450,28 @@ namespace GameOfLife
             else
             {
                 // Pause
-                Pause(sender, e);
+                pauseToolStripMenuItem_Click(sender, e);
             }
 
         }
 
+        // Tool strip version of the Start Button
+        private void toolStripButtonStart(object sender, EventArgs e)
+        {
+            startToolStripMenuItem_Click(sender, e);
+        }
+
         // Pause button
-        private void Pause(object sender, EventArgs e)
+        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Stop timer
             timer.Enabled = false;
 
             // Change the display name
-            toolStripStart.Text = Properties.Resources.start;
+            toolStripButtonStart.Text = Properties.Resources.start;
 
             // Toggle tool strip Start icon to the Pause icon
-            toolStripStart.Image = Properties.Resources.startIcon;
+            toolStripButtonStart.Image = Properties.Resources.startIcon;
 
             // Enable File > Start
             startToolStripMenuItem.Enabled = true;
@@ -472,8 +480,7 @@ namespace GameOfLife
             pauseToolStripMenuItem.Enabled = false;
         }
 
-        // Next button
-        private void Next(object sender, EventArgs e)
+        private void toolStripButtonNext_Click(object sender, EventArgs e)
         {
             if (_cellCount > 0)
             {
@@ -482,7 +489,7 @@ namespace GameOfLife
                 toolStripButtonNext.Enabled = true;
 
                 // Pause
-                Pause(sender, e);
+                pauseToolStripMenuItem_Click(sender, e);
 
                 // Step forward one generation
                 NextGeneration();
@@ -493,10 +500,17 @@ namespace GameOfLife
                 toolStripButtonNext.Enabled = false;
             }
         }
+<<<<<<< HEAD:GameOfLife/Game.cs
+
+        // Exit button
+        private void Exit(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
 
         #region Duplicate Methods
         // Tool strip version of the Start Button
-        private void toolStripButtonStart(object sender, EventArgs e)
+        private void toolStripButtonStart_Click(object sender, EventArgs e)
         {
             Start(sender, e);
         }
@@ -507,5 +521,7 @@ namespace GameOfLife
             New(sender, e);
         }
         #endregion
+=======
+>>>>>>> parent of ecb27ad (Renamed methods, general organization):GameOfLife/Form1.cs
     }
 }
