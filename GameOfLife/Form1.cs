@@ -13,9 +13,11 @@ namespace GameOfLife
         private Color _gridColor;       // Grid color
         private Color _cellColor;       // Cell color
 
-        Timer timer = new Timer();       // The Timer class
+        Timer timer = new Timer();      // The Timer class
 
-        private int _generations = 0;    // Generation count
+        private int _generations = 0;   // Generation count
+        private int _rows;              // Rows count
+        private int _columns;           // Column Count
 
         // Constructor
         public Form1()
@@ -25,6 +27,8 @@ namespace GameOfLife
 
             // Initialize components for Windows Form (avoid editing)
             InitializeComponent();
+
+            this.MouseWheel += Form_MouseWheel;
 
             // Setup the timer
             timer.Interval = 100; // milliseconds
@@ -64,7 +68,9 @@ namespace GameOfLife
             // Initialize data members here
             _gridColor = Color.FromName(data[0]);
             _cellColor = Color.FromName(data[1]);
-            _universe = new bool[Int32.Parse(data[2]), Int32.Parse(data[3])];
+            _rows = Int32.Parse(data[2]);
+            _columns = Int32.Parse(data[3]);
+            _universe = new bool[_rows, _columns];
         }
 
         // Create new settings file
@@ -83,12 +89,51 @@ namespace GameOfLife
 
                 // Row Count
                 sw.WriteLine("// " + Properties.Resources.labelRowCount);
-                sw.WriteLine(10);
+                sw.WriteLine(5);
 
                 // Column Count
                 sw.WriteLine("// " + Properties.Resources.labelColumnCount);
-                sw.WriteLine(10);
+                sw.WriteLine(5);
             }
+        }
+
+        void Form_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // Scroll down (zoom out)
+            if (e.Delta < 0)
+            {
+                _rows++;
+                _columns++;
+            }
+            // Scroll up (zoom in)
+            else
+            {
+                _rows--;
+                _columns--;
+            }
+
+            bool[,] tempUniverse = _universe;
+            _universe = new bool[_rows, _columns];
+
+            // Iterate through the universe in the y, top to bottom
+            for (int y = 0; y < _columns; y++)
+            {
+                // Iterate through the universe in the x, left to right
+                for (int x = 0; x < _rows; x++)
+                {
+                    if (x == _rows - 1 || y == _columns - 1)
+                    {
+                        _universe[x, y] = false;
+                    }
+                    else
+                    {
+                        _universe[x, y] = tempUniverse[x, y];
+                    }
+                    
+                }
+            }
+            // Tell Windows you need to repaint
+            graphicsPanel1.Invalidate();
         }
 
         // Calculate the next generation of cells
@@ -333,5 +378,7 @@ namespace GameOfLife
 
             NextGeneration();
         }
+
+
     }
 }
