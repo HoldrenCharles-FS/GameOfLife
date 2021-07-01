@@ -16,6 +16,7 @@ namespace GameOfLife
         Timer timer = new Timer();      // The Timer class
 
         private int _generations = 0;   // Generation count
+        private int _cellCount = 0;     // Cell count
         private int _rows;              // Rows count
         private int _columns;           // Column Count
 
@@ -32,6 +33,7 @@ namespace GameOfLife
 
             // Setup the timer
             timer.Interval = 100; // milliseconds
+            timer.Tick += Timer_Tick;
         }
 
         // Load settings from file
@@ -129,7 +131,7 @@ namespace GameOfLife
                     {
                         _universe[x, y] = tempUniverse[x, y];
                     }
-                    
+
                 }
             }
             // Tell Windows you need to repaint
@@ -201,7 +203,19 @@ namespace GameOfLife
             _generations++;
 
             // Update status strip generations
-            toolStripStatusLabelGenerations.Text = "Generations = " + _generations.ToString();
+            toolStripStatusLabelGenerations.Text = "Generations = " + _generations;
+
+            _cellCount = 0;
+
+            foreach (bool cell in _universe)
+            {
+                if (cell == true)
+                {
+                    _cellCount++;
+                }
+            }
+
+            toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
 
             // Tell Windows you need to repaint
             graphicsPanel1.Invalidate();
@@ -261,6 +275,7 @@ namespace GameOfLife
             // Cleaning up pens and brushes
             gridPen.Dispose();
             cellBrush.Dispose();
+
         }
 
         private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)
@@ -285,6 +300,19 @@ namespace GameOfLife
                 // Toggle the cell's state
                 _universe[(int)x, (int)y] = !_universe[(int)x, (int)y];
 
+                // If toggled on, increment cell count
+                if (_universe[(int)x, (int)y] == true)
+                {
+                    _cellCount++;
+                }
+                // Else if toggled off, decrement cell count
+                else
+                {
+                    _cellCount--;
+                }
+
+                toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
+
                 // Tell Windows you need to repaint
                 graphicsPanel1.Invalidate();
             }
@@ -293,6 +321,14 @@ namespace GameOfLife
         // New button
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // Update status strip generations
+            _generations = 0;
+            toolStripStatusLabelGenerations.Text = "Generations = " + _generations;
+
+            // Update status strip Cell count
+            _cellCount = 0;
+            toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
+
             // Pause in the case that it is running
             pauseToolStripMenuItem_Click(sender, e);
 
@@ -324,7 +360,6 @@ namespace GameOfLife
             {
                 // Start timer
                 timer.Enabled = true;
-                timer.Tick += Timer_Tick;
 
                 // Change the display name
                 toolStripStart.Text = Properties.Resources.pause;
@@ -376,6 +411,7 @@ namespace GameOfLife
             // Pause
             pauseToolStripMenuItem_Click(sender, e);
 
+            // Step forward one generation
             NextGeneration();
         }
 
