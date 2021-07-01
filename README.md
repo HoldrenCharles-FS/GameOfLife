@@ -22,6 +22,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Push the project onto the repository.
 - Smoother window scaling, updated cell width and height to be calculated as floats.
 - Added functionality to the "New" option.
+- Mousewheel scroll now changes grid size.
 
 ## Requirements
 ### Cell Behavior (Rules)
@@ -47,7 +48,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [ ] Display the current generation. 
 - [ ] Display the number of living cells.
 - [ ] User can adjust game speed.
-- [ ] Able to change grid size.
+- [X] Able to change grid size.
 - [ ] Display the neighbor count in each cell.
 - [ ] Toggle the neighbor count (on/off) in the View menu.
 - [ ] Toggle the grid (on/off) in the View menu. 
