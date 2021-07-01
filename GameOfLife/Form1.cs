@@ -205,8 +205,10 @@ namespace GameOfLife
             // Update status strip generations
             toolStripStatusLabelGenerations.Text = "Generations = " + _generations;
 
+            // Reset cell count
             _cellCount = 0;
 
+            // Get the current cell count
             foreach (bool cell in _universe)
             {
                 if (cell == true)
@@ -215,6 +217,7 @@ namespace GameOfLife
                 }
             }
 
+            // Update status strip cell count
             toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
 
             // Tell Windows you need to repaint
@@ -224,7 +227,17 @@ namespace GameOfLife
         // The event called by the timer every Interval milliseconds.
         private void Timer_Tick(object sender, EventArgs e)
         {
-            NextGeneration();
+            // Pause if there are no living cells
+            if (_cellCount == 0)
+            {
+                pauseToolStripMenuItem_Click(sender, e);
+            }
+            else
+            {
+                // Else keep going
+                NextGeneration();
+            }
+            
         }
 
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
