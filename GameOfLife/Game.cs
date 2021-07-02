@@ -9,6 +9,7 @@ namespace GameOfLife
     {
         // Fields
         private bool[,] _universe;      // The universe array
+        private Color _backColor;       // Grid color
         private Color _gridColor;       // Grid color
         private Color _cellColor;       // Cell color
         private int _rows;              // Rows count
@@ -39,7 +40,7 @@ namespace GameOfLife
         private void LoadSettings()
         {
             // An array to store data from each line
-            string[] data = new string[6];
+            string[] data = new string[7];
 
             // Array index #
             int i = 0;
@@ -66,14 +67,19 @@ namespace GameOfLife
                 }
             }
 
+            // Reuse of i to easily access array without hardcoding
+            i = 0;
+
             // Initialize data members here
-            _gridColor = Color.FromName(data[0]);
-            _cellColor = Color.FromName(data[1]);
-            _rows = Int32.Parse(data[2]);
-            _columns = Int32.Parse(data[3]);
+            _backColor = Color.FromName(data[i]); i++;
+            _gridColor = Color.FromName(data[i]); i++;
+            _cellColor = Color.FromName(data[i]); i++;
+            _rows = Int32.Parse(data[i]); i++;
+            _columns = Int32.Parse(data[i]); i++;
+            _generations = Int32.Parse(data[i]); i++;
+            _boundry = bool.Parse(data[i]);
+
             _universe = new bool[_rows, _columns];
-            _generations = Int32.Parse(data[4]);
-            _boundry = bool.Parse(data[5]);
         }
 
         // Create new settings file
@@ -82,6 +88,10 @@ namespace GameOfLife
             // Label and write default properties to file
             using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
             {
+                // Back Color
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridColor);
+                sw.WriteLine(Color.White.Name);
+
                 // Grid Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridColor);
                 sw.WriteLine(Color.Black.Name);
