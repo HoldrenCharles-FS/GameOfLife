@@ -121,6 +121,10 @@
     <value>// </value>
     <comment>To indicate a comment within cfg files</comment>
   </data>
+  <data name="labelBackColor" xml:space="preserve">
+    <value>Back Color</value>
+    <comment>Label for Back Color</comment>
+  </data>
   <data name="labelBoundry" xml:space="preserve">
     <value>Boundry</value>
     <comment>Label for Boundry</comment>
@@ -141,9 +145,17 @@
     <value>Grid Color</value>
     <comment>Label for Grid Color</comment>
   </data>
+  <data name="labelGridx10Color" xml:space="preserve">
+    <value>Grid x10 Color</value>
+    <comment>Label for Grid 10x Color</comment>
+  </data>
   <data name="labelRowCount" xml:space="preserve">
     <value>Row Count</value>
     <comment>Label for Row Count</comment>
+  </data>
+  <data name="labelTimer" xml:space="preserve">
+    <value>Timer</value>
+    <comment>Label for Timer</comment>
   </data>
   <data name="labelUniverseSize" xml:space="preserve">
     <value>Universe Size</value>

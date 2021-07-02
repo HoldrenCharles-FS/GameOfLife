@@ -70,6 +70,15 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back Color.
+        /// </summary>
+        internal static string labelBackColor {
+            get {
+                return ResourceManager.GetString("labelBackColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Boundry.
         /// </summary>
         internal static string labelBoundry {
@@ -115,11 +124,29 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grid x10 Color.
+        /// </summary>
+        internal static string labelGridx10Color {
+            get {
+                return ResourceManager.GetString("labelGridx10Color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Row Count.
         /// </summary>
         internal static string labelRowCount {
             get {
                 return ResourceManager.GetString("labelRowCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Timer.
+        /// </summary>
+        internal static string labelTimer {
+            get {
+                return ResourceManager.GetString("labelTimer", resourceCulture);
             }
         }
         

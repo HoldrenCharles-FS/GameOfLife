@@ -31,17 +31,13 @@ namespace GameOfLife
             InitializeComponent();
 
             MouseWheel += Zoom_MouseWheel;
-
-            // Setup the timer
-            timer.Interval = 100; // milliseconds
-            timer.Tick += Timer_Tick;
         }
 
         // Load settings from file
         private void LoadSettings()
         {
             // An array to store data from each line
-            string[] data = new string[8];
+            string[] data = new string[9];
 
             // Array index #
             int i = 0;
@@ -79,7 +75,11 @@ namespace GameOfLife
             _rows = Int32.Parse(data[i]); i++;
             _columns = Int32.Parse(data[i]); i++;
             _generations = Int32.Parse(data[i]); i++;
-            _boundry = bool.Parse(data[i]);
+            _boundry = bool.Parse(data[i]); i++;
+
+            // Setup the timer
+            timer.Interval = Int32.Parse(data[i]); // milliseconds
+            timer.Tick += Timer_Tick;
 
             _universe = new bool[_rows, _columns];
         }
@@ -91,7 +91,7 @@ namespace GameOfLife
             using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
             {
                 // Back Color
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridColor);
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBackColor);
                 sw.WriteLine(Color.White.Name);
 
                 // Grid Color
@@ -99,7 +99,7 @@ namespace GameOfLife
                 sw.WriteLine(Color.Gray.Name);
 
                 // Grid 10x Color
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridColor);
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridx10Color);
                 sw.WriteLine(Color.Black.Name);
 
                 // Cell Color
@@ -121,6 +121,10 @@ namespace GameOfLife
                 // Boundry
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundry);
                 sw.WriteLine(false);
+
+                // Timer
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelTimer);
+                sw.WriteLine(20);
             }
         }
 
