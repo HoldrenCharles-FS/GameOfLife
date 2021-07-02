@@ -164,10 +164,10 @@ namespace GameOfLife
             bool[,] nextUniverse = new bool[_universe.GetLength(0), _universe.GetLength(1)];
 
             // Iterate through the universe in the y, top to bottom
-            for (int y = 1; y < _universe.GetLength(1) - 1; y++)
+            for (int y = 0; y < _universe.GetLength(1); y++)
             {
                 // Iterate through the universe in the x, left to right
-                for (int x = 1; x < _universe.GetLength(0) - 1; x++)
+                for (int x = 0; x < _universe.GetLength(0); x++)
                 {
                     // Count neighbors
                     int neighbors = 0;
@@ -177,16 +177,31 @@ namespace GameOfLife
                     {
                         for (int j = -1; j <= 1; j++)
                         {
-                            // Ignore borders for now
-                            if (x == 0 || y == 0 || x == _universe.GetLength(0) - 1 || x == _universe.GetLength(1) - 1)
+                            // Torodial boundry check
+                            if (_boundry == true)
                             {
-                                nextUniverse[x, y] = _universe[x, y];
+                                int horizontal = (x + i + _rows) % _rows;
+                                int vertical = (y + j + _columns) % _columns;
+                                    if (_universe[horizontal, vertical] == true)
+                                    {
+                                        // Increment neighbors if the cell is alive
+                                        neighbors++;
+                                    }
+                                
                             }
-                            else if (_universe[x + i, y + j] == true)
+                            else
                             {
-                                // Increment neighbors if the cell is alive
-                                neighbors++;
+                                // Checking for out of bounds
+                                if ((x + i >= 0 && y + j >= 0) && (x + i < _universe.GetLength(0) && y + j < _universe.GetLength(1)))
+                                {
+                                    if (_universe[x + i, y + j] == true)
+                                    {
+                                        // Increment neighbors if the cell is alive
+                                        neighbors++;
+                                    }
+                                }
                             }
+                            
                         }
                     }
 
