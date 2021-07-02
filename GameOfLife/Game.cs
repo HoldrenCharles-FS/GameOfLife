@@ -436,9 +436,7 @@ namespace GameOfLife
         // New
         private void New(object sender, EventArgs e)
         {
-            // Reset universe size
-            _rows = 10;
-            _columns = 10;
+            // Reset universe
             _universe = new bool[_rows, _columns];
 
             // Update status strip generations
