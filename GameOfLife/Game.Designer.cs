@@ -59,7 +59,7 @@ namespace GameOfLife
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelGenerations = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelCellCount = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabelBoundry = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabelBoundary = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelUniverseSize = new System.Windows.Forms.ToolStripStatusLabel();
             this.graphicsPanel1 = new GameOfLife.GraphicsPanel();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -304,7 +304,7 @@ namespace GameOfLife
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabelGenerations,
             this.toolStripStatusLabelCellCount,
-            this.toolStripStatusLabelBoundry,
+            this.toolStripStatusLabelBoundary,
             this.toolStripStatusLabelUniverseSize});
             this.statusStrip1.Location = new System.Drawing.Point(0, 549);
             this.statusStrip1.Name = "statusStrip1";
@@ -327,10 +327,10 @@ namespace GameOfLife
             // 
             // toolStripStatusLabelBoundry
             // 
-            this.toolStripStatusLabelBoundry.Name = "toolStripStatusLabelBoundry";
-            this.toolStripStatusLabelBoundry.Padding = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.toolStripStatusLabelBoundry.Size = new System.Drawing.Size(103, 17);
-            this.toolStripStatusLabelBoundry.Text = "Boundry = Finite";
+            this.toolStripStatusLabelBoundary.Name = "toolStripStatusLabelBoundry";
+            this.toolStripStatusLabelBoundary.Padding = new System.Windows.Forms.Padding(0, 0, 8, 0);
+            this.toolStripStatusLabelBoundary.Size = new System.Drawing.Size(103, 17);
+            this.toolStripStatusLabelBoundary.Text = "Boundry = Finite";
             // 
             // toolStripStatusLabelUniverseSize
             // 
@@ -474,7 +474,7 @@ namespace GameOfLife
         private System.Windows.Forms.ToolStripMenuItem pauseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nextToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelCellCount;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBoundry;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBoundary;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelUniverseSize;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem backColorToolStripMenuItem;
