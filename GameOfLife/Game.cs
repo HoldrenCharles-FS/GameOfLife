@@ -16,7 +16,9 @@ namespace GameOfLife
         private int _rows;              // Rows count
         private int _columns;           // Column Count
         private int _generations;       // Generation count
-        private bool _boundary;          // Boundary type : True = Torodial, False = Finite
+        private bool _boundary;         // Boundary type : True = Torodial, False = Finite
+        private bool _hud;              // Display HUD
+        private bool _displayGrid;
 
         Timer timer = new Timer();      // The Timer class
         private int _cellCount = 0;     // Cell count
@@ -37,7 +39,7 @@ namespace GameOfLife
         private void LoadSettings()
         {
             // An array to store data from each line
-            string[] data = new string[9];
+            string[] data = new string[11];
 
             // Array index #
             int i = 0;
@@ -76,6 +78,8 @@ namespace GameOfLife
             _columns = Int32.Parse(data[i]); i++;
             _generations = Int32.Parse(data[i]); i++;
             _boundary = bool.Parse(data[i]); i++;
+            _hud = bool.Parse(data[i]); i++;
+            _displayGrid = bool.Parse(data[i]); i++;
 
             // Setup the timer
             timer.Interval = Int32.Parse(data[i]); // milliseconds
@@ -120,6 +124,14 @@ namespace GameOfLife
 
                 // Boundary
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundary);
+                sw.WriteLine(true);
+
+                // HUD
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelHUD);
+                sw.WriteLine(true);
+
+                // Display Grid
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelDisplayGrid);
                 sw.WriteLine(true);
 
                 // Timer
@@ -362,14 +374,17 @@ namespace GameOfLife
                         e.Graphics.FillRectangle(cellBrush, cellRect);
                     }
 
-                    // Paint the 10x grid
-                    if ((x % 10 == 0) || (y % 10 == 0))
+                    if (_displayGrid == true)
                     {
-                        e.Graphics.DrawRectangle(grid10xPen, cellRect.X * 10, cellRect.Y * 10, clientWidth, clientHeight);
-                    }
+                        // Paint the 10x grid
+                        if ((x % 10 == 0) || (y % 10 == 0))
+                        {
+                            e.Graphics.DrawRectangle(grid10xPen, cellRect.X * 10, cellRect.Y * 10, clientWidth, clientHeight);
+                        }
 
-                    // Outline the cell with a pen
-                    e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
+                        // Outline the cell with a pen
+                        e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
+                    }
                 }
             }
 
@@ -579,6 +594,22 @@ namespace GameOfLife
 
                 UpdateStatusStrip();
             }
+        }
+
+        private void HUDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            HUDToolStripMenuItem.Checked = !HUDToolStripMenuItem.Checked;
+            _hud = HUDToolStripMenuItem.Checked;
+
+        }
+
+        private void GridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GridToolStripMenuItem.Checked = !GridToolStripMenuItem.Checked;
+            _displayGrid = GridToolStripMenuItem.Checked;
+
+            // Tell Windows you need to repaint
+            graphicsPanel1.Invalidate();
         }
     }
 }

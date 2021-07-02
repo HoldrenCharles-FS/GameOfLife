@@ -133,6 +133,15 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display Grid.
+        /// </summary>
+        internal static string labelDisplayGrid {
+            get {
+                return ResourceManager.GetString("labelDisplayGrid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Generations.
         /// </summary>
         internal static string labelGenerations {
@@ -156,6 +165,15 @@ namespace GameOfLife.Properties {
         internal static string labelGridx10Color {
             get {
                 return ResourceManager.GetString("labelGridx10Color", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HUD.
+        /// </summary>
+        internal static string labelHUD {
+            get {
+                return ResourceManager.GetString("labelHUD", resourceCulture);
             }
         }
         

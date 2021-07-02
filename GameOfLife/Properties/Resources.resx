@@ -149,6 +149,10 @@
     <value>Column Count</value>
     <comment>Label for Column Count</comment>
   </data>
+  <data name="labelDisplayGrid" xml:space="preserve">
+    <value>Display Grid</value>
+    <comment>Label for Display Grid</comment>
+  </data>
   <data name="labelGenerations" xml:space="preserve">
     <value>Generations</value>
     <comment>Label for Generations</comment>
@@ -160,6 +164,10 @@
   <data name="labelGridx10Color" xml:space="preserve">
     <value>Grid x10 Color</value>
     <comment>Label for Grid 10x Color</comment>
+  </data>
+  <data name="labelHUD" xml:space="preserve">
+    <value>HUD</value>
+    <comment>Label for HUD</comment>
   </data>
   <data name="labelRowCount" xml:space="preserve">
     <value>Row Count</value>
