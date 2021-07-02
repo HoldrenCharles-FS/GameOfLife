@@ -193,11 +193,11 @@ namespace GameOfLife
             this.neighborCountToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.neighborCountToolStripMenuItem.Text = "Neighbor Count";
             // 
-            // gridToolStripMenuItem
+            // GridToolStripMenuItem
             // 
             this.GridToolStripMenuItem.Checked = true;
             this.GridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.GridToolStripMenuItem.Name = "gridToolStripMenuItem";
+            this.GridToolStripMenuItem.Name = "GridToolStripMenuItem";
             this.GridToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.GridToolStripMenuItem.Text = "Grid";
             this.GridToolStripMenuItem.Click += new System.EventHandler(this.GridToolStripMenuItem_Click);
@@ -505,7 +505,7 @@ namespace GameOfLife
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Game";
-            this.Text = "Form1";
+            this.Text = "Game of Life";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
