@@ -9,8 +9,9 @@ namespace GameOfLife
     {
         // Fields
         private bool[,] _universe;      // The universe array
-        private Color _backColor;       // Grid color
+        private Color _backColor;       // Back color
         private Color _gridColor;       // Grid color
+        private Color _grid10xColor;    // Grid 10x color
         private Color _cellColor;       // Cell color
         private int _rows;              // Rows count
         private int _columns;           // Column Count
@@ -40,7 +41,7 @@ namespace GameOfLife
         private void LoadSettings()
         {
             // An array to store data from each line
-            string[] data = new string[7];
+            string[] data = new string[8];
 
             // Array index #
             int i = 0;
@@ -73,6 +74,7 @@ namespace GameOfLife
             // Initialize data members here
             _backColor = Color.FromName(data[i]); i++;
             _gridColor = Color.FromName(data[i]); i++;
+            _grid10xColor = Color.FromName(data[i]); i++;
             _cellColor = Color.FromName(data[i]); i++;
             _rows = Int32.Parse(data[i]); i++;
             _columns = Int32.Parse(data[i]); i++;
@@ -93,6 +95,10 @@ namespace GameOfLife
                 sw.WriteLine(Color.White.Name);
 
                 // Grid Color
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridColor);
+                sw.WriteLine(Color.Gray.Name);
+
+                // Grid 10x Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridColor);
                 sw.WriteLine(Color.Black.Name);
 
