@@ -120,7 +120,7 @@ namespace GameOfLife
 
                 // Boundary
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundary);
-                sw.WriteLine(true);
+                sw.WriteLine(false);
 
                 // Timer
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelTimer);
