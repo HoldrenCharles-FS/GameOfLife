@@ -9,6 +9,8 @@
 This project was created for the course Project and Portfolio I: Online at Full Sail University.
 
 ## Updates
+### 07/01/2021
+- Both torodial and finite boundry types have been successfully implemented.
 ### 06/30/2021
 - Created Icons for Play, Pause and Next. Added Play and Next to tool strip.
 - Created a method for loading user settings and one for creating a new file if it doesn't exist.
@@ -56,6 +58,6 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [ ] Toggle the HUD (on/off) in the View menu.
 - [ ] Importing patterns downloaded from Life Lexicon. 
 - [ ] The ability to change the colors for grid, background and cells.
-- [ ] Implement toroidal universe boundries.
-- [ ] Implement finite universe boundries.
+- [X] Implement toroidal universe boundries.
+- [X] Implement finite universe boundries.
 - [ ] Implement a ContextMenuStrip that allows the user to change various options in the application.
