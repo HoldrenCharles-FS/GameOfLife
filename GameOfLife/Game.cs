@@ -108,11 +108,11 @@ namespace GameOfLife
 
                 // Row Count
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelRowCount);
-                sw.WriteLine(10);
+                sw.WriteLine(30);
 
                 // Column Count
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelColumnCount);
-                sw.WriteLine(10);
+                sw.WriteLine(30);
 
                 // Generations
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGenerations);
@@ -123,7 +123,7 @@ namespace GameOfLife
                 sw.WriteLine(false);
             }
         }
-        
+
         // Enables zoom scaling with mouse wheel
         private void Zoom_MouseWheel(object sender, MouseEventArgs e)
         {
@@ -198,12 +198,12 @@ namespace GameOfLife
                             {
                                 int horizontal = (x + i + _rows) % _rows;
                                 int vertical = (y + j + _columns) % _columns;
-                                    if (_universe[horizontal, vertical] == true)
-                                    {
-                                        // Increment neighbors if the cell is alive
-                                        neighbors++;
-                                    }
-                                
+                                if (_universe[horizontal, vertical] == true)
+                                {
+                                    // Increment neighbors if the cell is alive
+                                    neighbors++;
+                                }
+
                             }
                             else
                             {
@@ -217,7 +217,7 @@ namespace GameOfLife
                                     }
                                 }
                             }
-                            
+
                         }
                     }
 
@@ -327,6 +327,7 @@ namespace GameOfLife
 
             // A Pen for drawing the grid lines (color, width)
             Pen gridPen = new Pen(_gridColor, 1);
+            Pen grid10xPen = new Pen(_grid10xColor, 2);
 
             // A Brush for filling living cells interiors (color)
             Brush cellBrush = new SolidBrush(_cellColor);
@@ -352,13 +353,25 @@ namespace GameOfLife
                         e.Graphics.FillRectangle(cellBrush, cellRect);
                     }
 
+                    // Paint the 10x grid
+                    if ((x % 10 == 0) || (y % 10 == 0))
+                    {
+                        e.Graphics.DrawRectangle(grid10xPen, cellRect.X * 10, cellRect.Y * 10, clientWidth, clientHeight);
+                    }
+
                     // Outline the cell with a pen
                     e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
+
+                    
+
+
+
                 }
             }
 
             // Cleaning up pens and brushes
             gridPen.Dispose();
+            grid10xPen.Dispose();
             cellBrush.Dispose();
 
         }
