@@ -121,6 +121,14 @@
     <value>// </value>
     <comment>To indicate a comment within cfg files</comment>
   </data>
+  <data name="equalSign" xml:space="preserve">
+    <value> = </value>
+    <comment>For status strips</comment>
+  </data>
+  <data name="finite" xml:space="preserve">
+    <value>Finite</value>
+    <comment>string value</comment>
+  </data>
   <data name="labelBackColor" xml:space="preserve">
     <value>Back Color</value>
     <comment>Label for Back Color</comment>
@@ -132,6 +140,10 @@
   <data name="labelCellColor" xml:space="preserve">
     <value>Cell Color</value>
     <comment>Label for Cell Color</comment>
+  </data>
+  <data name="labelCellCount" xml:space="preserve">
+    <value>Cell Count</value>
+    <comment>Label for Cell Count</comment>
   </data>
   <data name="labelColumnCount" xml:space="preserve">
     <value>Column Count</value>
@@ -172,6 +184,9 @@
   <data name="pauseIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ico\pauseIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="reloadIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\ico\reloadIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="settingsFile" xml:space="preserve">
     <value>settings.cfg</value>
     <comment>Configuration file for settings</comment>
@@ -182,5 +197,9 @@
   </data>
   <data name="startIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ico\starticon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="torodial" xml:space="preserve">
+    <value>Torodial</value>
+    <comment>string value</comment>
   </data>
 </root>

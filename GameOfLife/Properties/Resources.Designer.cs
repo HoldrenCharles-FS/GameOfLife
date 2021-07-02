@@ -70,6 +70,24 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  = .
+        /// </summary>
+        internal static string equalSign {
+            get {
+                return ResourceManager.GetString("equalSign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finite.
+        /// </summary>
+        internal static string finite {
+            get {
+                return ResourceManager.GetString("finite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back Color.
         /// </summary>
         internal static string labelBackColor {
@@ -93,6 +111,15 @@ namespace GameOfLife.Properties {
         internal static string labelCellColor {
             get {
                 return ResourceManager.GetString("labelCellColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cell Count.
+        /// </summary>
+        internal static string labelCellCount {
+            get {
+                return ResourceManager.GetString("labelCellCount", resourceCulture);
             }
         }
         
@@ -189,6 +216,16 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap reloadIcon {
+            get {
+                object obj = ResourceManager.GetObject("reloadIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to settings.cfg.
         /// </summary>
         internal static string settingsFile {
@@ -213,6 +250,15 @@ namespace GameOfLife.Properties {
             get {
                 object obj = ResourceManager.GetObject("startIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Torodial.
+        /// </summary>
+        internal static string torodial {
+            get {
+                return ResourceManager.GetString("torodial", resourceCulture);
             }
         }
     }

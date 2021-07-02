@@ -120,12 +120,28 @@ namespace GameOfLife
 
                 // Boundary
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundary);
-                sw.WriteLine(false);
+                sw.WriteLine(true);
 
                 // Timer
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelTimer);
                 sw.WriteLine(20);
             }
+        }
+
+        private void UpdateStatusStrip()
+        {
+            // Update status strip generations
+            toolStripStatusLabelGenerations.Text = Properties.Resources.labelGenerations + Properties.Resources.equalSign + _generations;
+
+            // Update status strip cell count
+            toolStripStatusLabelCellCount.Text = Properties.Resources.labelCellCount + Properties.Resources.equalSign + _cellCount;
+
+            // Update status strip boundary
+            string boundary = (_boundary == true) ? Properties.Resources.torodial : Properties.Resources.finite;
+            toolStripStatusLabelBoundary.Text = Properties.Resources.labelBoundary + Properties.Resources.equalSign + boundary;
+
+            // Update status strip universe size
+            toolStripStatusLabelUniverseSize.Text = Properties.Resources.labelUniverseSize + Properties.Resources.equalSign + $"{ _rows} x {_columns}";
         }
 
         // Enables zoom scaling with mouse wheel
@@ -171,8 +187,7 @@ namespace GameOfLife
 
                 }
             }
-            // Update status strip universe size
-            toolStripStatusLabelUniverseSize.Text = $"Universe Size = {_rows} x {_columns}";
+            UpdateStatusStrip();
 
             // Tell Windows you need to repaint
             graphicsPanel1.Invalidate();
@@ -257,8 +272,7 @@ namespace GameOfLife
             // Increment generation count
             _generations++;
 
-            // Update status strip generations
-            toolStripStatusLabelGenerations.Text = "Generations = " + _generations;
+            UpdateStatusStrip();
 
             // Reset cell count
             _cellCount = 0;
@@ -284,16 +298,7 @@ namespace GameOfLife
                 toolStripButtonNext.Enabled = false;
             }
 
-            // Update status strip cell count
-            toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
-
-            string boundary = (_boundary == true) ? "Torodial" : "Finite";
-
-            // Update status strip boundary
-            toolStripStatusLabelBoundary.Text = "Boundary = " + boundary;
-
-            // Update status strip universe size
-            toolStripStatusLabelUniverseSize.Text = $"Universe Size = {_rows} x {_columns}";
+            UpdateStatusStrip();
 
             // Tell Windows you need to repaint
             graphicsPanel1.Invalidate();
@@ -365,11 +370,6 @@ namespace GameOfLife
 
                     // Outline the cell with a pen
                     e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
-
-                    
-
-
-
                 }
             }
 
@@ -468,6 +468,29 @@ namespace GameOfLife
         }
 
         // Start
+       
+
+        // Exit
+        private void Exit(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        #region Duplicate Methods
+
+        // Tool strip version of the Start Button
+        private void toolStripButtonStart_Click(object sender, EventArgs e)
+        {
+            Start(sender, e);
+        }
+
+        // Tool strip version of the New Button
+        private void newToolStripButton_Click(object sender, EventArgs e)
+        {
+            New(sender, e);
+        }
+        #endregion
+
         private void Start(object sender, EventArgs e)
         {
             // Toggle between Start / Pause states 
@@ -493,10 +516,8 @@ namespace GameOfLife
                 // Pause
                 Pause(sender, e);
             }
-
         }
 
-        // Pause
         private void Pause(object sender, EventArgs e)
         {
             // Stop timer
@@ -515,7 +536,6 @@ namespace GameOfLife
             pauseToolStripMenuItem.Enabled = false;
         }
 
-        // Next
         private void Next(object sender, EventArgs e)
         {
             if (_cellCount > 0)
@@ -537,26 +557,28 @@ namespace GameOfLife
             }
         }
 
-        // Exit
-        private void Exit(object sender, EventArgs e)
+        private void torodialToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            if (_boundary == false)
+            {
+                _boundary = true;
+                torodialToolStripMenuItem.Checked = true;
+                finiteToolStripMenuItem.Checked = false;
+
+                UpdateStatusStrip();
+            }
         }
 
-        #region Duplicate Methods
-
-        // Tool strip version of the Start Button
-        private void toolStripButtonStart_Click(object sender, EventArgs e)
+        private void finiteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Start(sender, e);
-        }
+            if (_boundary == true)
+            {
+                _boundary = false;
+                torodialToolStripMenuItem.Checked = false;
+                finiteToolStripMenuItem.Checked = true;
 
-        // Tool strip version of the New Button
-        private void newToolStripButton_Click(object sender, EventArgs e)
-        {
-            New(sender, e);
+                UpdateStatusStrip();
+            }
         }
-        #endregion
-
     }
 }
