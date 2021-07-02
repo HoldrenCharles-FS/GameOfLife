@@ -79,11 +79,11 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Boundry.
+        ///   Looks up a localized string similar to Boundary.
         /// </summary>
-        internal static string labelBoundry {
+        internal static string labelBoundary {
             get {
-                return ResourceManager.GetString("labelBoundry", resourceCulture);
+                return ResourceManager.GetString("labelBoundary", resourceCulture);
             }
         }
         

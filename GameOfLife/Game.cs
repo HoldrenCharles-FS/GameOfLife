@@ -16,7 +16,7 @@ namespace GameOfLife
         private int _rows;              // Rows count
         private int _columns;           // Column Count
         private int _generations;       // Generation count
-        private bool _boundry;          // Boundry type : True = Torodial, False = Finite
+        private bool _boundary;          // Boundary type : True = Torodial, False = Finite
 
         Timer timer = new Timer();      // The Timer class
         private int _cellCount = 0;     // Cell count
@@ -75,7 +75,7 @@ namespace GameOfLife
             _rows = Int32.Parse(data[i]); i++;
             _columns = Int32.Parse(data[i]); i++;
             _generations = Int32.Parse(data[i]); i++;
-            _boundry = bool.Parse(data[i]); i++;
+            _boundary = bool.Parse(data[i]); i++;
 
             // Setup the timer
             timer.Interval = Int32.Parse(data[i]); // milliseconds
@@ -118,9 +118,9 @@ namespace GameOfLife
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGenerations);
                 sw.WriteLine(0);
 
-                // Boundry
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundry);
-                sw.WriteLine(false);
+                // Boundary
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundary);
+                sw.WriteLine(true);
 
                 // Timer
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelTimer);
@@ -197,8 +197,8 @@ namespace GameOfLife
                     {
                         for (int j = -1; j <= 1; j++)
                         {
-                            // Torodial boundry check
-                            if (_boundry == true)
+                            // Torodial boundary check
+                            if (_boundary == true)
                             {
                                 int horizontal = (x + i + _rows) % _rows;
                                 int vertical = (y + j + _columns) % _columns;
@@ -287,10 +287,10 @@ namespace GameOfLife
             // Update status strip cell count
             toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
 
-            string boundry = (_boundry == true) ? "Torodial" : "Finite";
+            string boundary = (_boundary == true) ? "Torodial" : "Finite";
 
-            // Update status strip boundry
-            toolStripStatusLabelBoundry.Text = "Boundry = " + boundry;
+            // Update status strip boundary
+            toolStripStatusLabelBoundary.Text = "Boundary = " + boundary;
 
             // Update status strip universe size
             toolStripStatusLabelUniverseSize.Text = $"Universe Size = {_rows} x {_columns}";

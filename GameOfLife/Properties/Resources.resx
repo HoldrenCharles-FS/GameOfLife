@@ -125,9 +125,9 @@
     <value>Back Color</value>
     <comment>Label for Back Color</comment>
   </data>
-  <data name="labelBoundry" xml:space="preserve">
-    <value>Boundry</value>
-    <comment>Label for Boundry</comment>
+  <data name="labelBoundary" xml:space="preserve">
+    <value>Boundary</value>
+    <comment>Label for Boundary</comment>
   </data>
   <data name="labelCellColor" xml:space="preserve">
     <value>Cell Color</value>
