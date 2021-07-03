@@ -17,8 +17,10 @@ namespace GameOfLife
         private int _columns;           // Column Count
         private int _generations;       // Generation count
         private bool _boundary;         // Boundary type : True = Torodial, False = Finite
+
         private bool _hud;              // Display HUD
-        private bool _displayGrid;
+        private bool _neighborCount;    // Display Neighbor Count
+        private bool _displayGrid;      // Display Grid
 
         Timer timer = new Timer();      // The Timer class
         private int _cellCount = 0;     // Cell count
@@ -480,7 +482,7 @@ namespace GameOfLife
         }
 
         // Start
-       
+
 
         // Exit
         private void Exit(object sender, EventArgs e)
@@ -562,7 +564,7 @@ namespace GameOfLife
             }
         }
 
-        private void torodialToolStripMenuItem_Click(object sender, EventArgs e)
+        private void TorodialMode(object sender, EventArgs e)
         {
             if (_boundary == false)
             {
@@ -574,7 +576,7 @@ namespace GameOfLife
             }
         }
 
-        private void finiteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FiniteMode(object sender, EventArgs e)
         {
             if (_boundary == true)
             {
@@ -586,16 +588,25 @@ namespace GameOfLife
             }
         }
 
-        private void HUDToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ToggleHUD(object sender, EventArgs e)
         {
             HUDToolStripMenuItem.Checked = !HUDToolStripMenuItem.Checked;
+            hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
             _hud = HUDToolStripMenuItem.Checked;
 
         }
 
-        private void GridToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ToggleNeighborCount(object sender, EventArgs e)
+        {
+            neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
+            neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
+            _neighborCount = neighborCountToolStripMenuItem.Checked;
+        }
+
+        private void ToggleGrid(object sender, EventArgs e)
         {
             GridToolStripMenuItem.Checked = !GridToolStripMenuItem.Checked;
+            gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
             _displayGrid = GridToolStripMenuItem.Checked;
 
             // Tell Windows you need to repaint
@@ -615,6 +626,88 @@ namespace GameOfLife
         private void nextToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             Next(sender, e);
+        }
+
+        private void ColorDialogBox(ref Color color)
+        {
+            ColorDialog dlg = new ColorDialog();
+
+            dlg.Color = color;
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                color = dlg.Color;
+
+                // Tell Windows you need to repaint
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        private void BackColorDialog(object sender, EventArgs e)
+        {
+            ColorDialogBox(ref _backColor);
+            graphicsPanel1.BackColor = _backColor;
+        }
+
+        private void CellColorDialog(object sender, EventArgs e)
+        {
+            ColorDialogBox(ref _cellColor);
+
+        }
+
+        private void GridColorDialog(object sender, EventArgs e)
+        {
+            ColorDialogBox(ref _gridColor);
+        }
+
+        private void GridX10ColorDialog(object sender, EventArgs e)
+        {
+            ColorDialogBox(ref _grid10xColor);
+        }
+
+        private void backColorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            BackColorDialog(sender, e);
+        }
+
+        private void cellColorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CellColorDialog(sender, e);
+        }
+
+        private void gridColorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            GridColorDialog(sender, e);
+        }
+
+        private void gridX10ColorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            GridX10ColorDialog(sender, e);
+        }
+
+        private void hUDToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ToggleHUD(sender, e);
+        }
+
+        private void gridToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ToggleGrid(sender, e);
+        }
+
+        private void neighborCountToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ToggleNeighborCount(sender, e);
+        }
+
+        private void torodialToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TorodialMode(sender, e);
+        }
+
+        private void finiteToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            FiniteMode(sender, e);
         }
     }
 }
