@@ -25,6 +25,7 @@ namespace GameOfLife
 
         Timer timer = new Timer();      // The Timer class
         private int _cellCount = 0;     // Cell count
+        private bool _enterPressed;
 
         // Constructor
         public Game()
@@ -226,6 +227,32 @@ namespace GameOfLife
 
             // Tell Windows you need to repaint
             graphicsPanel1.Invalidate();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                if (_enterPressed == true && toolStripTextBoxSeed.Focused == true)
+                {
+                    toolStripButtonGo_Click();
+                }
+                if (toolStripTextBoxSeed.Focused == true)
+                {
+                    _enterPressed = true;
+                    SeedParse();
+                }
+                else
+                {
+                    toolStripButtonGo_Click();
+                }
+
+            }
+            if (e.KeyCode == Keys.Space)
+            {
+                Next();
+            }
         }
 
         private void Randomize()
@@ -435,6 +462,21 @@ namespace GameOfLife
         // Mouse click on graphics panel
         private void GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
         {
+            if (toolStripTextBoxSeed.Focused == false)
+            {
+                if (toolStripTextBoxSeed.Text.Length == 0)
+                {
+                    SeedBoxStyles(true);
+                    toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
+
+                }
+                else
+                {
+                    SeedParse();
+                }
+
+            }
+
             // If the left mouse button was clicked
             if (e.Button == MouseButtons.Left)
             {
@@ -482,9 +524,7 @@ namespace GameOfLife
             _seed = 0;
             _universe = new bool[_rows, _columns];
 
-            toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Italic);
-            toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
-            toolStripTextBoxSeed.ForeColor = Color.Black;
+            SeedBoxStyles(true);
 
             // Update status strip generations
             _generations = 0;
@@ -523,7 +563,7 @@ namespace GameOfLife
             Application.Exit();
         }
 
-        
+
 
         private void Start(object sender, EventArgs e)
         {
@@ -570,7 +610,7 @@ namespace GameOfLife
             pauseToolStripMenuItem.Enabled = false;
         }
 
-        private void Next(object sender, EventArgs e)
+        private void Next(object sender = null, EventArgs e = null)
         {
             UpdateControls();
 
@@ -651,37 +691,44 @@ namespace GameOfLife
         private void toolStripTextBoxSeed_Click(object sender, EventArgs e)
         {
             SeedBoxStyles();
-            toolStripTextBoxSeed.Text = "";
-        }
-
-        private void SeedBoxStyles()
-        {
-            toolStripTextBoxSeed.ForeColor = Color.Black;
-            toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Regular);
-            toolStripTextBoxSeed.Text = Convert.ToString(_seed);
-        }
-
-        private void ParseSeed(object sender, EventArgs e)
-        {
-            int stringSum = 0;
-            if (toolStripTextBoxSeed.Text.Length > 0)
+            if (toolStripTextBoxSeed.Focused == true)
             {
-                if(!int.TryParse(toolStripTextBoxSeed.Text, out _seed))
+                toolStripTextBoxSeed.Text = "";
+            }
+
+        }
+
+        private void SeedBoxStyles(bool defaultStyle = false)
+        {
+            if (defaultStyle == false)
+            {
+                toolStripTextBoxSeed.ForeColor = Color.Black;
+                toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Regular);
+            }
+            else
+            {
+                toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Italic);
+                toolStripTextBoxSeed.ForeColor = Color.Gray;
+                toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
+
+            }
+
+        }
+
+        private void toolStripButtonGo_Click(object sender = null, EventArgs e = null)
+        {
+            if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
+            {
+                // If user entered 0, seed is blank
+                if (_seed == 0)
                 {
-
-                    foreach (char letter in toolStripTextBoxSeed.Text)
-                    {
-                        stringSum += letter;
-                    }
-                    _seed = stringSum;
-                    toolStripTextBoxSeed.Text = Convert.ToString(_seed);
+                    New(sender, e);
                 }
-
-                if (_seed > Int32.MaxValue)
+                else if (_seed > Int32.MaxValue)
                 {
                     _seed = Int32.MaxValue;
                 }
-                else if(_seed < Int32.MinValue)
+                else if (_seed < Int32.MinValue)
                 {
                     _seed = Int32.MinValue;
                 }
@@ -697,9 +744,37 @@ namespace GameOfLife
                 // Tell Windows you need to repaint
                 graphicsPanel1.Invalidate();
             }
+            else
+            {
+                SeedBoxStyles(true);
+            }
         }
 
-        private void RandomSeed(object sender, EventArgs e)
+        private void SeedParse(object sender = null, EventArgs e = null)
+        {
+            int stringSum = 0;
+            if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
+            {
+                // If seed can be parsed, it will be in _seed
+                // Add each char as a number to stringSum
+                if (!int.TryParse(toolStripTextBoxSeed.Text, out _seed))
+                {
+
+                    foreach (char letter in toolStripTextBoxSeed.Text)
+                    {
+                        stringSum += letter;
+                    }
+                    _seed = stringSum;
+                    toolStripTextBoxSeed.Text = Convert.ToString(_seed);
+                }
+            }
+            else
+            {
+                SeedBoxStyles(true);
+            }
+        }
+
+        private void SeedRandom(object sender, EventArgs e)
         {
             SeedBoxStyles();
 
@@ -709,7 +784,7 @@ namespace GameOfLife
 
             Randomize();
 
-            ParseSeed(sender, e);
+            SeedParse();
 
             CountCells();
 
@@ -723,12 +798,33 @@ namespace GameOfLife
 
         }
 
+        private void SeedBox_Leave(object sender, EventArgs e)
+        {
+            SeedParse(sender, e);
+            SeedBoxStyles();
+        }
+
         #region Duplicate Methods
 
         // Tool strip version of the Start Button
         private void toolStripButtonStart_Click(object sender, EventArgs e)
         {
             Start(sender, e);
+        }
+
+        private void runToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Start(sender, e);
+        }
+
+        private void pauseToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Pause(sender, e);
+        }
+
+        private void nextToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Next(sender, e);
         }
 
         // Tool strip version of the New Button
@@ -803,21 +899,8 @@ namespace GameOfLife
         {
             FiniteMode(sender, e);
         }
-
-        private void runToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Start(sender, e);
-        }
-
-        private void pauseToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Pause(sender, e);
-        }
-
-        private void nextToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Next(sender, e);
-        }
         #endregion
+
+
     }
 }

@@ -51,6 +51,8 @@ namespace GameOfLife
             this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.randomizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cellColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -110,6 +112,7 @@ namespace GameOfLife
             this.MenuFile,
             this.viewToolStripMenuItem,
             this.runToolStripMenuItem,
+            this.randomizeToolStripMenuItem,
             this.settingsToolStripMenuItem,
             this.MenuHelp});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -117,6 +120,7 @@ namespace GameOfLife
             this.menuStrip1.Size = new System.Drawing.Size(500, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip1.Click += new System.EventHandler(this.SeedParse);
             // 
             // MenuFile
             // 
@@ -258,7 +262,7 @@ namespace GameOfLife
             // 
             this.startToolStripMenuItem.Image = global::GameOfLife.Properties.Resources.startIcon;
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.startToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
             this.startToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.startToolStripMenuItem.Text = "Start";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.Start);
@@ -282,6 +286,20 @@ namespace GameOfLife
             this.nextToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.nextToolStripMenuItem.Text = "Next";
             this.nextToolStripMenuItem.Click += new System.EventHandler(this.Next);
+            // 
+            // randomizeToolStripMenuItem
+            // 
+            this.randomizeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshToolStripMenuItem});
+            this.randomizeToolStripMenuItem.Name = "randomizeToolStripMenuItem";
+            this.randomizeToolStripMenuItem.Size = new System.Drawing.Size(78, 20);
+            this.randomizeToolStripMenuItem.Text = "Randomize";
+            // 
+            // refreshToolStripMenuItem
+            // 
+            this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.refreshToolStripMenuItem.Text = "Refresh";
             // 
             // settingsToolStripMenuItem
             // 
@@ -390,6 +408,7 @@ namespace GameOfLife
             this.toolStrip1.Size = new System.Drawing.Size(500, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            this.toolStrip1.Click += new System.EventHandler(this.SeedParse);
             // 
             // toolStripButtonNew
             // 
@@ -459,7 +478,7 @@ namespace GameOfLife
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.RandomSeed);
+            this.toolStripButton1.Click += new System.EventHandler(this.SeedRandom);
             // 
             // toolStripButton2
             // 
@@ -475,8 +494,9 @@ namespace GameOfLife
             this.toolStripTextBoxSeed.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             this.toolStripTextBoxSeed.ForeColor = System.Drawing.SystemColors.GrayText;
             this.toolStripTextBoxSeed.Name = "toolStripTextBoxSeed";
-            this.toolStripTextBoxSeed.Size = new System.Drawing.Size(80, 25);
+            this.toolStripTextBoxSeed.Size = new System.Drawing.Size(100, 25);
             this.toolStripTextBoxSeed.Text = "Enter a seed...";
+            this.toolStripTextBoxSeed.Leave += new System.EventHandler(this.SeedBox_Leave);
             this.toolStripTextBoxSeed.Click += new System.EventHandler(this.toolStripTextBoxSeed_Click);
             // 
             // toolStripButtonGo
@@ -488,7 +508,7 @@ namespace GameOfLife
             this.toolStripButtonGo.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonGo.Text = "toolStripButton3";
             this.toolStripButtonGo.ToolTipText = "Run Seed";
-            this.toolStripButtonGo.Click += new System.EventHandler(this.ParseSeed);
+            this.toolStripButtonGo.Click += new System.EventHandler(this.toolStripButtonGo_Click);
             // 
             // statusStrip1
             // 
@@ -695,6 +715,7 @@ namespace GameOfLife
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Game";
             this.Text = "Game of Life";
@@ -779,6 +800,8 @@ namespace GameOfLife
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxSeed;
         private System.Windows.Forms.ToolStripButton toolStripButtonGo;
+        private System.Windows.Forms.ToolStripMenuItem randomizeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem refreshToolStripMenuItem;
     }
 }
 
