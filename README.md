@@ -9,6 +9,8 @@
 This project was created for the course Project and Portfolio I: Online at Full Sail University.
 
 ## Updates
+### 07/03/2021
+- Made improvements to randomization options, added text box to input seed.
 ### 07/02/2021
 - Implemented 10x Grid display.
 - Added a context menu strip to the graphics panel.
