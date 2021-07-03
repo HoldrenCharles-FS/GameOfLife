@@ -88,6 +88,16 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap goIcon {
+            get {
+                object obj = ResourceManager.GetObject("goIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back Color.
         /// </summary>
         internal static string labelBackColor {
@@ -187,6 +197,15 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Seed.
+        /// </summary>
+        internal static string labelSeed {
+            get {
+                return ResourceManager.GetString("labelSeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Timer.
         /// </summary>
         internal static string labelTimer {
@@ -236,10 +255,29 @@ namespace GameOfLife.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap randomizeIcon {
+            get {
+                object obj = ResourceManager.GetObject("randomizeIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap reloadIcon {
             get {
                 object obj = ResourceManager.GetObject("reloadIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter a seed....
+        /// </summary>
+        internal static string seedPrompt {
+            get {
+                return ResourceManager.GetString("seedPrompt", resourceCulture);
             }
         }
         
@@ -267,6 +305,16 @@ namespace GameOfLife.Properties {
         internal static System.Drawing.Bitmap startIcon {
             get {
                 object obj = ResourceManager.GetObject("startIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap timeIcon {
+            get {
+                object obj = ResourceManager.GetObject("timeIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -16,6 +16,7 @@ namespace GameOfLife
         private int _rows;              // Rows count
         private int _columns;           // Column Count
         private int _generations;       // Generation count
+        private int _seed;              // Seed
         private bool _boundary;         // Boundary type : True = Torodial, False = Finite
 
         private bool _hud;              // Display HUD
@@ -41,7 +42,7 @@ namespace GameOfLife
         private void LoadSettings()
         {
             // An array to store data from each line
-            string[] data = new string[11];
+            string[] data = new string[12];
 
             // Array index #
             int i = 0;
@@ -79,6 +80,7 @@ namespace GameOfLife
             _rows = Int32.Parse(data[i]); i++;
             _columns = Int32.Parse(data[i]); i++;
             _generations = Int32.Parse(data[i]); i++;
+            _seed = Int32.Parse(data[i]); i++;
             _boundary = bool.Parse(data[i]); i++;
             _hud = bool.Parse(data[i]); i++;
             _displayGrid = bool.Parse(data[i]); i++;
@@ -124,6 +126,10 @@ namespace GameOfLife
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGenerations);
                 sw.WriteLine(0);
 
+                // Seed
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelSeed);
+                sw.WriteLine(0);
+
                 // Boundary
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundary);
                 sw.WriteLine(true);
@@ -146,7 +152,6 @@ namespace GameOfLife
         {
             if (_cellCount > 0)
             {
-
                 nextToolStripMenuItem.Enabled = true;
                 nextToolStripMenuItem1.Enabled = true;
                 toolStripButtonNext.Enabled = true;
@@ -178,7 +183,6 @@ namespace GameOfLife
         // Enables zoom scaling with mouse wheel
         private void Zoom_MouseWheel(object sender, MouseEventArgs e)
         {
-
             // Scroll down (zoom out)
             if (e.Delta < 0)
             {
@@ -224,6 +228,25 @@ namespace GameOfLife
             graphicsPanel1.Invalidate();
         }
 
+        private void Randomize()
+        {
+            // 0 is the shortcut for a blank canvas
+            if (_seed != 0)
+            {
+                Random rnd = new Random(_seed);
+
+                // Iterate through the universe in the y, top to bottom
+                for (int y = 0; y < _universe.GetLength(1); y++)
+                {
+                    // Iterate through the universe in the x, left to right
+                    for (int x = 0; x < _universe.GetLength(0); x++)
+                    {
+                        bool result = (rnd.Next(0, 2) == 0) ? false : true;
+                        _universe[x, y] = result;
+                    }
+                }
+            }
+        }
         // Calculate the next generation of cells
         private void NextGeneration()
         {
@@ -305,6 +328,18 @@ namespace GameOfLife
 
             UpdateStatusStrip();
 
+            CountCells();
+
+            UpdateControls();
+
+            UpdateStatusStrip();
+
+            // Tell Windows you need to repaint
+            graphicsPanel1.Invalidate();
+        }
+
+        private void CountCells()
+        {
             // Reset cell count
             _cellCount = 0;
 
@@ -316,13 +351,6 @@ namespace GameOfLife
                     _cellCount++;
                 }
             }
-
-            UpdateControls();
-
-            UpdateStatusStrip();
-
-            // Tell Windows you need to repaint
-            graphicsPanel1.Invalidate();
         }
 
         // The event called by the timer every Interval milliseconds.
@@ -451,7 +479,12 @@ namespace GameOfLife
         private void New(object sender, EventArgs e)
         {
             // Reset universe
+            _seed = 0;
             _universe = new bool[_rows, _columns];
+
+            toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Italic);
+            toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
+            toolStripTextBoxSeed.ForeColor = Color.Black;
 
             // Update status strip generations
             _generations = 0;
@@ -490,20 +523,7 @@ namespace GameOfLife
             Application.Exit();
         }
 
-        #region Duplicate Methods
-
-        // Tool strip version of the Start Button
-        private void toolStripButtonStart_Click(object sender, EventArgs e)
-        {
-            Start(sender, e);
-        }
-
-        // Tool strip version of the New Button
-        private void newToolStripButton_Click(object sender, EventArgs e)
-        {
-            New(sender, e);
-        }
-        #endregion
+        
 
         private void Start(object sender, EventArgs e)
         {
@@ -613,21 +633,6 @@ namespace GameOfLife
             graphicsPanel1.Invalidate();
         }
 
-        private void runToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Start(sender, e);
-        }
-
-        private void pauseToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Pause(sender, e);
-        }
-
-        private void nextToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Next(sender, e);
-        }
-
         private void ColorDialogBox(ref Color color)
         {
             ColorDialog dlg = new ColorDialog();
@@ -641,6 +646,95 @@ namespace GameOfLife
                 // Tell Windows you need to repaint
                 graphicsPanel1.Invalidate();
             }
+        }
+
+        private void toolStripTextBoxSeed_Click(object sender, EventArgs e)
+        {
+            SeedBoxStyles();
+            toolStripTextBoxSeed.Text = "";
+        }
+
+        private void SeedBoxStyles()
+        {
+            toolStripTextBoxSeed.ForeColor = Color.Black;
+            toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Regular);
+            toolStripTextBoxSeed.Text = Convert.ToString(_seed);
+        }
+
+        private void ParseSeed(object sender, EventArgs e)
+        {
+            int stringSum = 0;
+            if (toolStripTextBoxSeed.Text.Length > 0)
+            {
+                if(!int.TryParse(toolStripTextBoxSeed.Text, out _seed))
+                {
+
+                    foreach (char letter in toolStripTextBoxSeed.Text)
+                    {
+                        stringSum += letter;
+                    }
+                    _seed = stringSum;
+                    toolStripTextBoxSeed.Text = Convert.ToString(_seed);
+                }
+
+                if (_seed > Int32.MaxValue)
+                {
+                    _seed = Int32.MaxValue;
+                }
+                else if(_seed < Int32.MinValue)
+                {
+                    _seed = Int32.MinValue;
+                }
+
+                Randomize();
+
+                CountCells();
+
+                UpdateStatusStrip();
+
+                UpdateControls();
+
+                // Tell Windows you need to repaint
+                graphicsPanel1.Invalidate();
+            }
+        }
+
+        private void RandomSeed(object sender, EventArgs e)
+        {
+            SeedBoxStyles();
+
+            Random rnd = new Random();
+
+            _seed = rnd.Next(Int32.MinValue, Int32.MaxValue);
+
+            Randomize();
+
+            ParseSeed(sender, e);
+
+            CountCells();
+
+            UpdateStatusStrip();
+
+            UpdateControls();
+
+            // Tell Windows you need to repaint
+            graphicsPanel1.Invalidate();
+
+
+        }
+
+        #region Duplicate Methods
+
+        // Tool strip version of the Start Button
+        private void toolStripButtonStart_Click(object sender, EventArgs e)
+        {
+            Start(sender, e);
+        }
+
+        // Tool strip version of the New Button
+        private void newToolStripButton_Click(object sender, EventArgs e)
+        {
+            New(sender, e);
         }
 
         private void BackColorDialog(object sender, EventArgs e)
@@ -709,5 +803,21 @@ namespace GameOfLife
         {
             FiniteMode(sender, e);
         }
+
+        private void runToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Start(sender, e);
+        }
+
+        private void pauseToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Pause(sender, e);
+        }
+
+        private void nextToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Next(sender, e);
+        }
+        #endregion
     }
 }
