@@ -140,6 +140,23 @@ namespace GameOfLife
             }
         }
 
+        private void UpdateControls()
+        {
+            if (_cellCount > 0)
+            {
+
+                nextToolStripMenuItem.Enabled = true;
+                nextToolStripMenuItem1.Enabled = true;
+                toolStripButtonNext.Enabled = true;
+            }
+            else
+            {
+                nextToolStripMenuItem.Enabled = false;
+                nextToolStripMenuItem1.Enabled = false;
+                toolStripButtonNext.Enabled = false;
+            }
+        }
+
         private void UpdateStatusStrip()
         {
             // Update status strip generations
@@ -298,17 +315,7 @@ namespace GameOfLife
                 }
             }
 
-            if (_cellCount > 0)
-            {
-
-                nextToolStripMenuItem.Enabled = true;
-                toolStripButtonNext.Enabled = true;
-            }
-            else
-            {
-                nextToolStripMenuItem.Enabled = false;
-                toolStripButtonNext.Enabled = false;
-            }
+            UpdateControls();
 
             UpdateStatusStrip();
 
@@ -429,17 +436,7 @@ namespace GameOfLife
                     _cellCount--;
                 }
 
-                if (_cellCount > 0)
-                {
-
-                    nextToolStripMenuItem.Enabled = true;
-                    toolStripButtonNext.Enabled = true;
-                }
-                else
-                {
-                    nextToolStripMenuItem.Enabled = false;
-                    toolStripButtonNext.Enabled = false;
-                }
+                UpdateControls();
 
                 toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
 
@@ -553,22 +550,15 @@ namespace GameOfLife
 
         private void Next(object sender, EventArgs e)
         {
+            UpdateControls();
+
             if (_cellCount > 0)
             {
-
-                nextToolStripMenuItem.Enabled = true;
-                toolStripButtonNext.Enabled = true;
-
                 // Pause
                 Pause(sender, e);
 
                 // Step forward one generation
                 NextGeneration();
-            }
-            else
-            {
-                nextToolStripMenuItem.Enabled = false;
-                toolStripButtonNext.Enabled = false;
             }
         }
 
@@ -610,6 +600,21 @@ namespace GameOfLife
 
             // Tell Windows you need to repaint
             graphicsPanel1.Invalidate();
+        }
+
+        private void runToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Start(sender, e);
+        }
+
+        private void pauseToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Pause(sender, e);
+        }
+
+        private void nextToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            Next(sender, e);
         }
     }
 }
