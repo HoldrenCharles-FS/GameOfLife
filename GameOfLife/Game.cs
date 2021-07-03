@@ -7,6 +7,7 @@ namespace GameOfLife
 {
     public partial class Game : Form
     {
+        #region Fields and Contructor
         // Fields
         private bool[,] _universe;      // The universe array
         private Color _backColor;       // Back color
@@ -31,16 +32,298 @@ namespace GameOfLife
         public Game()
         {
             // Load settings from file
-            LoadSettings();
+            Settings_Reload();
 
             // Initialize components for Windows Form (avoid editing)
             InitializeComponent();
 
-            MouseWheel += Zoom_MouseWheel;
+            MouseWheel += OnMouseWheel_Zoom;
+        }
+        #endregion
+
+        #region Buttons
+
+        #region File
+        // New
+        private void File_New(object sender = null, EventArgs e = null)
+        {
+            // Reset universe
+            _seed = 0;
+            _universe = new bool[_rows, _columns];
+
+            // Display default message in seed box
+            SeedBox_SetStyle(true);
+
+            // Update Status Strip
+            Update_StatusStrip();
+
+            // Pause in the case that it is running
+            Control_Pause(sender, e);
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
 
-        // Load settings from file
-        private void LoadSettings()
+        // Open
+        private void File_Open(object sender, EventArgs e)
+        {
+
+        }
+
+        // Save
+        private void File_Save(object sender, EventArgs e)
+        {
+
+        }
+
+        // Save As
+        private void File_SaveAs(object sender, EventArgs e)
+        {
+
+        }
+
+        // Exit
+        private void File_Exit(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+        #endregion
+
+        #region View
+        // Toggle HUD
+        private void View_HUD(object sender, EventArgs e)
+        {
+            Menu_View_HUD.Checked = !Menu_View_HUD.Checked;
+            hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
+            _hud = Menu_View_HUD.Checked;
+
+        }
+
+        // Toggle Neighbor Count
+        private void View_NeighborCount(object sender, EventArgs e)
+        {
+            Menu_View_NeighborCount.Checked = !Menu_View_NeighborCount.Checked;
+            neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
+            _neighborCount = Menu_View_NeighborCount.Checked;
+        }
+
+        // Toggle Grid
+        private void View_Grid(object sender, EventArgs e)
+        {
+            Menu_View_Grid.Checked = !Menu_View_Grid.Checked;
+            gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
+            _displayGrid = Menu_View_Grid.Checked;
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
+        }
+
+        // Torodial
+        private void View_Torodial(object sender, EventArgs e)
+        {
+            if (_boundary == false)
+            {
+                _boundary = true;
+                Menu_View_Torodial.Checked = true;
+                Menu_View_Finite.Checked = false;
+
+                Update_StatusStrip();
+            }
+        }
+
+        // Finite
+        private void View_Finite(object sender, EventArgs e)
+        {
+            if (_boundary == true)
+            {
+                _boundary = false;
+                Menu_View_Torodial.Checked = false;
+                Menu_View_Finite.Checked = true;
+
+                Update_StatusStrip();
+            }
+        }
+        #endregion
+
+        #region Control
+        // Start
+        private void Control_Start(object sender, EventArgs e)
+        {
+            // Toggle between Start / Pause states 
+            if (timer.Enabled == false)
+            {
+                // Start timer
+                timer.Enabled = true;
+
+                // Change the display name
+                ToolStrip_Start.Text = Properties.Resources.pause;
+
+                // Toggle tool strip Start icon to the Pause icon
+                ToolStrip_Start.Image = Properties.Resources.pauseIcon;
+
+                // Disable File > Start
+                Menu_Control_Start.Enabled = false;
+
+                // Enable File > Pause
+                Menu_Control_Pause.Enabled = true;
+            }
+            else
+            {
+                // Pause
+                Control_Pause(sender, e);
+            }
+        }
+
+        // Pause
+        private void Control_Pause(object sender, EventArgs e)
+        {
+            // Stop timer
+            timer.Enabled = false;
+
+            // Change the display name
+            ToolStrip_Start.Text = Properties.Resources.start;
+
+            // Toggle tool strip Start icon to the Pause icon
+            ToolStrip_Start.Image = Properties.Resources.startIcon;
+
+            // Enable File > Start
+            Menu_Control_Start.Enabled = true;
+
+            // Disable File > Pause
+            Menu_Control_Pause.Enabled = false;
+        }
+
+        // Next
+        private void Control_Next(object sender = null, EventArgs e = null)
+        {
+            Update_Controls();
+
+            if (_cellCount > 0)
+            {
+                // Pause
+                Control_Pause(sender, e);
+
+                // Step forward one generation
+                Process_NextGeneration();
+            }
+        }
+
+
+        #endregion
+
+        #region Randomize
+        // Regenerate
+        private void Randomize_GenerateSeed(object sender = null, EventArgs e = null)
+        {
+            if (ToolStrip_SeedBox.Text.Length > 0 && ToolStrip_SeedBox.Font.Italic == false)
+            {
+                // If user entered 0, seed is blank
+                if (_seed == 0)
+                {
+                    File_New(sender, e);
+                }
+                else if (_seed > Int32.MaxValue)
+                {
+                    _seed = Int32.MaxValue;
+                }
+                else if (_seed < Int32.MinValue)
+                {
+                    _seed = Int32.MinValue;
+                }
+
+                Randomize_Process_UpdateArray();
+
+                Process_CountCells();
+
+                Update_StatusStrip();
+
+                Update_Controls();
+
+                // Tell Windows you need to repaint
+                GraphicsPanel.Invalidate();
+            }
+            else
+            {
+                SeedBox_SetStyle(true);
+            }
+        }
+
+        // Random Seed
+        private void Randomize_RandomSeed(object sender, EventArgs e)
+        {
+            SeedBox_SetStyle();
+
+            Random rnd = new Random();
+
+            _seed = rnd.Next(Int32.MinValue, Int32.MaxValue);
+
+            Randomize_Process_UpdateArray();
+
+            SeedBox_ParseSeed();
+
+            Process_CountCells();
+
+            Update_StatusStrip();
+
+            Update_Controls();
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
+
+
+        }
+
+        // Process that updates the universe with random values
+        private void Randomize_Process_UpdateArray()
+        {
+            // 0 is the shortcut for a blank canvas
+            if (_seed != 0)
+            {
+                Random rnd = new Random(_seed);
+
+                // Iterate through the universe in the y, top to bottom
+                for (int y = 0; y < _universe.GetLength(1); y++)
+                {
+                    // Iterate through the universe in the x, left to right
+                    for (int x = 0; x < _universe.GetLength(0); x++)
+                    {
+                        bool result = (rnd.Next(0, 2) == 0) ? false : true;
+                        _universe[x, y] = result;
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Settings
+        // Back Color
+        private void Settings_BackColor(object sender, EventArgs e)
+        {
+            Settings_Process_ColorDialogBox(ref _backColor);
+            GraphicsPanel.BackColor = _backColor;
+        }
+
+        // Cell Color
+        private void Settings_CellColor(object sender, EventArgs e)
+        {
+            Settings_Process_ColorDialogBox(ref _cellColor);
+
+        }
+
+        // Grid Color
+        private void Settings_GridColor(object sender, EventArgs e)
+        {
+            Settings_Process_ColorDialogBox(ref _gridColor);
+        }
+
+        // Grid x10 color
+        private void Settings_GridX10Color(object sender, EventArgs e)
+        {
+            Settings_Process_ColorDialogBox(ref _grid10xColor);
+        }
+
+        // Reload / Loads settings from a file
+        private void Settings_Reload(object sender = null, EventArgs e = null)
         {
             // An array to store data from each line
             string[] data = new string[12];
@@ -52,7 +335,7 @@ namespace GameOfLife
             if (!File.Exists(Properties.Resources.settingsFile))
             {
                 // If not create new settings file
-                CreateSettings();
+                Settings_Reset();
             }
 
             // Read data from file
@@ -88,13 +371,13 @@ namespace GameOfLife
 
             // Setup the timer
             timer.Interval = Int32.Parse(data[i]); // milliseconds
-            timer.Tick += Timer_Tick;
+            timer.Tick += Process_Timer_Tick;
 
             _universe = new bool[_rows, _columns];
         }
 
-        // Create new settings file
-        private void CreateSettings()
+        // Reset / Create new settings file
+        private void Settings_Reset(object sender = null, EventArgs e = null)
         {
             // Label and write default properties to file
             using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
@@ -149,40 +432,86 @@ namespace GameOfLife
             }
         }
 
-        private void UpdateControls()
+        // Process that opens the Color Dialog Box
+        private void Settings_Process_ColorDialogBox(ref Color color)
         {
-            if (_cellCount > 0)
+            ColorDialog dlg = new ColorDialog();
+
+            dlg.Color = color;
+
+            if (DialogResult.OK == dlg.ShowDialog())
             {
-                nextToolStripMenuItem.Enabled = true;
-                nextToolStripMenuItem1.Enabled = true;
-                toolStripButtonNext.Enabled = true;
+                color = dlg.Color;
+
+                // Tell Windows you need to repaint
+                GraphicsPanel.Invalidate();
+            }
+        }
+
+        #endregion
+
+        #region Seed Box
+        // When the seed box is clicked
+        private void SeedBox_Click(object sender, EventArgs e)
+        {
+            SeedBox_SetStyle();
+            if (ToolStrip_SeedBox.Focused == true)
+            {
+                ToolStrip_SeedBox.Text = "";
+            }
+
+        }
+
+        // Sets the font style of the seed box
+        private void SeedBox_SetStyle(bool defaultStyle = false)
+        {
+            if (defaultStyle == false)
+            {
+                ToolStrip_SeedBox.ForeColor = Color.Black;
+                ToolStrip_SeedBox.Font = new Font(ToolStrip_SeedBox.Font, FontStyle.Regular);
             }
             else
             {
-                nextToolStripMenuItem.Enabled = false;
-                nextToolStripMenuItem1.Enabled = false;
-                toolStripButtonNext.Enabled = false;
+                ToolStrip_SeedBox.Font = new Font(ToolStrip_SeedBox.Font, FontStyle.Italic);
+                ToolStrip_SeedBox.ForeColor = Color.Gray;
+                ToolStrip_SeedBox.Text = Properties.Resources.seedPrompt;
+
+            }
+
+        }
+
+        // Parses seed value inside seed box
+        private void SeedBox_ParseSeed(object sender = null, EventArgs e = null)
+        {
+            int stringSum = 0;
+            if (ToolStrip_SeedBox.Text.Length > 0 && ToolStrip_SeedBox.Font.Italic == false)
+            {
+                // If seed can be parsed, it will be in _seed
+                // Add each char as a number to stringSum
+                if (!int.TryParse(ToolStrip_SeedBox.Text, out _seed))
+                {
+
+                    foreach (char letter in ToolStrip_SeedBox.Text)
+                    {
+                        stringSum += letter;
+                    }
+                    _seed = stringSum;
+                    ToolStrip_SeedBox.Text = Convert.ToString(_seed);
+                }
+            }
+            else
+            {
+                SeedBox_SetStyle(true);
             }
         }
 
-        private void UpdateStatusStrip()
-        {
-            // Update status strip generations
-            toolStripStatusLabelGenerations.Text = Properties.Resources.labelGenerations + Properties.Resources.equalSign + _generations;
+        #endregion
 
-            // Update status strip cell count
-            toolStripStatusLabelCellCount.Text = Properties.Resources.labelCellCount + Properties.Resources.equalSign + _cellCount;
+        #endregion
 
-            // Update status strip boundary
-            string boundary = (_boundary == true) ? Properties.Resources.torodial : Properties.Resources.finite;
-            toolStripStatusLabelBoundary.Text = Properties.Resources.labelBoundary + Properties.Resources.equalSign + boundary;
-
-            // Update status strip universe size
-            toolStripStatusLabelUniverseSize.Text = Properties.Resources.labelUniverseSize + Properties.Resources.equalSign + $"{ _rows} x {_columns}";
-        }
-
+        #region Keyboard / MouseWheel
         // Enables zoom scaling with mouse wheel
-        private void Zoom_MouseWheel(object sender, MouseEventArgs e)
+        private void OnMouseWheel_Zoom(object sender, MouseEventArgs e)
         {
             // Scroll down (zoom out)
             if (e.Delta < 0)
@@ -223,59 +552,181 @@ namespace GameOfLife
 
                 }
             }
-            UpdateStatusStrip();
+            Update_StatusStrip();
 
             // Tell Windows you need to repaint
-            graphicsPanel1.Invalidate();
+            GraphicsPanel.Invalidate();
         }
 
+        // For key detection within the application
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                if (_enterPressed == true && toolStripTextBoxSeed.Focused == true)
+                if (_enterPressed == true && ToolStrip_SeedBox.Focused == true)
                 {
-                    toolStripButtonGo_Click();
+                    Randomize_GenerateSeed();
                 }
-                if (toolStripTextBoxSeed.Focused == true)
+                if (ToolStrip_SeedBox.Focused == true)
                 {
                     _enterPressed = true;
-                    SeedParse();
+                    SeedBox_ParseSeed();
                 }
                 else
                 {
-                    toolStripButtonGo_Click();
+                    Randomize_GenerateSeed();
                 }
 
             }
             if (e.KeyCode == Keys.Space)
             {
-                Next();
+                Control_Next();
             }
         }
 
-        private void Randomize()
-        {
-            // 0 is the shortcut for a blank canvas
-            if (_seed != 0)
-            {
-                Random rnd = new Random(_seed);
+        #endregion
 
-                // Iterate through the universe in the y, top to bottom
-                for (int y = 0; y < _universe.GetLength(1); y++)
+        #region Background Processes
+        // Count alive cells
+        private void Process_CountCells()
+        {
+            // Reset cell count
+            _cellCount = 0;
+
+            // Get the current cell count
+            foreach (bool cell in _universe)
+            {
+                if (cell == true)
                 {
-                    // Iterate through the universe in the x, left to right
-                    for (int x = 0; x < _universe.GetLength(0); x++)
-                    {
-                        bool result = (rnd.Next(0, 2) == 0) ? false : true;
-                        _universe[x, y] = result;
-                    }
+                    _cellCount++;
                 }
             }
         }
+
+        // Paint graphics panel
+        private void Process_GraphicsPanel_Paint(object sender, PaintEventArgs e)
+        {
+            // Covert to floats
+            float clientWidth = GraphicsPanel.ClientSize.Width, zeroCount = _universe.GetLength(0),
+                clientHeight = GraphicsPanel.ClientSize.Height, oneCount = _universe.GetLength(1);
+
+            // Calculate the width and height of each cell in pixels
+            // CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
+            float cellWidth = clientWidth / zeroCount;
+
+            // CELL HEIGHT = WINDOW HEIGHT / NUMBER OF CELLS IN Y
+            float cellHeight = clientHeight / oneCount;
+
+            // A Pen for drawing the grid lines (color, width)
+            Pen gridPen = new Pen(_gridColor, 1);
+            Pen grid10xPen = new Pen(_grid10xColor, 2);
+
+            // A Brush for filling living cells interiors (color)
+            Brush cellBrush = new SolidBrush(_cellColor);
+
+            // Iterate through the universe in the y, top to bottom
+            for (int y = 0; y < _universe.GetLength(1); y++)
+            {
+                // Iterate through the universe in the x, left to right
+                for (int x = 0; x < _universe.GetLength(0); x++)
+                {
+                    // A rectangle to represent each cell in pixels
+                    RectangleF cellRect = RectangleF.Empty;
+                    //Rectangle cellRect = Rectangle.Empty;
+                    float fX = x, fY = y;
+                    cellRect.X = fX * cellWidth;
+                    cellRect.Y = fY * cellHeight;
+                    cellRect.Width = cellWidth;
+                    cellRect.Height = cellHeight;
+
+                    // Fill the cell with a brush if alive
+                    if (_universe[x, y] == true)
+                    {
+                        e.Graphics.FillRectangle(cellBrush, cellRect);
+                    }
+
+                    if (_displayGrid == true)
+                    {
+                        // Paint the 10x grid
+                        if ((x % 10 == 0) || (y % 10 == 0))
+                        {
+                            e.Graphics.DrawRectangle(grid10xPen, cellRect.X * 10, cellRect.Y * 10, clientWidth, clientHeight);
+                        }
+
+                        // Outline the cell with a pen
+                        e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
+                    }
+                }
+            }
+
+            // Cleaning up pens and brushes
+            gridPen.Dispose();
+            grid10xPen.Dispose();
+            cellBrush.Dispose();
+
+        }
+
+        // Mouse click on graphics panel
+        private void Process_GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (ToolStrip_SeedBox.Focused == false)
+            {
+                if (ToolStrip_SeedBox.Text.Length == 0)
+                {
+                    SeedBox_SetStyle(true);
+                    ToolStrip_SeedBox.Text = Properties.Resources.seedPrompt;
+
+                }
+                else
+                {
+                    SeedBox_ParseSeed();
+                }
+
+            }
+
+            // If the left mouse button was clicked
+            if (e.Button == MouseButtons.Left)
+            {
+                // Covert to floats
+                float clientWidth = GraphicsPanel.ClientSize.Width, zeroCount = _universe.GetLength(0),
+                clientHeight = GraphicsPanel.ClientSize.Height, oneCount = _universe.GetLength(1),
+                eX = e.X, eY = e.Y;
+                // Calculate the width and height of each cell in pixels
+                float cellWidth = clientWidth / zeroCount;
+                float cellHeight = clientHeight / oneCount;
+
+                // Calculate the cell that was clicked in
+                // CELL X = MOUSE X / CELL WIDTH
+                float x = eX / cellWidth;
+                // CELL Y = MOUSE Y / CELL HEIGHT
+                float y = eY / cellHeight;
+
+                // Toggle the cell's state
+                _universe[(int)x, (int)y] = !_universe[(int)x, (int)y];
+
+                // If toggled on, increment cell count
+                if (_universe[(int)x, (int)y] == true)
+                {
+                    _cellCount++;
+                }
+                // Else if toggled off, decrement cell count
+                else
+                {
+                    _cellCount--;
+                }
+
+                Update_Controls();
+
+                StatusLabel_CellCount.Text = "Cell Count = " + _cellCount;
+
+                // Tell Windows you need to repaint
+                GraphicsPanel.Invalidate();
+            }
+        }
+
         // Calculate the next generation of cells
-        private void NextGeneration()
+        private void Process_NextGeneration()
         {
             bool[,] nextUniverse = new bool[_universe.GetLength(0), _universe.GetLength(1)];
 
@@ -353,554 +804,68 @@ namespace GameOfLife
             // Increment generation count
             _generations++;
 
-            UpdateStatusStrip();
+            Update_StatusStrip();
 
-            CountCells();
+            Process_CountCells();
 
-            UpdateControls();
+            Update_Controls();
 
-            UpdateStatusStrip();
+            Update_StatusStrip();
 
             // Tell Windows you need to repaint
-            graphicsPanel1.Invalidate();
+            GraphicsPanel.Invalidate();
         }
-
-        private void CountCells()
-        {
-            // Reset cell count
-            _cellCount = 0;
-
-            // Get the current cell count
-            foreach (bool cell in _universe)
-            {
-                if (cell == true)
-                {
-                    _cellCount++;
-                }
-            }
-        }
-
         // The event called by the timer every Interval milliseconds.
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Process_Timer_Tick(object sender, EventArgs e)
         {
             // Pause if there are no living cells
             if (_cellCount == 0)
             {
-                Pause(sender, e);
+                Control_Pause(sender, e);
             }
             else
             {
                 // Else keep going
-                NextGeneration();
+                Process_NextGeneration();
             }
 
         }
 
-        // Paint graphics panel
-        private void GraphicsPanel_Paint(object sender, PaintEventArgs e)
+        // Update controls for Control_Next
+        private void Update_Controls()
         {
-            // Covert to floats
-            float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = _universe.GetLength(0),
-                clientHeight = graphicsPanel1.ClientSize.Height, oneCount = _universe.GetLength(1);
-
-            // Calculate the width and height of each cell in pixels
-            // CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
-            float cellWidth = clientWidth / zeroCount;
-
-            // CELL HEIGHT = WINDOW HEIGHT / NUMBER OF CELLS IN Y
-            float cellHeight = clientHeight / oneCount;
-
-            // A Pen for drawing the grid lines (color, width)
-            Pen gridPen = new Pen(_gridColor, 1);
-            Pen grid10xPen = new Pen(_grid10xColor, 2);
-
-            // A Brush for filling living cells interiors (color)
-            Brush cellBrush = new SolidBrush(_cellColor);
-
-            // Iterate through the universe in the y, top to bottom
-            for (int y = 0; y < _universe.GetLength(1); y++)
-            {
-                // Iterate through the universe in the x, left to right
-                for (int x = 0; x < _universe.GetLength(0); x++)
-                {
-                    // A rectangle to represent each cell in pixels
-                    RectangleF cellRect = RectangleF.Empty;
-                    //Rectangle cellRect = Rectangle.Empty;
-                    float fX = x, fY = y;
-                    cellRect.X = fX * cellWidth;
-                    cellRect.Y = fY * cellHeight;
-                    cellRect.Width = cellWidth;
-                    cellRect.Height = cellHeight;
-
-                    // Fill the cell with a brush if alive
-                    if (_universe[x, y] == true)
-                    {
-                        e.Graphics.FillRectangle(cellBrush, cellRect);
-                    }
-
-                    if (_displayGrid == true)
-                    {
-                        // Paint the 10x grid
-                        if ((x % 10 == 0) || (y % 10 == 0))
-                        {
-                            e.Graphics.DrawRectangle(grid10xPen, cellRect.X * 10, cellRect.Y * 10, clientWidth, clientHeight);
-                        }
-
-                        // Outline the cell with a pen
-                        e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
-                    }
-                }
-            }
-
-            // Cleaning up pens and brushes
-            gridPen.Dispose();
-            grid10xPen.Dispose();
-            cellBrush.Dispose();
-
-        }
-
-        // Mouse click on graphics panel
-        private void GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (toolStripTextBoxSeed.Focused == false)
-            {
-                if (toolStripTextBoxSeed.Text.Length == 0)
-                {
-                    SeedBoxStyles(true);
-                    toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
-
-                }
-                else
-                {
-                    SeedParse();
-                }
-
-            }
-
-            // If the left mouse button was clicked
-            if (e.Button == MouseButtons.Left)
-            {
-                // Covert to floats
-                float clientWidth = graphicsPanel1.ClientSize.Width, zeroCount = _universe.GetLength(0),
-                clientHeight = graphicsPanel1.ClientSize.Height, oneCount = _universe.GetLength(1),
-                eX = e.X, eY = e.Y;
-                // Calculate the width and height of each cell in pixels
-                float cellWidth = clientWidth / zeroCount;
-                float cellHeight = clientHeight / oneCount;
-
-                // Calculate the cell that was clicked in
-                // CELL X = MOUSE X / CELL WIDTH
-                float x = eX / cellWidth;
-                // CELL Y = MOUSE Y / CELL HEIGHT
-                float y = eY / cellHeight;
-
-                // Toggle the cell's state
-                _universe[(int)x, (int)y] = !_universe[(int)x, (int)y];
-
-                // If toggled on, increment cell count
-                if (_universe[(int)x, (int)y] == true)
-                {
-                    _cellCount++;
-                }
-                // Else if toggled off, decrement cell count
-                else
-                {
-                    _cellCount--;
-                }
-
-                UpdateControls();
-
-                toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
-
-                // Tell Windows you need to repaint
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        // New
-        private void New(object sender, EventArgs e)
-        {
-            // Reset universe
-            _seed = 0;
-            _universe = new bool[_rows, _columns];
-
-            SeedBoxStyles(true);
-
-            // Update status strip generations
-            _generations = 0;
-            toolStripStatusLabelGenerations.Text = "Generations = " + _generations;
-
-            // Update status strip Cell count
-            _cellCount = 0;
-            toolStripStatusLabelCellCount.Text = "Cell Count = " + _cellCount;
-
-            // Update status strip universe size
-            toolStripStatusLabelUniverseSize.Text = $"Universe Size = {_rows} x {_columns}";
-
-            // Pause in the case that it is running
-            Pause(sender, e);
-
-            // Iterate through the universe in the y, top to bottom
-            for (int y = 0; y < _universe.GetLength(1); y++)
-            {
-                // Iterate through the universe in the x, left to right
-                for (int x = 0; x < _universe.GetLength(0); x++)
-                {
-                    // Set each element to false
-                    _universe[x, y] = false;
-                }
-            }
-            // Tell Windows you need to repaint
-            graphicsPanel1.Invalidate();
-        }
-
-        // Start
-
-
-        // Exit
-        private void Exit(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-
-
-        private void Start(object sender, EventArgs e)
-        {
-            // Toggle between Start / Pause states 
-            if (timer.Enabled == false)
-            {
-                // Start timer
-                timer.Enabled = true;
-
-                // Change the display name
-                toolStripButtonStart.Text = Properties.Resources.pause;
-
-                // Toggle tool strip Start icon to the Pause icon
-                toolStripButtonStart.Image = Properties.Resources.pauseIcon;
-
-                // Disable File > Start
-                startToolStripMenuItem.Enabled = false;
-
-                // Enable File > Pause
-                pauseToolStripMenuItem.Enabled = true;
-            }
-            else
-            {
-                // Pause
-                Pause(sender, e);
-            }
-        }
-
-        private void Pause(object sender, EventArgs e)
-        {
-            // Stop timer
-            timer.Enabled = false;
-
-            // Change the display name
-            toolStripButtonStart.Text = Properties.Resources.start;
-
-            // Toggle tool strip Start icon to the Pause icon
-            toolStripButtonStart.Image = Properties.Resources.startIcon;
-
-            // Enable File > Start
-            startToolStripMenuItem.Enabled = true;
-
-            // Disable File > Pause
-            pauseToolStripMenuItem.Enabled = false;
-        }
-
-        private void Next(object sender = null, EventArgs e = null)
-        {
-            UpdateControls();
-
             if (_cellCount > 0)
             {
-                // Pause
-                Pause(sender, e);
-
-                // Step forward one generation
-                NextGeneration();
-            }
-        }
-
-        private void TorodialMode(object sender, EventArgs e)
-        {
-            if (_boundary == false)
-            {
-                _boundary = true;
-                torodialToolStripMenuItem.Checked = true;
-                finiteToolStripMenuItem.Checked = false;
-
-                UpdateStatusStrip();
-            }
-        }
-
-        private void FiniteMode(object sender, EventArgs e)
-        {
-            if (_boundary == true)
-            {
-                _boundary = false;
-                torodialToolStripMenuItem.Checked = false;
-                finiteToolStripMenuItem.Checked = true;
-
-                UpdateStatusStrip();
-            }
-        }
-
-        private void ToggleHUD(object sender, EventArgs e)
-        {
-            HUDToolStripMenuItem.Checked = !HUDToolStripMenuItem.Checked;
-            hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
-            _hud = HUDToolStripMenuItem.Checked;
-
-        }
-
-        private void ToggleNeighborCount(object sender, EventArgs e)
-        {
-            neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
-            neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
-            _neighborCount = neighborCountToolStripMenuItem.Checked;
-        }
-
-        private void ToggleGrid(object sender, EventArgs e)
-        {
-            GridToolStripMenuItem.Checked = !GridToolStripMenuItem.Checked;
-            gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
-            _displayGrid = GridToolStripMenuItem.Checked;
-
-            // Tell Windows you need to repaint
-            graphicsPanel1.Invalidate();
-        }
-
-        private void ColorDialogBox(ref Color color)
-        {
-            ColorDialog dlg = new ColorDialog();
-
-            dlg.Color = color;
-
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                color = dlg.Color;
-
-                // Tell Windows you need to repaint
-                graphicsPanel1.Invalidate();
-            }
-        }
-
-        private void toolStripTextBoxSeed_Click(object sender, EventArgs e)
-        {
-            SeedBoxStyles();
-            if (toolStripTextBoxSeed.Focused == true)
-            {
-                toolStripTextBoxSeed.Text = "";
-            }
-
-        }
-
-        private void SeedBoxStyles(bool defaultStyle = false)
-        {
-            if (defaultStyle == false)
-            {
-                toolStripTextBoxSeed.ForeColor = Color.Black;
-                toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Regular);
+                Menu_Control_Next.Enabled = true;
+                nextToolStripMenuItem1.Enabled = true;
+                ToolStrip_Next.Enabled = true;
             }
             else
             {
-                toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Italic);
-                toolStripTextBoxSeed.ForeColor = Color.Gray;
-                toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
-
-            }
-
-        }
-
-        private void toolStripButtonGo_Click(object sender = null, EventArgs e = null)
-        {
-            if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
-            {
-                // If user entered 0, seed is blank
-                if (_seed == 0)
-                {
-                    New(sender, e);
-                }
-                else if (_seed > Int32.MaxValue)
-                {
-                    _seed = Int32.MaxValue;
-                }
-                else if (_seed < Int32.MinValue)
-                {
-                    _seed = Int32.MinValue;
-                }
-
-                Randomize();
-
-                CountCells();
-
-                UpdateStatusStrip();
-
-                UpdateControls();
-
-                // Tell Windows you need to repaint
-                graphicsPanel1.Invalidate();
-            }
-            else
-            {
-                SeedBoxStyles(true);
+                Menu_Control_Next.Enabled = false;
+                nextToolStripMenuItem1.Enabled = false;
+                ToolStrip_Next.Enabled = false;
             }
         }
 
-        private void SeedParse(object sender = null, EventArgs e = null)
+        // Updates the status strip
+        private void Update_StatusStrip()
         {
-            int stringSum = 0;
-            if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
-            {
-                // If seed can be parsed, it will be in _seed
-                // Add each char as a number to stringSum
-                if (!int.TryParse(toolStripTextBoxSeed.Text, out _seed))
-                {
+            // Update status strip generations
+            StatusLabel_Generations.Text = Properties.Resources.labelGenerations + Properties.Resources.equalSign + _generations;
 
-                    foreach (char letter in toolStripTextBoxSeed.Text)
-                    {
-                        stringSum += letter;
-                    }
-                    _seed = stringSum;
-                    toolStripTextBoxSeed.Text = Convert.ToString(_seed);
-                }
-            }
-            else
-            {
-                SeedBoxStyles(true);
-            }
+            // Update status strip cell count
+            StatusLabel_CellCount.Text = Properties.Resources.labelCellCount + Properties.Resources.equalSign + _cellCount;
+
+            // Update status strip boundary
+            string boundary = (_boundary == true) ? Properties.Resources.torodial : Properties.Resources.finite;
+            StatusLabel_Boundary.Text = Properties.Resources.labelBoundary + Properties.Resources.equalSign + boundary;
+
+            // Update status strip universe size
+            StatusLabel_UniverseSize.Text = Properties.Resources.labelUniverseSize + Properties.Resources.equalSign + $"{ _rows} x {_columns}";
         }
 
-        private void SeedRandom(object sender, EventArgs e)
-        {
-            SeedBoxStyles();
 
-            Random rnd = new Random();
-
-            _seed = rnd.Next(Int32.MinValue, Int32.MaxValue);
-
-            Randomize();
-
-            SeedParse();
-
-            CountCells();
-
-            UpdateStatusStrip();
-
-            UpdateControls();
-
-            // Tell Windows you need to repaint
-            graphicsPanel1.Invalidate();
-
-
-        }
-
-        private void SeedBox_Leave(object sender, EventArgs e)
-        {
-            SeedParse(sender, e);
-            SeedBoxStyles();
-        }
-
-        #region Duplicate Methods
-
-        // Tool strip version of the Start Button
-        private void toolStripButtonStart_Click(object sender, EventArgs e)
-        {
-            Start(sender, e);
-        }
-
-        private void runToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Start(sender, e);
-        }
-
-        private void pauseToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Pause(sender, e);
-        }
-
-        private void nextToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            Next(sender, e);
-        }
-
-        // Tool strip version of the New Button
-        private void newToolStripButton_Click(object sender, EventArgs e)
-        {
-            New(sender, e);
-        }
-
-        private void BackColorDialog(object sender, EventArgs e)
-        {
-            ColorDialogBox(ref _backColor);
-            graphicsPanel1.BackColor = _backColor;
-        }
-
-        private void CellColorDialog(object sender, EventArgs e)
-        {
-            ColorDialogBox(ref _cellColor);
-
-        }
-
-        private void GridColorDialog(object sender, EventArgs e)
-        {
-            ColorDialogBox(ref _gridColor);
-        }
-
-        private void GridX10ColorDialog(object sender, EventArgs e)
-        {
-            ColorDialogBox(ref _grid10xColor);
-        }
-
-        private void backColorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            BackColorDialog(sender, e);
-        }
-
-        private void cellColorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            CellColorDialog(sender, e);
-        }
-
-        private void gridColorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            GridColorDialog(sender, e);
-        }
-
-        private void gridX10ColorToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            GridX10ColorDialog(sender, e);
-        }
-
-        private void hUDToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ToggleHUD(sender, e);
-        }
-
-        private void gridToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ToggleGrid(sender, e);
-        }
-
-        private void neighborCountToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ToggleNeighborCount(sender, e);
-        }
-
-        private void torodialToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            TorodialMode(sender, e);
-        }
-
-        private void finiteToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            FiniteMode(sender, e);
-        }
         #endregion
-
-
     }
 }
