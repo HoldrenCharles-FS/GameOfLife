@@ -12,6 +12,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 ### 07/02/2021
 - Implemented 10x Grid display.
 - Added a context menu strip to the graphics panel.
+- Implemented randomize options dependent on seed.
 ### 07/01/2021
 - Both torodial and finite boundry types have been successfully implemented.
 ### 06/30/2021
