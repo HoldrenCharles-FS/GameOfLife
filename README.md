@@ -11,6 +11,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 ## Updates
 ### 07/02/2021
 - Implemented 10x Grid display.
+- Added a context menu strip to the graphics panel.
 ### 07/01/2021
 - Both torodial and finite boundry types have been successfully implemented.
 ### 06/30/2021
@@ -50,13 +51,13 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [ ] Add functionality to the Save button.
 - [ ] Add functionality to Import.
 - [ ] The ability to randomize by new seed, current seed or generate seed based on time.
-- [ ] Display the current generation. 
-- [ ] Display the number of living cells.
+- [X] Display the current generation. 
+- [X] Display the number of living cells.
 - [ ] User can adjust game speed.
 - [X] Able to change grid size.
 - [ ] Display the neighbor count in each cell.
 - [ ] Toggle the neighbor count (on/off) in the View menu.
-- [ ] Toggle the grid (on/off) in the View menu. 
+- [X] Toggle the grid (on/off) in the View menu. 
 - [ ] Toggle the HUD (on/off) in the View menu.
 - [ ] Importing patterns downloaded from Life Lexicon. 
 - [ ] The ability to change the colors for grid, background and cells.
