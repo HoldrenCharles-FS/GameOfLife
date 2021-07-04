@@ -25,6 +25,7 @@ namespace GameOfLife
 
         Timer timer = new Timer();      // The Timer class
         private int _cellCount = 0;     // Cell count
+        private int[,] _neighbors;
 
         // Constructor
         public Game()
@@ -324,7 +325,7 @@ namespace GameOfLife
         private void Settings_Reload(object sender = null, EventArgs e = null)
         {
             // An array to store data from each line
-            string[] data = new string[12];
+            string[] data = new string[13];
 
             // Array index #
             int i = 0;
@@ -365,6 +366,7 @@ namespace GameOfLife
             _seed = Int32.Parse(data[i]); i++;
             _boundary = bool.Parse(data[i]); i++;
             _hud = bool.Parse(data[i]); i++;
+            _neighborCount = bool.Parse(data[i]); i++;
             _displayGrid = bool.Parse(data[i]); i++;
 
             // Setup the timer
@@ -372,6 +374,7 @@ namespace GameOfLife
             timer.Tick += Process_Timer_Tick;
 
             _universe = new bool[_rows, _columns];
+            _neighbors = new int[_rows, _columns];
         }
 
         // Reset / Create new settings file
@@ -390,7 +393,7 @@ namespace GameOfLife
 
                 // Grid 10x Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridx10Color);
-                sw.WriteLine(Color.Black.Name);
+                sw.WriteLine(Color.DarkSlateGray.Name);
 
                 // Cell Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelCellColor);
@@ -420,7 +423,11 @@ namespace GameOfLife
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelHUD);
                 sw.WriteLine(true);
 
-                // Display Grid
+                // Neighbors Count
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelHUD);
+                sw.WriteLine(true);
+
+                // Grid
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelDisplayGrid);
                 sw.WriteLine(true);
 
@@ -624,12 +631,17 @@ namespace GameOfLife
             Pen gridPen = new Pen(_gridColor, 1);
             Pen grid10xPen = new Pen(_grid10xColor, 2);
             Brush hudBrush = new SolidBrush(Color.FromArgb(0x78FF0000));
+
+
+            int r = (_cellColor.R + 127) % 255;
+            int g = (_cellColor.G + 127) % 255;
+            int b = (_cellColor.B + 127) % 255;
+
+            Color neighborColor = Color.FromArgb(255, r, g, b);
+
+            Brush neighborBrush = new SolidBrush(neighborColor);
             // A Brush for filling living cells interiors (color)
             Brush cellBrush = new SolidBrush(_cellColor);
-
-            
-
-            
 
             // Iterate through the universe in the y, top to bottom
             for (int y = 0; y < _universe.GetLength(1); y++)
@@ -663,14 +675,46 @@ namespace GameOfLife
                             e.Graphics.DrawRectangle(grid10xPen, cellRect.X * 10, cellRect.Y * 10, clientWidth, clientHeight);
                         }
                     }
+
+                    if (_neighborCount == true)
+                    {
+                        Font neighborsFont = new Font("Courier New", cellHeight * 0.7f, FontStyle.Regular);
+
+
+                        int count = Process_CountNeighbors(x, y);
+
+
+                        if (count > 0)
+                        {
+                            if (count == 3)
+                            {
+                                neighborColor = Color.FromArgb(255, r, 160, b);
+                                neighborBrush = new SolidBrush(neighborColor);
+                            }
+                            else if (count != 3)
+                            {
+                                neighborColor = Color.FromArgb(255, 255, g, b);
+                                neighborBrush = new SolidBrush(neighborColor);
+                            }
+
+                            if (_universe[x,y] == true)
+                            {
+                                count--;
+                            }
+
+                            if (count > 0)
+                            {
+                                e.Graphics.DrawString(Convert.ToString(count), neighborsFont, neighborBrush, cellRect.X + 2, cellRect.Y);
+                            }
+                        }
+
+                    }
                 }
             }
 
             if (_hud == true)
             {
-                //Process_CountCells();
-
-                Font hudFont = new Font("Gill Sans", 15, FontStyle.Bold);
+                Font hudFont = new Font("Consolas", 15, FontStyle.Bold);
 
                 e.Graphics.DrawString($"Generations: {_generations}\nCell Count: {_cellCount}" +
                     $"\nBoundary Type: {GetBoundaryString()}\nUniverse Size: {_rows} x {_columns}",
@@ -754,41 +798,7 @@ namespace GameOfLife
                 // Iterate through the universe in the x, left to right
                 for (int x = 0; x < _universe.GetLength(0); x++)
                 {
-                    // Count neighbors
-                    int neighbors = 0;
-
-                    // Iterate each adjacent space next to the current cell
-                    for (int i = -1; i <= 1; i++)
-                    {
-                        for (int j = -1; j <= 1; j++)
-                        {
-                            // Torodial boundary check
-                            if (_boundary == true)
-                            {
-                                int horizontal = (x + i + _rows) % _rows;
-                                int vertical = (y + j + _columns) % _columns;
-                                if (_universe[horizontal, vertical] == true)
-                                {
-                                    // Increment neighbors if the cell is alive
-                                    neighbors++;
-                                }
-
-                            }
-                            else
-                            {
-                                // Checking for out of bounds
-                                if ((x + i >= 0 && y + j >= 0) && (x + i < _universe.GetLength(0) && y + j < _universe.GetLength(1)))
-                                {
-                                    if (_universe[x + i, y + j] == true)
-                                    {
-                                        // Increment neighbors if the cell is alive
-                                        neighbors++;
-                                    }
-                                }
-                            }
-
-                        }
-                    }
+                    int neighbors = Process_CountNeighbors(x, y);
 
                     // Decrement the count for the current cell
                     if (_universe[x, y] == true)
@@ -833,6 +843,50 @@ namespace GameOfLife
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
+
+        private int Process_CountNeighbors(int x, int y)
+        {
+            // Count neighbors
+            int count = 0, horizontal = 0, vertical = 0, cntr = -1;
+
+            // Iterate each adjacent space next to the current cell
+            for (int i = -1; i <= 1; i++, cntr++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    // Torodial boundary check
+                    if (_boundary == true)
+                    {
+                        horizontal = (x + i + _rows) % _rows;
+                        vertical = (y + j + _columns) % _columns;
+                        if (_universe[horizontal, vertical] == true)
+                        {
+                            // Increment neighbors if the cell is alive
+                            count++;
+                        }
+
+                    }
+                    else
+                    {
+                        // Checking for out of bounds
+                        if ((x + i >= 0 && y + j >= 0) && (x + i < _universe.GetLength(0) && y + j < _universe.GetLength(1)))
+                        {
+                            horizontal = x + i;
+                            vertical = y + j;
+                            if (_universe[horizontal, vertical] == true)
+                            {
+                                // Increment neighbors if the cell is alive
+                                count++;
+                            }
+                        }
+                    }
+
+
+                }
+            }
+            return count;
+        }
+
         // The event called by the timer every Interval milliseconds.
         private void Process_Timer_Tick(object sender, EventArgs e)
         {
