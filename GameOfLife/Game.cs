@@ -22,7 +22,7 @@ namespace GameOfLife
         private bool _hud;              // Display HUD
         private bool _neighborCount;    // Display Neighbor Count
         private bool _displayGrid;      // Display Grid
-        private int _interval;
+        private decimal _interval;      // Interval
 
         Timer timer = new Timer();      // The Timer class
         private int _cellCount = 0;     // Cell count
@@ -324,7 +324,16 @@ namespace GameOfLife
 
         private void Settings_Speed(object sender, EventArgs e)
         {
-            
+            ModalDialog_Interval dlg = new ModalDialog_Interval();
+
+            dlg.Interval = _interval;
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                _interval = dlg.Interval;
+                timer.Interval = (int)dlg.Interval;
+                Update_StatusStrip();
+            }
         }
 
         // Reload / Loads settings from a file
@@ -374,7 +383,7 @@ namespace GameOfLife
             _hud = bool.Parse(data[i]); i++;
             _neighborCount = bool.Parse(data[i]); i++;
             _displayGrid = bool.Parse(data[i]); i++;
-            _interval = Int32.Parse(data[i]);
+            _interval = decimal.Parse(data[i]);
             // Setup the timer
             timer.Interval = Int32.Parse(data[i]); // milliseconds
             timer.Tick += Process_Timer_Tick;
@@ -710,7 +719,7 @@ namespace GameOfLife
                                 neighborBrush = new SolidBrush(neighborColor);
                             }
 
-                            if (_universe[x,y] == true)
+                            if (_universe[x, y] == true)
                             {
                                 count--;
                             }
@@ -722,6 +731,7 @@ namespace GameOfLife
                         }
 
                     }
+
                 }
             }
 
@@ -964,6 +974,6 @@ namespace GameOfLife
 
         #endregion
 
-        
+
     }
 }
