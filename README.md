@@ -56,7 +56,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [ ] Add functionality to the Open button.
 - [ ] Add functionality to the Save button.
 - [ ] Add functionality to Import.
-- [ ] The ability to randomize by new seed, current seed or generate seed based on time.
+- [X] The ability to randomize by new seed, current seed or generate seed based on time.
 - [X] Display the current generation. 
 - [X] Display the number of living cells.
 - [ ] User can adjust game speed.
