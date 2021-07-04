@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace GameOfLife
 {
-    public partial class Game : Form
+    public partial class Game2 : Form
     {
         #region Fields and Contructor
         // Fields
@@ -29,7 +29,7 @@ namespace GameOfLife
         private bool _enterPressed;
 
         // Constructor
-        public Game()
+        public Game2()
         {
             // Load settings from file
             Settings_Reload();
@@ -89,6 +89,62 @@ namespace GameOfLife
         }
         #endregion
 
+        #region View
+        // Toggle HUD
+        private void View_HUD(object sender, EventArgs e)
+        {
+            Menu_View_HUD.Checked = !Menu_View_HUD.Checked;
+            hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
+            _hud = Menu_View_HUD.Checked;
+
+        }
+
+        // Toggle Neighbor Count
+        private void View_NeighborCount(object sender, EventArgs e)
+        {
+            Menu_View_NeighborCount.Checked = !Menu_View_NeighborCount.Checked;
+            neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
+            _neighborCount = Menu_View_NeighborCount.Checked;
+        }
+
+        // Toggle Grid
+        private void View_Grid(object sender, EventArgs e)
+        {
+            Menu_View_Grid.Checked = !Menu_View_Grid.Checked;
+            gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
+            _displayGrid = Menu_View_Grid.Checked;
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
+        }
+
+        // Torodial
+        private void View_Torodial(object sender, EventArgs e)
+        {
+            if (_boundary == false)
+            {
+                _boundary = true;
+                Menu_View_Torodial.Checked = true;
+                Menu_View_Finite.Checked = false;
+
+                Update_StatusStrip();
+            }
+        }
+
+        // Finite
+        private void View_Finite(object sender, EventArgs e)
+        {
+            if (_boundary == true)
+            {
+                _boundary = false;
+                Menu_View_Torodial.Checked = false;
+                Menu_View_Finite.Checked = true;
+
+                Update_StatusStrip();
+            }
+        }
+        #endregion
+
         #region Control
         // Start
         private void Control_Start(object sender, EventArgs e)
@@ -99,14 +155,17 @@ namespace GameOfLife
                 // Start timer
                 timer.Enabled = true;
 
+                // Change the display name
+                ToolStrip_Start.Text = Properties.Resources.pause;
+
                 // Toggle tool strip Start icon to the Pause icon
-                toolStripButtonStart.Image = Properties.Resources.pauseIcon;
+                ToolStrip_Start.Image = Properties.Resources.pauseIcon;
 
                 // Disable File > Start
-                startToolStripMenuItem.Enabled = false;
+                Menu_Control_Start.Enabled = false;
 
                 // Enable File > Pause
-                pauseToolStripMenuItem.Enabled = true;
+                Menu_Control_Pause.Enabled = true;
             }
             else
             {
@@ -121,14 +180,17 @@ namespace GameOfLife
             // Stop timer
             timer.Enabled = false;
 
+            // Change the display name
+            ToolStrip_Start.Text = Properties.Resources.start;
+
             // Toggle tool strip Start icon to the Pause icon
-            toolStripButtonStart.Image = Properties.Resources.startIcon;
+            ToolStrip_Start.Image = Properties.Resources.startIcon;
 
             // Enable File > Start
-            startToolStripMenuItem.Enabled = true;
+            Menu_Control_Start.Enabled = true;
 
             // Disable File > Pause
-            pauseToolStripMenuItem.Enabled = false;
+            Menu_Control_Pause.Enabled = false;
         }
 
         // Next
@@ -153,7 +215,7 @@ namespace GameOfLife
         // Regenerate
         private void Randomize_GenerateSeed(object sender = null, EventArgs e = null)
         {
-            if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
+            if (ToolStrip_SeedBox.Text.Length > 0 && ToolStrip_SeedBox.Font.Italic == false)
             {
                 // If user entered 0, seed is blank
                 if (_seed == 0)
@@ -234,7 +296,6 @@ namespace GameOfLife
         #endregion
 
         #region Settings
-        #region Color
         // Back Color
         private void Settings_BackColor(object sender, EventArgs e)
         {
@@ -260,65 +321,6 @@ namespace GameOfLife
         {
             Settings_Process_ColorDialogBox(ref _grid10xColor);
         }
-
-
-        #endregion
-
-        #region View
-        // Toggle HUD
-        private void View_HUD(object sender, EventArgs e)
-        {
-            hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
-            hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
-            _hud = hUDToolStripMenuItem.Checked;
-
-        }
-
-        // Toggle Neighbor Count
-        private void View_NeighborCount(object sender, EventArgs e)
-        {
-            neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
-            neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
-            _neighborCount = neighborCountToolStripMenuItem.Checked;
-        }
-
-        // Toggle Grid
-        private void View_Grid(object sender, EventArgs e)
-        {
-            gridToolStripMenuItem.Checked = !gridToolStripMenuItem.Checked;
-            gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
-            _displayGrid = gridToolStripMenuItem.Checked;
-
-            // Tell Windows you need to repaint
-            GraphicsPanel.Invalidate();
-        }
-
-        // Torodial
-        private void View_Torodial(object sender, EventArgs e)
-        {
-            if (_boundary == false)
-            {
-                _boundary = true;
-                torodialToolStripMenuItem.Checked = true;
-                finiteToolStripMenuItem.Checked = false;
-
-                Update_StatusStrip();
-            }
-        }
-
-        // Finite
-        private void View_Finite(object sender, EventArgs e)
-        {
-            if (_boundary == true)
-            {
-                _boundary = false;
-                torodialToolStripMenuItem.Checked = false;
-                finiteToolStripMenuItem.Checked = true;
-
-                Update_StatusStrip();
-            }
-        }
-        #endregion
 
         // Reload / Loads settings from a file
         private void Settings_Reload(object sender = null, EventArgs e = null)
@@ -453,9 +455,9 @@ namespace GameOfLife
         private void SeedBox_Click(object sender, EventArgs e)
         {
             SeedBox_SetStyle();
-            if (toolStripTextBoxSeed.Focused == true)
+            if (ToolStrip_SeedBox.Focused == true)
             {
-                toolStripTextBoxSeed.Text = "";
+                ToolStrip_SeedBox.Text = "";
             }
 
         }
@@ -465,14 +467,14 @@ namespace GameOfLife
         {
             if (defaultStyle == false)
             {
-                toolStripTextBoxSeed.ForeColor = Color.Black;
-                toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Regular);
+                ToolStrip_SeedBox.ForeColor = Color.Black;
+                ToolStrip_SeedBox.Font = new Font(ToolStrip_SeedBox.Font, FontStyle.Regular);
             }
             else
             {
-                toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Italic);
-                toolStripTextBoxSeed.ForeColor = Color.Gray;
-                toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
+                ToolStrip_SeedBox.Font = new Font(ToolStrip_SeedBox.Font, FontStyle.Italic);
+                ToolStrip_SeedBox.ForeColor = Color.Gray;
+                ToolStrip_SeedBox.Text = Properties.Resources.seedPrompt;
 
             }
 
@@ -482,19 +484,19 @@ namespace GameOfLife
         private void SeedBox_ParseSeed(object sender = null, EventArgs e = null)
         {
             int stringSum = 0;
-            if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
+            if (ToolStrip_SeedBox.Text.Length > 0 && ToolStrip_SeedBox.Font.Italic == false)
             {
                 // If seed can be parsed, it will be in _seed
                 // Add each char as a number to stringSum
-                if (!int.TryParse(toolStripTextBoxSeed.Text, out _seed))
+                if (!int.TryParse(ToolStrip_SeedBox.Text, out _seed))
                 {
 
-                    foreach (char letter in toolStripTextBoxSeed.Text)
+                    foreach (char letter in ToolStrip_SeedBox.Text)
                     {
                         stringSum += letter;
                     }
                     _seed = stringSum;
-                    toolStripTextBoxSeed.Text = Convert.ToString(_seed);
+                    ToolStrip_SeedBox.Text = Convert.ToString(_seed);
                 }
             }
             else
@@ -562,11 +564,11 @@ namespace GameOfLife
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                if (_enterPressed == true && toolStripTextBoxSeed.Focused == true)
+                if (_enterPressed == true && ToolStrip_SeedBox.Focused == true)
                 {
                     Randomize_GenerateSeed();
                 }
-                if (toolStripTextBoxSeed.Focused == true)
+                if (ToolStrip_SeedBox.Focused == true)
                 {
                     _enterPressed = true;
                     SeedBox_ParseSeed();
@@ -668,12 +670,12 @@ namespace GameOfLife
         // Mouse click on graphics panel
         private void Process_GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            if (toolStripTextBoxSeed.Focused == false)
+            if (ToolStrip_SeedBox.Focused == false)
             {
-                if (toolStripTextBoxSeed.Text.Length == 0)
+                if (ToolStrip_SeedBox.Text.Length == 0)
                 {
                     SeedBox_SetStyle(true);
-                    toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
+                    ToolStrip_SeedBox.Text = Properties.Resources.seedPrompt;
 
                 }
                 else
@@ -716,7 +718,7 @@ namespace GameOfLife
 
                 Update_Controls();
 
-                Update_StatusStrip();
+                StatusLabel_CellCount.Text = "Cell Count = " + _cellCount;
 
                 // Tell Windows you need to repaint
                 GraphicsPanel.Invalidate();
@@ -834,15 +836,15 @@ namespace GameOfLife
         {
             if (_cellCount > 0)
             {
-                nextToolStripMenuItem.Enabled = true;
+                Menu_Control_Next.Enabled = true;
                 nextToolStripMenuItem1.Enabled = true;
-                toolStripButtonNext.Enabled = true;
+                ToolStrip_Next.Enabled = true;
             }
             else
             {
-                nextToolStripMenuItem.Enabled = false;
+                Menu_Control_Next.Enabled = false;
                 nextToolStripMenuItem1.Enabled = false;
-                toolStripButtonNext.Enabled = false;
+                ToolStrip_Next.Enabled = false;
             }
         }
 
@@ -850,17 +852,17 @@ namespace GameOfLife
         private void Update_StatusStrip()
         {
             // Update status strip generations
-            toolStripStatusLabelGenerations.Text = Properties.Resources.labelGenerations + Properties.Resources.equalSign + _generations;
+            StatusLabel_Generations.Text = Properties.Resources.labelGenerations + Properties.Resources.equalSign + _generations;
 
             // Update status strip cell count
-            toolStripStatusLabelAlive.Text = Properties.Resources.labelCellCount + Properties.Resources.equalSign + _cellCount;
+            StatusLabel_CellCount.Text = Properties.Resources.labelCellCount + Properties.Resources.equalSign + _cellCount;
 
             // Update status strip boundary
             string boundary = (_boundary == true) ? Properties.Resources.torodial : Properties.Resources.finite;
-            toolStripStatusLabelType.Text = Properties.Resources.labelBoundary + Properties.Resources.equalSign + boundary;
+            StatusLabel_Boundary.Text = Properties.Resources.labelBoundary + Properties.Resources.equalSign + boundary;
 
             // Update status strip universe size
-            toolStripStatusLabelSize.Text = Properties.Resources.labelUniverseSize + Properties.Resources.equalSign + $"{ _rows} x {_columns}";
+            StatusLabel_UniverseSize.Text = Properties.Resources.labelUniverseSize + Properties.Resources.equalSign + $"{ _rows} x {_columns}";
         }
 
 
