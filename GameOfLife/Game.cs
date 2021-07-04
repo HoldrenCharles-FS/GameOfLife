@@ -22,6 +22,7 @@ namespace GameOfLife
         private bool _hud;              // Display HUD
         private bool _neighborCount;    // Display Neighbor Count
         private bool _displayGrid;      // Display Grid
+        private int _interval;
 
         Timer timer = new Timer();      // The Timer class
         private int _cellCount = 0;     // Cell count
@@ -321,6 +322,11 @@ namespace GameOfLife
         }
         #endregion
 
+        private void Settings_Speed(object sender, EventArgs e)
+        {
+            
+        }
+
         // Reload / Loads settings from a file
         private void Settings_Reload(object sender = null, EventArgs e = null)
         {
@@ -368,7 +374,7 @@ namespace GameOfLife
             _hud = bool.Parse(data[i]); i++;
             _neighborCount = bool.Parse(data[i]); i++;
             _displayGrid = bool.Parse(data[i]); i++;
-
+            _interval = Int32.Parse(data[i]);
             // Setup the timer
             timer.Interval = Int32.Parse(data[i]); // milliseconds
             timer.Tick += Process_Timer_Tick;
@@ -431,8 +437,8 @@ namespace GameOfLife
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelDisplayGrid);
                 sw.WriteLine(true);
 
-                // Timer
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelTimer);
+                // Interval
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelInterval);
                 sw.WriteLine(20);
             }
         }
@@ -678,8 +684,11 @@ namespace GameOfLife
 
                     if (_neighborCount == true)
                     {
-                        Font neighborsFont = new Font("Courier New", cellHeight * 0.7f, FontStyle.Regular);
+                        Font neighborsFont = new Font("Courier New", cellHeight * 0.4f, FontStyle.Regular);
 
+                        StringFormat stringFormat = new StringFormat();
+                        stringFormat.Alignment = StringAlignment.Center;
+                        stringFormat.LineAlignment = StringAlignment.Center;
 
                         int count = Process_CountNeighbors(x, y);
 
@@ -704,7 +713,7 @@ namespace GameOfLife
 
                             if (count > 0)
                             {
-                                e.Graphics.DrawString(Convert.ToString(count), neighborsFont, neighborBrush, cellRect.X + 2, cellRect.Y);
+                                e.Graphics.DrawString(count.ToString(), neighborsFont, neighborBrush, cellRect, stringFormat);
                             }
                         }
 
@@ -937,7 +946,10 @@ namespace GameOfLife
 
             // Update status strip cell count
             toolStripStatusLabelAlive.Text = Properties.Resources.labelCellCount + Properties.Resources.equalSign + _cellCount;
-            
+
+            // Update status strip interval
+            toolStripStatusLabelInterval.Text = Properties.Resources.labelInterval + Properties.Resources.equalSign + _interval;
+
         }
 
         private string GetBoundaryString()
@@ -947,5 +959,7 @@ namespace GameOfLife
 
 
         #endregion
+
+        
     }
 }

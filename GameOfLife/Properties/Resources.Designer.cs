@@ -188,6 +188,15 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interval.
+        /// </summary>
+        internal static string labelInterval {
+            get {
+                return ResourceManager.GetString("labelInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Row Count.
         /// </summary>
         internal static string labelRowCount {
@@ -202,15 +211,6 @@ namespace GameOfLife.Properties {
         internal static string labelSeed {
             get {
                 return ResourceManager.GetString("labelSeed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Timer.
-        /// </summary>
-        internal static string labelTimer {
-            get {
-                return ResourceManager.GetString("labelTimer", resourceCulture);
             }
         }
         

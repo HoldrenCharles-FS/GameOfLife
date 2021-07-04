@@ -173,6 +173,10 @@
     <value>HUD</value>
     <comment>Label for HUD</comment>
   </data>
+  <data name="labelInterval" xml:space="preserve">
+    <value>Interval</value>
+    <comment>Label for Interval</comment>
+  </data>
   <data name="labelRowCount" xml:space="preserve">
     <value>Row Count</value>
     <comment>Label for Row Count</comment>
@@ -180,10 +184,6 @@
   <data name="labelSeed" xml:space="preserve">
     <value>Seed</value>
     <comment>Label for seed</comment>
-  </data>
-  <data name="labelTimer" xml:space="preserve">
-    <value>Timer</value>
-    <comment>Label for Timer</comment>
   </data>
   <data name="labelUniverseSize" xml:space="preserve">
     <value>Size</value>
