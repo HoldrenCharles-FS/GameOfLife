@@ -94,8 +94,6 @@ namespace GameOfLife
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabelGenerations = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelAlive = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabelType = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabelSize = new System.Windows.Forms.ToolStripStatusLabel();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.runToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.pauseToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -114,6 +112,7 @@ namespace GameOfLife
             this.torodialToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.finiteToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.GraphicsPanel = new GameOfLife.GraphicsPanel();
+            this.toolStripStatusLabelSeed = new System.Windows.Forms.ToolStripStatusLabel();
             this.MenuStrip.SuspendLayout();
             this.ToolStrip.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -622,10 +621,9 @@ namespace GameOfLife
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabelSeed,
             this.toolStripStatusLabelGenerations,
-            this.toolStripStatusLabelAlive,
-            this.toolStripStatusLabelType,
-            this.toolStripStatusLabelSize});
+            this.toolStripStatusLabelAlive});
             this.statusStrip1.Location = new System.Drawing.Point(0, 549);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(500, 22);
@@ -635,7 +633,8 @@ namespace GameOfLife
             // toolStripStatusLabelGenerations
             // 
             this.toolStripStatusLabelGenerations.Name = "toolStripStatusLabelGenerations";
-            this.toolStripStatusLabelGenerations.Size = new System.Drawing.Size(90, 17);
+            this.toolStripStatusLabelGenerations.Padding = new System.Windows.Forms.Padding(0, 0, 32, 0);
+            this.toolStripStatusLabelGenerations.Size = new System.Drawing.Size(122, 17);
             this.toolStripStatusLabelGenerations.Text = "Generations = 0";
             // 
             // toolStripStatusLabelAlive
@@ -644,20 +643,6 @@ namespace GameOfLife
             this.toolStripStatusLabelAlive.Padding = new System.Windows.Forms.Padding(0, 0, 16, 0);
             this.toolStripStatusLabelAlive.Size = new System.Drawing.Size(69, 17);
             this.toolStripStatusLabelAlive.Text = "Alive = 0";
-            // 
-            // toolStripStatusLabelType
-            // 
-            this.toolStripStatusLabelType.Name = "toolStripStatusLabelType";
-            this.toolStripStatusLabelType.Padding = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.toolStripStatusLabelType.Size = new System.Drawing.Size(95, 17);
-            this.toolStripStatusLabelType.Text = "Type = Torodial";
-            // 
-            // toolStripStatusLabelSize
-            // 
-            this.toolStripStatusLabelSize.Name = "toolStripStatusLabelSize";
-            this.toolStripStatusLabelSize.Padding = new System.Windows.Forms.Padding(0, 0, 8, 0);
-            this.toolStripStatusLabelSize.Size = new System.Drawing.Size(85, 17);
-            this.toolStripStatusLabelSize.Text = "Size = 30 x 30";
             // 
             // contextMenuStrip1
             // 
@@ -815,6 +800,12 @@ namespace GameOfLife
             this.GraphicsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.Process_GraphicsPanel_Paint);
             this.GraphicsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Process_GraphicsPanel_MouseClick);
             // 
+            // toolStripStatusLabelSeed
+            // 
+            this.toolStripStatusLabelSeed.Name = "toolStripStatusLabelSeed";
+            this.toolStripStatusLabelSeed.Size = new System.Drawing.Size(52, 17);
+            this.toolStripStatusLabelSeed.Text = "Seed = 0";
+            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -925,8 +916,7 @@ namespace GameOfLife
         private System.Windows.Forms.ToolStripButton toolStripButton4;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGenerations;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelAlive;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelType;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelSize;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelSeed;
     }
 }
 

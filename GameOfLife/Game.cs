@@ -923,18 +923,15 @@ namespace GameOfLife
         // Updates the status strip
         private void Update_StatusStrip()
         {
+            // Update the current seed
+            toolStripStatusLabelSeed.Text = Properties.Resources.labelSeed + Properties.Resources.equalSign + _seed;
+
             // Update status strip generations
             toolStripStatusLabelGenerations.Text = Properties.Resources.labelGenerations + Properties.Resources.equalSign + _generations;
 
             // Update status strip cell count
             toolStripStatusLabelAlive.Text = Properties.Resources.labelCellCount + Properties.Resources.equalSign + _cellCount;
-
-            // Update status strip boundary
-            string boundary = GetBoundaryString();
-            toolStripStatusLabelType.Text = Properties.Resources.labelBoundary + Properties.Resources.equalSign + boundary;
-
-            // Update status strip universe size
-            toolStripStatusLabelSize.Text = Properties.Resources.labelUniverseSize + Properties.Resources.equalSign + $"{ _rows} x {_columns}";
+            
         }
 
         private string GetBoundaryString()
