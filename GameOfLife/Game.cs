@@ -91,7 +91,7 @@ namespace GameOfLife
 
         #region Control
         // Start
-        private void Control_Start(object sender, EventArgs e)
+        private void Control_Start(object sender = null, EventArgs e = null)
         {
             // Toggle between Start / Pause states 
             if (timer.Enabled == false)
@@ -595,6 +595,10 @@ namespace GameOfLife
 
             }
             if (e.KeyCode == Keys.Space)
+            {
+                Control_Start();
+            }
+            if (e.KeyCode == Keys.OemBackslash)
             {
                 Control_Next();
             }
