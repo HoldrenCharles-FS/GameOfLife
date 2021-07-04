@@ -11,6 +11,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 ## Updates
 ### 07/03/2021
 - Made improvements to randomization options, added text box to input seed.
+- HUD feature implemented.
 ### 07/02/2021
 - Implemented 10x Grid display.
 - Added a context menu strip to the graphics panel.
@@ -49,7 +50,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [X] Add functionality to the Next button.
 - [X] Add functionality to the New button.
 ### Additional Project Requirements
-- [ ] Implement a HUD that displays current generation, cell count, boundary type, and universe size.
+- [X] Implement a HUD that displays current generation, cell count, boundary type, and universe size.
 - [ ] Add functionality to the Open button.
 - [ ] Add functionality to the Save button.
 - [ ] Add functionality to Import.
@@ -66,4 +67,4 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [ ] The ability to change the colors for grid, background and cells.
 - [X] Implement toroidal universe boundries.
 - [X] Implement finite universe boundries.
-- [ ] Implement a ContextMenuStrip that allows the user to change various options in the application.
+- [X] Implement a ContextMenuStrip that allows the user to change various options in the application.
