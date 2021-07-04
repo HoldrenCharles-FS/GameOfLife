@@ -138,7 +138,7 @@
     <comment>Label for Back Color</comment>
   </data>
   <data name="labelBoundary" xml:space="preserve">
-    <value>Boundary</value>
+    <value>Type</value>
     <comment>Label for Boundary</comment>
   </data>
   <data name="labelCellColor" xml:space="preserve">
@@ -146,7 +146,7 @@
     <comment>Label for Cell Color</comment>
   </data>
   <data name="labelCellCount" xml:space="preserve">
-    <value>Cell Count</value>
+    <value>Alive</value>
     <comment>Label for Cell Count</comment>
   </data>
   <data name="labelColumnCount" xml:space="preserve">
@@ -186,7 +186,7 @@
     <comment>Label for Timer</comment>
   </data>
   <data name="labelUniverseSize" xml:space="preserve">
-    <value>Universe Size</value>
+    <value>Size</value>
     <comment>Label for Universe Size</comment>
   </data>
   <data name="nextIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">

@@ -11,22 +11,20 @@ namespace GameOfLife
         // Fields
         private bool[,] _universe;      // The universe array
         private Color _backColor;       // Back color
+        private Color _cellColor;       // Cell color
         private Color _gridColor;       // Grid color
         private Color _grid10xColor;    // Grid 10x color
-        private Color _cellColor;       // Cell color
         private int _rows;              // Rows count
         private int _columns;           // Column Count
         private int _generations;       // Generation count
         private int _seed;              // Seed
         private bool _boundary;         // Boundary type : True = Torodial, False = Finite
-
         private bool _hud;              // Display HUD
         private bool _neighborCount;    // Display Neighbor Count
         private bool _displayGrid;      // Display Grid
 
         Timer timer = new Timer();      // The Timer class
         private int _cellCount = 0;     // Cell count
-        private bool _enterPressed;
 
         // Constructor
         public Game()
@@ -272,6 +270,8 @@ namespace GameOfLife
             hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
             _hud = hUDToolStripMenuItem.Checked;
 
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
 
         // Toggle Neighbor Count
@@ -394,7 +394,7 @@ namespace GameOfLife
 
                 // Cell Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelCellColor);
-                sw.WriteLine(Color.Gray.Name);
+                sw.WriteLine(Color.LightGray.Name);
 
                 // Row Count
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelRowCount);
@@ -449,17 +449,6 @@ namespace GameOfLife
         #endregion
 
         #region Seed Box
-        // When the seed box is clicked
-        private void SeedBox_Click(object sender, EventArgs e)
-        {
-            SeedBox_SetStyle();
-            if (toolStripTextBoxSeed.Focused == true)
-            {
-                toolStripTextBoxSeed.Text = "";
-            }
-
-        }
-
         // Sets the font style of the seed box
         private void SeedBox_SetStyle(bool defaultStyle = false)
         {
@@ -482,13 +471,14 @@ namespace GameOfLife
         private void SeedBox_ParseSeed(object sender = null, EventArgs e = null)
         {
             int stringSum = 0;
-            if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
+
+            if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Text != "0"
+                && toolStripTextBoxSeed.Text != Properties.Resources.seedPrompt)
             {
                 // If seed can be parsed, it will be in _seed
                 // Add each char as a number to stringSum
                 if (!int.TryParse(toolStripTextBoxSeed.Text, out _seed))
                 {
-
                     foreach (char letter in toolStripTextBoxSeed.Text)
                     {
                         stringSum += letter;
@@ -500,9 +490,22 @@ namespace GameOfLife
             else
             {
                 SeedBox_SetStyle(true);
+
             }
+
         }
 
+        // When the seed box is clicked
+        private void SeedBox_Click(object sender, EventArgs e)
+        {
+            SeedBox_SetStyle();
+            if (toolStripTextBoxSeed.Focused == true)
+            {
+
+                toolStripTextBoxSeed.Text = "";
+            }
+
+        }
         #endregion
 
         #endregion
@@ -562,14 +565,15 @@ namespace GameOfLife
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                if (_enterPressed == true && toolStripTextBoxSeed.Focused == true)
+
+                if (toolStripTextBoxSeed.Text == null)
                 {
-                    Randomize_GenerateSeed();
+                    SeedBox_SetStyle();
                 }
-                if (toolStripTextBoxSeed.Focused == true)
+                else if (toolStripTextBoxSeed.Focused == true)
                 {
-                    _enterPressed = true;
                     SeedBox_ParseSeed();
+                    Randomize_GenerateSeed();
                 }
                 else
                 {
@@ -619,9 +623,13 @@ namespace GameOfLife
             // A Pen for drawing the grid lines (color, width)
             Pen gridPen = new Pen(_gridColor, 1);
             Pen grid10xPen = new Pen(_grid10xColor, 2);
-
+            Brush hudBrush = new SolidBrush(Color.FromArgb(0x78FF0000));
             // A Brush for filling living cells interiors (color)
             Brush cellBrush = new SolidBrush(_cellColor);
+
+            
+
+            
 
             // Iterate through the universe in the y, top to bottom
             for (int y = 0; y < _universe.GetLength(1); y++)
@@ -646,22 +654,34 @@ namespace GameOfLife
 
                     if (_displayGrid == true)
                     {
+                        // Outline the cell with a pen
+                        e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
+
                         // Paint the 10x grid
                         if ((x % 10 == 0) || (y % 10 == 0))
                         {
                             e.Graphics.DrawRectangle(grid10xPen, cellRect.X * 10, cellRect.Y * 10, clientWidth, clientHeight);
                         }
-
-                        // Outline the cell with a pen
-                        e.Graphics.DrawRectangle(gridPen, cellRect.X, cellRect.Y, cellRect.Width, cellRect.Height);
                     }
                 }
+            }
+
+            if (_hud == true)
+            {
+                //Process_CountCells();
+
+                Font hudFont = new Font("Gill Sans", 15, FontStyle.Bold);
+
+                e.Graphics.DrawString($"Generations: {_generations}\nCell Count: {_cellCount}" +
+                    $"\nBoundary Type: {GetBoundaryString()}\nUniverse Size: {_rows} x {_columns}",
+                    hudFont, hudBrush, 3, clientHeight - 95);
             }
 
             // Cleaning up pens and brushes
             gridPen.Dispose();
             grid10xPen.Dispose();
             cellBrush.Dispose();
+            hudBrush.Dispose();
 
         }
 
@@ -856,11 +876,16 @@ namespace GameOfLife
             toolStripStatusLabelAlive.Text = Properties.Resources.labelCellCount + Properties.Resources.equalSign + _cellCount;
 
             // Update status strip boundary
-            string boundary = (_boundary == true) ? Properties.Resources.torodial : Properties.Resources.finite;
+            string boundary = GetBoundaryString();
             toolStripStatusLabelType.Text = Properties.Resources.labelBoundary + Properties.Resources.equalSign + boundary;
 
             // Update status strip universe size
             toolStripStatusLabelSize.Text = Properties.Resources.labelUniverseSize + Properties.Resources.equalSign + $"{ _rows} x {_columns}";
+        }
+
+        private string GetBoundaryString()
+        {
+            return (_boundary == true) ? Properties.Resources.torodial : Properties.Resources.finite;
         }
 
 

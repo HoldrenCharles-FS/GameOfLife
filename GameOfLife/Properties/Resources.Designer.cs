@@ -107,7 +107,7 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Boundary.
+        ///   Looks up a localized string similar to Type.
         /// </summary>
         internal static string labelBoundary {
             get {
@@ -125,7 +125,7 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cell Count.
+        ///   Looks up a localized string similar to Alive.
         /// </summary>
         internal static string labelCellCount {
             get {
@@ -215,7 +215,7 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Universe Size.
+        ///   Looks up a localized string similar to Size.
         /// </summary>
         internal static string labelUniverseSize {
             get {
