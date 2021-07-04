@@ -11,6 +11,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 ## Updates
 ### 07/03/2021
 - Implemented Neighbor Count overlay.
+- User can change interval.
 ### 07/03/2021
 - Made improvements to randomization options, added text box to input seed.
 - HUD feature implemented.
@@ -59,7 +60,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [X] The ability to randomize by new seed, current seed or generate seed based on time.
 - [X] Display the current generation. 
 - [X] Display the number of living cells.
-- [ ] User can adjust game speed.
+- [X] User can adjust game speed.
 - [X] Able to change grid size.
 - [X] Display the neighbor count in each cell.
 - [X] Toggle the neighbor count (on/off) in the View menu.
