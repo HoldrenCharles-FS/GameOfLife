@@ -908,12 +908,18 @@ namespace GameOfLife
         {
             if (_cellCount > 0)
             {
+                toolStripButtonStart.Enabled = true;
+                startToolStripMenuItem.Enabled = true;
+                startToolStripMenuItem1.Enabled = true;
                 nextToolStripMenuItem.Enabled = true;
                 nextToolStripMenuItem1.Enabled = true;
                 toolStripButtonNext.Enabled = true;
             }
             else
             {
+                toolStripButtonStart.Enabled = false;
+                startToolStripMenuItem.Enabled = false;
+                startToolStripMenuItem1.Enabled = false;
                 nextToolStripMenuItem.Enabled = false;
                 nextToolStripMenuItem1.Enabled = false;
                 toolStripButtonNext.Enabled = false;
