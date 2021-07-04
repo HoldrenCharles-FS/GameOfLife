@@ -10,6 +10,8 @@ This project was created for the course Project and Portfolio I: Online at Full 
 
 ## Updates
 ### 07/03/2021
+- Implemented Neighbor Count overlay.
+### 07/03/2021
 - Made improvements to randomization options, added text box to input seed.
 - HUD feature implemented.
 ### 07/02/2021
@@ -59,12 +61,12 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [X] Display the number of living cells.
 - [ ] User can adjust game speed.
 - [X] Able to change grid size.
-- [ ] Display the neighbor count in each cell.
-- [ ] Toggle the neighbor count (on/off) in the View menu.
+- [X] Display the neighbor count in each cell.
+- [X] Toggle the neighbor count (on/off) in the View menu.
 - [X] Toggle the grid (on/off) in the View menu. 
-- [ ] Toggle the HUD (on/off) in the View menu.
+- [X] Toggle the HUD (on/off) in the View menu.
 - [ ] Importing patterns downloaded from Life Lexicon. 
-- [ ] The ability to change the colors for grid, background and cells.
+- [X] The ability to change the colors for grid, background and cells.
 - [X] Implement toroidal universe boundries.
 - [X] Implement finite universe boundries.
 - [X] Implement a ContextMenuStrip that allows the user to change various options in the application.
