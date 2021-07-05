@@ -87,7 +87,7 @@ namespace GameOfLife
             Update_Controls();
 
             // Pause in the case that it is running
-            Control_Pause(sender, e);
+            Control_Process_Pause(sender, e);
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -367,45 +367,51 @@ namespace GameOfLife
                 // Start the timer
                 timer.Enabled = true;
 
+                startToolStripMenuItem.Image = Properties.Resources.pauseIcon;
+                startToolStripMenuItem.Text = Properties.Resources.pause;
+
+                startToolStripMenuItem1.Image = Properties.Resources.pauseIcon;
+                startToolStripMenuItem1.Text = Properties.Resources.pause;
+
                 // Toggle tool strip Start icon to the Pause icon
                 toolStripButtonStart.Image = Properties.Resources.pauseIcon;
+                
 
-                // Disable File > Start
-                // The game is running
-                startToolStripMenuItem.Enabled = false;
-
-                // Enable File > Pause
-                // It can be paused
-                pauseToolStripMenuItem.Enabled = true;
+                Update_Controls();
             }
             // Else the game is running, feel free to pause!
             else
             {
                 // Pause
-                Control_Pause(sender, e);
+                Control_Process_Pause(sender, e);
             }
         }
 
         // Pause
-        private void Control_Pause(object sender = null, EventArgs e = null)
+        private void Control_Process_Pause(object sender = null, EventArgs e = null)
         {
             // Stop timer
             timer.Enabled = false;
+
+            startToolStripMenuItem.Image = Properties.Resources.startIcon;
+            startToolStripMenuItem.Text = Properties.Resources.start;
+
+            startToolStripMenuItem1.Image = Properties.Resources.startIcon;
+            startToolStripMenuItem1.Text = Properties.Resources.start;
 
             // Toggle tool strip Start icon to the Pause icon
             toolStripButtonStart.Image = Properties.Resources.startIcon;
 
             if (_cellCount != 0)
             {
-                // Enable File > Start
-                // The game is paused
-                startToolStripMenuItem.Enabled = true;
+                Update_Controls();
             }
-            
-
-            // Disable File > Pause
-            // Can't pause what isn't running
-            pauseToolStripMenuItem.Enabled = false;
+            else
+            {
+                // Disable File > Start
+                // The world is empty
+                startToolStripMenuItem.Enabled = false;
+            }
 
 
         }
@@ -420,7 +426,7 @@ namespace GameOfLife
             if (_cellCount > 0)
             {
                 // Pause or
-                Control_Pause(sender, e);
+                Control_Process_Pause(sender, e);
 
                 // Step forward one generation
                 Process_NextGeneration();
@@ -456,7 +462,7 @@ namespace GameOfLife
             // If timer is enabled, pause
             if (timer.Enabled == true)
             {
-                Control_Pause();
+                Control_Process_Pause();
             }
             // Seed generated, display it
             _seedFlag = true;
@@ -484,7 +490,7 @@ namespace GameOfLife
         }
 
         // Opens a modal dialog to enter seed
-        private void Randomize_EnterSeed(object sender, EventArgs e)
+        private void Randomize_EnterSeed(object sender = null, EventArgs e = null)
         {
             ModalDialog_EnterSeed dlg = new ModalDialog_EnterSeed();
 
@@ -689,7 +695,7 @@ namespace GameOfLife
         }
 
         // Finite
-        private void View_Finite(object sender, EventArgs e)
+        private void View_Finite(object sender = null, EventArgs e = null)
         {
 
             // If boundary is torodial
@@ -722,7 +728,6 @@ namespace GameOfLife
         {
             // Used for all modifiable colors, Color sent by reference
             ColorDialog dlg = new ColorDialog();
-            dlg.Color = color;
 
             // Open the dialog box
             if (DialogResult.OK == dlg.ShowDialog())
@@ -739,27 +744,27 @@ namespace GameOfLife
         }
 
         // Back Color
-        private void Settings_BackColor(object sender, EventArgs e)
+        private void Settings_BackColor(object sender = null, EventArgs e = null)
         {
             Settings_Process_ColorDialogBox(ref _backColor);
             GraphicsPanel.BackColor = _backColor;
         }
 
         // Cell Color
-        private void Settings_CellColor(object sender, EventArgs e)
+        private void Settings_CellColor(object sender = null, EventArgs e = null)
         {
             Settings_Process_ColorDialogBox(ref _cellColor);
 
         }
 
         // Grid Color
-        private void Settings_GridColor(object sender, EventArgs e)
+        private void Settings_GridColor(object sender = null, EventArgs e = null)
         {
             Settings_Process_ColorDialogBox(ref _gridColor);
         }
 
         // Grid x10 color
-        private void Settings_GridX10Color(object sender, EventArgs e)
+        private void Settings_GridX10Color(object sender = null, EventArgs e = null)
         {
             Settings_Process_ColorDialogBox(ref _grid10xColor);
         }
@@ -768,7 +773,7 @@ namespace GameOfLife
         #endregion
 
         // Speed
-        private void Settings_Speed(object sender, EventArgs e)
+        private void Settings_Speed(object sender = null, EventArgs e = null)
         {
             // Instantiate the interval dialog box
             ModalDialog_Interval dlg = new ModalDialog_Interval();
@@ -1116,10 +1121,6 @@ namespace GameOfLife
             Process_Zoom();
         }
 
-
-
-
-
         // For key detection within the application
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -1158,30 +1159,89 @@ namespace GameOfLife
 
             }
 
-            // Space = Start / Stop
-            if (e.KeyCode == Keys.Space)
+            // Don't register shortcuts when typing seed
+            if (toolStripTextBoxSeed.Focused == false)
             {
-                Control_Start();
-            }
+                // Space = Start / Stop
+                if (e.KeyCode == Keys.Space)
+                {
+                    Control_Start();
+                }
 
-            // Right Arrow = Next
-            if (e.KeyCode == Keys.Right)
-            {
-                Control_Next();
-            }
+                // Right Arrow = Next
+                if (e.KeyCode == Keys.Right)
+                {
+                    Control_Next();
+                }
 
-            // Up Arrow = Zoom In
-            if (e.KeyCode == Keys.Up)
-            {
-                Process_UniverseShrink();
-                Process_Zoom();
-            }
+                // Up Arrow = Zoom In
+                if (e.KeyCode == Keys.Up)
+                {
+                    Process_UniverseShrink();
+                    Process_Zoom();
+                }
 
-            // Down Arrow = Zoom Out
-            if (e.KeyCode == Keys.Down)
-            {
-                Process_UniverseGrow();
-                Process_Zoom();
+                // Down Arrow = Zoom Out
+                if (e.KeyCode == Keys.Down)
+                {
+                    Process_UniverseGrow();
+                    Process_Zoom();
+                }
+
+                // H = HUD
+                if (e.KeyCode == Keys.H)
+                {
+                    View_HUD();
+                }
+
+                // N = Neighbor Count
+                if (e.KeyCode == Keys.N)
+                {
+                    View_NeighborCount();
+                }
+
+                // G = Grid
+                if (e.KeyCode == Keys.G)
+                {
+                    View_Grid();
+                }
+
+                // R = Random Seed
+                if (e.KeyCode == Keys.R)
+                {
+                    Randomize_RandomSeed();
+                }
+
+                // E = Enter Seed
+                if (e.KeyCode == Keys.E)
+                {
+                    Randomize_EnterSeed();
+                }
+
+                // B = Boundary change
+                if (e.KeyCode == Keys.B)
+                {
+                    if (_boundary == true)
+                    {
+                        View_Finite();
+                    }
+                    else
+                    {
+                        View_Torodial();
+                    }
+                }
+
+                // S = Speed
+                if (e.KeyCode == Keys.S)
+                {
+                    Settings_Speed();
+                }
+
+                // Escape = File_Exit
+                if (e.KeyCode == Keys.Escape)
+                {
+                    Application.Exit();
+                }
             }
 
             // Tell windows to repaint
@@ -1534,7 +1594,7 @@ namespace GameOfLife
             // Pause timer if there are no living cells
             if (_cellCount == 0)
             {
-                Control_Pause(sender, e);
+                Control_Process_Pause(sender, e);
             }
             // Else keep going
             else
@@ -1554,6 +1614,7 @@ namespace GameOfLife
                 toolStripButtonStart.Enabled = true;    // Enable Start
                 startToolStripMenuItem.Enabled = true;  // Enable Start
                 startToolStripMenuItem1.Enabled = true; // Enable Start
+                
                 nextToolStripMenuItem.Enabled = true;   // Enable Next
                 nextToolStripMenuItem1.Enabled = true;  // Enable Next
                 toolStripButtonNext.Enabled = true;     // Enable Next
@@ -1565,6 +1626,7 @@ namespace GameOfLife
                 toolStripButtonStart.Enabled = false;       // Disable Start
                 startToolStripMenuItem.Enabled = false;     // Disable Start
                 startToolStripMenuItem1.Enabled = false;    // Disable Start    
+
                 nextToolStripMenuItem.Enabled = false;      // Disable Next
                 nextToolStripMenuItem1.Enabled = false;     // Disable Next
                 toolStripButtonNext.Enabled = false;        // Disable Next
