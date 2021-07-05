@@ -327,7 +327,7 @@ namespace GameOfLife
         }
 
         // Pause
-        private void Control_Pause(object sender, EventArgs e)
+        private void Control_Pause(object sender = null, EventArgs e = null)
         {
             // Stop timer
             timer.Enabled = false;
@@ -403,6 +403,11 @@ namespace GameOfLife
         // Random Seed
         private void Randomize_RandomSeed(object sender = null, EventArgs e = null)
         {
+            // If timer is enabled, pause
+            if (timer.Enabled == true)
+            {
+                Control_Pause();
+            }
             // Seed generated, display it
             _seedFlag = true;
 
@@ -1410,8 +1415,7 @@ namespace GameOfLife
         {
             return (_boundary == true) ? Properties.Resources.torodial : Properties.Resources.finite;
         }
+
         #endregion
-
-
     }
 }
