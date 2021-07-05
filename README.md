@@ -12,6 +12,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 ### 07/03/2021
 - Implemented Neighbor Count overlay.
 - User can change interval.
+- Implemented Open and Save As.
 ### 07/03/2021
 - Made improvements to randomization options, added text box to input seed.
 - HUD feature implemented.
@@ -54,8 +55,8 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [X] Add functionality to the New button.
 ### Additional Project Requirements
 - [X] Implement a HUD that displays current generation, cell count, boundary type, and universe size.
-- [ ] Add functionality to the Open button.
-- [ ] Add functionality to the Save button.
+- [X] Add functionality to the Open button.
+- [X] Add functionality to the Save button.
 - [ ] Add functionality to Import.
 - [X] The ability to randomize by new seed, current seed or generate seed based on time.
 - [X] Display the current generation. 
