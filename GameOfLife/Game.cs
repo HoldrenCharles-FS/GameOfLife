@@ -76,6 +76,12 @@ namespace GameOfLife
             // Update Status Strip
             Update_StatusStrip();
 
+             // Count alive cells
+            Process_CountCells();
+
+            // Update controls (will enable Start and Next if seed is blank)
+            Update_Controls();
+
             // Pause in the case that it is running
             Control_Pause(sender, e);
 
@@ -385,23 +391,7 @@ namespace GameOfLife
             // and that the style is no longer italic
             if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
             {
-                // User has input a seed, so display it
-                _seedFlag = true;
-
-                // Update the universe array
-                Randomize_Process_UpdateArray();
-
-                // Count alive cells
-                Process_CountCells();
-
-                // Update status strip
-                Update_StatusStrip();
-
-                // Update controls (will enable Start and Next if seed is blank)
-                Update_Controls();
-
-                // Tell Windows you need to repaint
-                GraphicsPanel.Invalidate();
+                Randomize_Process_UpdateGraphics();
             }
             // Else nothing was entered
             else
@@ -444,6 +434,49 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
+        // Opens a modal dialog to enter seed
+        private void Randomize_EnterSeed(object sender, EventArgs e)
+        {
+            ModalDialog_EnterSeed dlg = new ModalDialog_EnterSeed();
+
+            dlg.Seed = _seed;
+            dlg.Text = Properties.Resources.seedPrompt;
+
+            dlg.SeedBox_SetStyle();
+            // Open the dialog box
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                
+                // Retrieve the seed from the form
+                _seed = dlg.Seed;
+
+                // Update graphics
+                Randomize_Process_UpdateGraphics();
+            }
+
+        }
+
+        private void Randomize_Process_UpdateGraphics()
+        {
+            // User has input a seed, so display it
+            _seedFlag = true;
+
+            // Update the universe array
+            Randomize_Process_UpdateArray();
+
+            // Count alive cells
+            Process_CountCells();
+
+            // Update status strip
+            Update_StatusStrip();
+
+            // Update controls (will enable Start and Next if seed is blank)
+            Update_Controls();
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
+        }
+
         // Process that updates the universe with random values
         private void Randomize_Process_UpdateArray()
         {
@@ -467,6 +500,18 @@ namespace GameOfLife
                     }
                 }
             }
+
+            // Count alive cells
+            Process_CountCells();
+
+            // Update status strip
+            Update_StatusStrip();
+
+            // Update controls (will enable Start and Next if seed is blank)
+            Update_Controls();
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
         #endregion
 
@@ -807,6 +852,10 @@ namespace GameOfLife
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelInterval);
                 sw.WriteLine(20);
             }
+            if (_initFlag == false)
+            {
+                GraphicsPanel.Invalidate();
+            }
         }
 
         private void Settings_Process_AutoSave()
@@ -1104,7 +1153,12 @@ namespace GameOfLife
         // Paint graphics panel
         private void Process_GraphicsPanel_Paint(object sender, PaintEventArgs e)
         {
-            GraphicsPanel.BackColor = _backColor;
+            // Initalizing Data
+            if (_initFlag == true)
+            {
+                GraphicsPanel.BackColor = _backColor;
+            }
+
             // Covert to floats
             float clientWidth = GraphicsPanel.ClientSize.Width, zeroCount = _universe.GetLength(0),
                 clientHeight = GraphicsPanel.ClientSize.Height, oneCount = _universe.GetLength(1);
@@ -1553,5 +1607,6 @@ namespace GameOfLife
         }
 
         #endregion
+
     }
 }

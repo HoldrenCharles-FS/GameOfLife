@@ -55,6 +55,12 @@
     <Compile Include="GraphicsPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ModalDialog_EnterSeed.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalDialog_EnterSeed.Designer.cs">
+      <DependentUpon>ModalDialog_EnterSeed.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModalDialog_Interval.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,6 +72,9 @@
     <EmbeddedResource Include="Game.resx">
       <DependentUpon>Game.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalDialog_EnterSeed.resx">
+      <DependentUpon>ModalDialog_EnterSeed.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModalDialog_Interval.resx">
       <DependentUpon>ModalDialog_Interval.cs</DependentUpon>
