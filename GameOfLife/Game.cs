@@ -1079,6 +1079,10 @@ namespace GameOfLife
         {
             // Empty the seed box on click
 
+            // Enable Generate
+            generateToolStripMenuItem.Enabled = true;
+            toolStripButtonGenerate.Enabled = true;
+
             // Change font to regular / black
             SeedBox_SetStyle();
 
@@ -1141,6 +1145,10 @@ namespace GameOfLife
                     }
 
                 }
+
+                // Disable Generate
+                generateToolStripMenuItem.Enabled = false;
+                toolStripButtonGenerate.Enabled = false;
 
                 // Change focus to Graphics panel
                 GraphicsPanel.Focus();
