@@ -13,6 +13,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Implemented Neighbor Count overlay.
 - User can change interval.
 - Implemented Open and Save As.
+- User can now import .cells file (PlainText)
 ### 07/03/2021
 - Made improvements to randomization options, added text box to input seed.
 - HUD feature implemented.
@@ -57,7 +58,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [X] Implement a HUD that displays current generation, cell count, boundary type, and universe size.
 - [X] Add functionality to the Open button.
 - [X] Add functionality to the Save button.
-- [ ] Add functionality to Import.
+- [X] Add functionality to Import.
 - [X] The ability to randomize by new seed, current seed or generate seed based on time.
 - [X] Display the current generation. 
 - [X] Display the number of living cells.
@@ -67,7 +68,6 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - [X] Toggle the neighbor count (on/off) in the View menu.
 - [X] Toggle the grid (on/off) in the View menu. 
 - [X] Toggle the HUD (on/off) in the View menu.
-- [ ] Importing patterns downloaded from Life Lexicon. 
 - [X] The ability to change the colors for grid, background and cells.
 - [X] Implement toroidal universe boundries.
 - [X] Implement finite universe boundries.
