@@ -27,6 +27,7 @@ namespace GameOfLife
         Timer timer = new Timer();      // The Timer class
         private int _cellCount = 0;     // Cell count
         private bool _seedFlag = false;
+        private bool _importFlag = false;
 
         // Constructor
         public Game()
@@ -96,11 +97,14 @@ namespace GameOfLife
                     // Get the length of the current row string and adjust the maxWidth variable
                     rows = row.Length;
                 }
-
-                // Resize the universe
-                _rows = rows;
-                _columns = columns;
-                _universe = new bool[rows, columns];
+                
+                if (_importFlag == false)
+                {
+                    // Resize the universe
+                    _rows = rows;
+                    _columns = columns;
+                    _universe = new bool[rows, columns];
+                }
 
                 // Reset the file pointer back to the beginning of the file.
                 sr.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -110,19 +114,37 @@ namespace GameOfLife
                 // Iterate through the file again, this time reading in the cells.
                 while (!sr.EndOfStream)
                 {
-
+                    bool[,] tempUniverse = new bool[_universe.GetLength(0), _universe.GetLength(1)];
+                    int tempRow = 0, tempCol = 0;
                     // Read one row at a time.
                     string row = sr.ReadLine();
 
                     // If the row begins with '!' it is a comment
                     if (row[0] != '!')
                     {
-                        // If the row is not a comment then 
-                        // it is a row of cells and needs to be iterated through.
-                        for (int x = 0; x < row.Length; x++)
+                        
+                        if (_importFlag == false)
+                        {
+                            tempRow = row.Length;
+                        }
+                        else
+                        {
+                            tempRow = _universe.GetLength(0);
+                        }
+
+                        for (int x = 0; x < tempRow; x++)
                         {
                             // If row[xPos] is a 'O' (capital O) then it is alive
-                            _universe[x, y] = (row[x] == 'O') ? true : false;
+                            if (_importFlag == false)
+                            {
+                                _universe[x, y] = (row[x] == 'O') ? true : false;
+                            }
+                            else if (y < _universe.GetLength(1))
+                            {
+                                tempUniverse[x, y] = (row[x] == 'O') ? true : false;
+                                _universe[x, y] = _universe[x, y] | tempUniverse[x,y];
+                            }
+                            
                         }
                     }
                     y++;
@@ -134,11 +156,23 @@ namespace GameOfLife
 
                 _seedFlag = false;
 
+                Process_CountCells();
+
                 Update_StatusStrip();
+
+                Update_Controls();
 
                 GraphicsPanel.Invalidate();
 
             }
+        }
+
+        // Import
+        private void File_Import(object sender, EventArgs e)
+        {
+            _importFlag = true;
+            File_Open(sender, e);
+            _importFlag = false;
         }
 
         // Save
@@ -1098,8 +1132,9 @@ namespace GameOfLife
         }
 
 
+
         #endregion
 
-
+        
     }
 }
