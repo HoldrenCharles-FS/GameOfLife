@@ -26,7 +26,7 @@ namespace GameOfLife
 
         Timer timer = new Timer();      // The Timer class
         private int _cellCount = 0;     // Cell count
-        private int[,] _neighbors;
+        private bool _seedFlag = false;
 
         // Constructor
         public Game()
@@ -50,6 +50,7 @@ namespace GameOfLife
             // Reset universe
             _seed = 0;
             _universe = new bool[_rows, _columns];
+            _seedFlag = false;
 
             // Display default message in seed box
             SeedBox_SetStyle(true);
@@ -67,19 +68,130 @@ namespace GameOfLife
         // Open
         private void File_Open(object sender, EventArgs e)
         {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2;
 
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                StreamReader sr = new StreamReader(dlg.FileName);
+
+                // Create a couple variables to calculate the width and height
+                // of the data in the file.
+                int rows = 0;
+                int columns = 0;
+
+                // Iterate through the file once to get its size.
+                while (!sr.EndOfStream)
+                {
+                    // Read one row at a time.
+                    string row = sr.ReadLine();
+
+                    // If the row begins with '!' it is a comment
+                    if (row[0] != '!')
+                    {
+                        // Increment the maxHeight variable for each row read.
+                        columns++;
+                    }
+                    // Get the length of the current row string and adjust the maxWidth variable
+                    rows = row.Length;
+                }
+
+                // Resize the universe
+                _rows = rows;
+                _columns = columns;
+                _universe = new bool[rows, columns];
+
+                // Reset the file pointer back to the beginning of the file.
+                sr.BaseStream.Seek(0, SeekOrigin.Begin);
+
+                int y = 0;
+
+                // Iterate through the file again, this time reading in the cells.
+                while (!sr.EndOfStream)
+                {
+
+                    // Read one row at a time.
+                    string row = sr.ReadLine();
+
+                    // If the row begins with '!' it is a comment
+                    if (row[0] != '!')
+                    {
+                        // If the row is not a comment then 
+                        // it is a row of cells and needs to be iterated through.
+                        for (int x = 0; x < row.Length; x++)
+                        {
+                            // If row[xPos] is a 'O' (capital O) then it is alive
+                            _universe[x, y] = (row[x] == 'O') ? true : false;
+                        }
+                    }
+                    y++;
+
+                }
+
+                // Close the file.
+                sr.Close();
+
+                _seedFlag = false;
+
+                Update_StatusStrip();
+
+                GraphicsPanel.Invalidate();
+
+            }
         }
 
         // Save
         private void File_Save(object sender, EventArgs e)
         {
 
-        }
 
+        }
         // Save As
         private void File_SaveAs(object sender, EventArgs e)
         {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "All Files|*.*|Cells|*.cells";
+            dlg.FilterIndex = 2; dlg.DefaultExt = "cells";
 
+
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                StreamWriter sw = new StreamWriter(dlg.FileName);
+
+                // Iterate through the universe one row at a time.
+                for (int y = 0; y < _universe.GetLength(1); y++)
+                {
+                    // Create a string to represent the current row.
+                    String currentRow = string.Empty;
+
+                    // Iterate through the current row one cell at a time.
+                    for (int x = 0; x < _universe.GetLength(0); x++)
+                    {
+                        // If the universe[x,y] is alive then append 'O' (capital O)
+                        // to the row string.
+                        if (_universe[x, y] == true)
+                        {
+                            currentRow += 'O';
+                        }
+                        // Else if the universe[x,y] is dead then append '.' (period)
+                        // to the row string.
+                        else
+                        {
+                            currentRow += '.';
+                        }
+
+
+                    }
+
+                    // Once the current row has been read through and the 
+                    // string constructed then write it to the file using WriteLine.
+                    sw.WriteLine(currentRow);
+                }
+
+                // After all rows and columns have been written then close the file.
+                sw.Close();
+            }
         }
 
         // Exit
@@ -155,6 +267,8 @@ namespace GameOfLife
         {
             if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
             {
+                _seedFlag = true;
+
                 // If user entered 0, seed is blank
                 if (_seed == 0)
                 {
@@ -189,6 +303,8 @@ namespace GameOfLife
         // Random Seed
         private void Randomize_RandomSeed(object sender, EventArgs e)
         {
+            _seedFlag = true;
+
             SeedBox_SetStyle();
 
             Random rnd = new Random();
@@ -389,7 +505,6 @@ namespace GameOfLife
             timer.Tick += Process_Timer_Tick;
 
             _universe = new bool[_rows, _columns];
-            _neighbors = new int[_rows, _columns];
         }
 
         // Reset / Create new settings file
@@ -536,6 +651,7 @@ namespace GameOfLife
         // Enables zoom scaling with mouse wheel
         private void OnMouseWheel_Zoom(object sender, MouseEventArgs e)
         {
+            bool zoomIn = false;
             // Scroll down (zoom out)
             if (e.Delta < 0)
             {
@@ -552,6 +668,7 @@ namespace GameOfLife
                 {
                     _rows--;
                     _columns--;
+                    zoomIn = true;
                 }
             }
 
@@ -564,7 +681,7 @@ namespace GameOfLife
                 // Iterate through the universe in the x, left to right
                 for (int x = 0; x < _rows; x++)
                 {
-                    if (x == _rows - 1 || y == _columns - 1)
+                    if ((x == _rows - 1 || y == _columns - 1) && zoomIn == false)
                     {
                         _universe[x, y] = false;
                     }
@@ -952,8 +1069,17 @@ namespace GameOfLife
         // Updates the status strip
         private void Update_StatusStrip()
         {
-            // Update the current seed
-            toolStripStatusLabelSeed.Text = Properties.Resources.labelSeed + Properties.Resources.equalSign + _seed;
+            // Seed flag indicates whether or not the user has generated a seed
+            if (_seedFlag == true)
+            {
+                // Update the current seed
+                toolStripStatusLabelSeed.Text = Properties.Resources.labelSeed + Properties.Resources.equalSign + _seed;
+            }
+            else
+            {
+                toolStripStatusLabelSeed.Text = Properties.Resources.labelSeed + Properties.Resources.equalSign + Properties.Resources.labelTextNA;
+            }
+
 
             // Update status strip generations
             toolStripStatusLabelGenerations.Text = Properties.Resources.labelGenerations + Properties.Resources.equalSign + _generations;

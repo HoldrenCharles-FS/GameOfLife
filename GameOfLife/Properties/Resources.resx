@@ -185,6 +185,10 @@
     <value>Seed</value>
     <comment>Label for seed</comment>
   </data>
+  <data name="labelTextNA" xml:space="preserve">
+    <value>N/A</value>
+    <comment>Not applicable label</comment>
+  </data>
   <data name="labelUniverseSize" xml:space="preserve">
     <value>Size</value>
     <comment>Label for Universe Size</comment>
