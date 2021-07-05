@@ -226,7 +226,7 @@ namespace GameOfLife
             this.startToolStripMenuItem.Enabled = false;
             this.startToolStripMenuItem.Image = global::GameOfLife.Properties.Resources.startIcon;
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.startToolStripMenuItem.Text = "Start";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.Control_Start);
             // 
@@ -235,7 +235,7 @@ namespace GameOfLife
             this.pauseToolStripMenuItem.Enabled = false;
             this.pauseToolStripMenuItem.Image = global::GameOfLife.Properties.Resources.pauseIcon;
             this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
-            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.pauseToolStripMenuItem.Text = "Pause";
             this.pauseToolStripMenuItem.Click += new System.EventHandler(this.Control_Pause);
             // 
@@ -244,7 +244,7 @@ namespace GameOfLife
             this.nextToolStripMenuItem.Enabled = false;
             this.nextToolStripMenuItem.Image = global::GameOfLife.Properties.Resources.nextIcon;
             this.nextToolStripMenuItem.Name = "nextToolStripMenuItem";
-            this.nextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.nextToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
             this.nextToolStripMenuItem.Text = "Next";
             this.nextToolStripMenuItem.Click += new System.EventHandler(this.Control_Next);
             // 
@@ -262,7 +262,7 @@ namespace GameOfLife
             // 
             this.generateToolStripMenuItem.Image = global::GameOfLife.Properties.Resources.goIcon;
             this.generateToolStripMenuItem.Name = "generateToolStripMenuItem";
-            this.generateToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.generateToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.generateToolStripMenuItem.Text = "Generate";
             this.generateToolStripMenuItem.Click += new System.EventHandler(this.Randomize_GenerateSeed);
             // 
@@ -270,14 +270,14 @@ namespace GameOfLife
             // 
             this.randomSeedToolStripMenuItem.Image = global::GameOfLife.Properties.Resources.randomizeIcon;
             this.randomSeedToolStripMenuItem.Name = "randomSeedToolStripMenuItem";
-            this.randomSeedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.randomSeedToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.randomSeedToolStripMenuItem.Text = "Random Seed";
             this.randomSeedToolStripMenuItem.Click += new System.EventHandler(this.Randomize_RandomSeed);
             // 
             // enterSeedToolStripMenuItem
             // 
             this.enterSeedToolStripMenuItem.Name = "enterSeedToolStripMenuItem";
-            this.enterSeedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.enterSeedToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.enterSeedToolStripMenuItem.Text = "Enter a seed...";
             this.enterSeedToolStripMenuItem.Click += new System.EventHandler(this.Randomize_EnterSeed);
             // 
@@ -864,7 +864,7 @@ namespace GameOfLife
             this.MainMenuStrip = this.MenuStrip;
             this.MinimumSize = new System.Drawing.Size(356, 450);
             this.Name = "Game";
-            this.Text = "Game of Life";
+            this.Text = "New World - Game of Life";
             this.MenuStrip.ResumeLayout(false);
             this.MenuStrip.PerformLayout();
             this.ToolStrip.ResumeLayout(false);

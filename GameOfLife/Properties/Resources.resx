@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="appendTitle" xml:space="preserve">
+    <value> - Game of Life</value>
+    <comment>Used for application text property</comment>
+  </data>
   <data name="commentPrefix" xml:space="preserve">
     <value>// </value>
     <comment>To indicate a comment within cfg files</comment>
@@ -124,6 +128,10 @@
   <data name="equalSign" xml:space="preserve">
     <value> = </value>
     <comment>For status strips</comment>
+  </data>
+  <data name="fileNewWorld" xml:space="preserve">
+    <value>New World</value>
+    <comment>Used for application text property</comment>
   </data>
   <data name="finite" xml:space="preserve">
     <value>Finite</value>

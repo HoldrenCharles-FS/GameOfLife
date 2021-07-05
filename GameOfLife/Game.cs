@@ -17,6 +17,7 @@ namespace GameOfLife
         private bool _saveAsFlag = false;   // Keeps frack if whether or not the user is Saving As...
         private bool _initFlag = true;      // Tells that where code is initializing data
         private string _fileName;           // Save file
+        private string _path;               // Full path to save
 
         //  Settings
         private Color _backColor;       // Back color
@@ -66,6 +67,9 @@ namespace GameOfLife
             // Reset universe
             _seed = 0;
             _universe = new bool[_rows, _columns];
+
+            // Update Game.Text to New World
+            Text = Properties.Resources.fileNewWorld + Properties.Resources.appendTitle;
 
             // Display N/A instead of _seed
             _seedFlag = false;
@@ -139,6 +143,8 @@ namespace GameOfLife
                 // Reset the file pointer back to the beginning of the file.
                 sr.BaseStream.Seek(0, SeekOrigin.Begin);
 
+                
+
                 // Column indexer
                 int y = 0;
 
@@ -199,6 +205,13 @@ namespace GameOfLife
                 // Close the file.
                 sr.Close();
 
+                string path = dlg.FileName;
+
+                File_Process_UpdatePath(ref path);
+
+                // Update Game.Text to include filename
+                Text = _fileName + Properties.Resources.appendTitle;
+
                 // Display N/A instead of _seed
                 _seedFlag = false;
 
@@ -232,15 +245,23 @@ namespace GameOfLife
         private void File_Save(object sender, EventArgs e)
         {
             // If the user is Saving and has not specified file name
-            if (_saveAsFlag == false && _fileName == null)
+            if (_saveAsFlag == false && (_fileName == null || Text == Properties.Resources.fileNewWorld + Properties.Resources.appendTitle))
             {
                 // Open Save As..
                 File_SaveAs(sender, e);
             }
             else
             {
+                if (!File.Exists(_path))
+                {
+                    File.Create(_path);
+                }
+
+
+                File_Process_UpdatePath(ref _path);
+
                 // Write to file
-                StreamWriter sw = new StreamWriter(_fileName);
+                StreamWriter sw = new StreamWriter(_path);
 
                 // Iterate through the universe one row at a time.
                 for (int y = 0; y < _universe.GetLength(1); y++)
@@ -273,6 +294,10 @@ namespace GameOfLife
 
                 // After all rows and columns have been written then close the file.
                 sw.Close();
+
+
+                // Update Game.Text to include filename
+                Text = _fileName + Properties.Resources.appendTitle;
             }
 
         }
@@ -294,8 +319,9 @@ namespace GameOfLife
                 // Mark Save As flag as true
                 _saveAsFlag = true;
 
-                // Update filename to user specified name
-                _fileName = dlg.FileName;
+                string path = dlg.FileName;
+
+                File_Process_UpdatePath(ref path);
 
                 // Save file
                 File_Save(sender, e);
@@ -304,6 +330,21 @@ namespace GameOfLife
                 _saveAsFlag = false;
             }
 
+        }
+
+        private void File_Process_UpdatePath(ref string path)
+        {
+            // Update filename to user specified name
+            _path = path;
+            string[] pathArr = path.Split('\\');
+
+            for (int i = 0; i < pathArr.Length; i++)
+            {
+                if (i == pathArr.Length - 1)
+                {
+                    _fileName = pathArr[i];
+                }
+            }
         }
 
         // Exit

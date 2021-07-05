@@ -61,6 +61,15 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to  - Game of Life.
+        /// </summary>
+        internal static string appendTitle {
+            get {
+                return ResourceManager.GetString("appendTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to // .
         /// </summary>
         internal static string commentPrefix {
@@ -75,6 +84,15 @@ namespace GameOfLife.Properties {
         internal static string equalSign {
             get {
                 return ResourceManager.GetString("equalSign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New World.
+        /// </summary>
+        internal static string fileNewWorld {
+            get {
+                return ResourceManager.GetString("fileNewWorld", resourceCulture);
             }
         }
         
