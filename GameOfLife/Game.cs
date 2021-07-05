@@ -231,47 +231,49 @@ namespace GameOfLife
         // Save
         private void File_Save(object sender, EventArgs e)
         {
-            // If the user is Saving, not Saving as
-            if (_saveAsFlag == false)
+            // If the user is Saving and has not specified file name
+            if (_saveAsFlag == false && _fileName == null)
             {
-                // Save to default location
-                _fileName = Properties.Resources.fileName;
+                // Open Save As..
+                File_SaveAs(sender, e);
             }
-
-            // Write to file
-            StreamWriter sw = new StreamWriter(_fileName);
-
-            // Iterate through the universe one row at a time.
-            for (int y = 0; y < _universe.GetLength(1); y++)
+            else
             {
-                // Create a string to represent the current row.
-                String currentRow = string.Empty;
+                // Write to file
+                StreamWriter sw = new StreamWriter(_fileName);
 
-                // Iterate through the current row one cell at a time.
-                for (int x = 0; x < _universe.GetLength(0); x++)
+                // Iterate through the universe one row at a time.
+                for (int y = 0; y < _universe.GetLength(1); y++)
                 {
-                    // If the universe[x,y] is alive then append 'O' (capital O)
-                    // to the row string.
-                    if (_universe[x, y] == true)
+                    // Create a string to represent the current row.
+                    String currentRow = string.Empty;
+
+                    // Iterate through the current row one cell at a time.
+                    for (int x = 0; x < _universe.GetLength(0); x++)
                     {
-                        currentRow += 'O';
-                    }
-                    // Else if the universe[x,y] is dead then append '.' (period)
-                    // to the row string.
-                    else
-                    {
-                        currentRow += '.';
-                    }
+                        // If the universe[x,y] is alive then append 'O' (capital O)
+                        // to the row string.
+                        if (_universe[x, y] == true)
+                        {
+                            currentRow += 'O';
+                        }
+                        // Else if the universe[x,y] is dead then append '.' (period)
+                        // to the row string.
+                        else
+                        {
+                            currentRow += '.';
+                        }
 
 
+                    }
+
+                    // Write row to file
+                    sw.WriteLine(currentRow);
                 }
 
-                // Write row to file
-                sw.WriteLine(currentRow);
+                // After all rows and columns have been written then close the file.
+                sw.Close();
             }
-
-            // After all rows and columns have been written then close the file.
-            sw.Close();
 
         }
         // Save As

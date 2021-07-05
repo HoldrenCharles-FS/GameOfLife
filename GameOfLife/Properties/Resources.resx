@@ -125,10 +125,6 @@
     <value> = </value>
     <comment>For status strips</comment>
   </data>
-  <data name="fileName" xml:space="preserve">
-    <value>Save.cells</value>
-    <comment>Default Save File</comment>
-  </data>
   <data name="finite" xml:space="preserve">
     <value>Finite</value>
     <comment>string value</comment>
