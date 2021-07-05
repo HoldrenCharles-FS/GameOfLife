@@ -9,7 +9,7 @@
 This project was created for the course Project and Portfolio I: Online at Full Sail University.
 
 ## Updates
-### 07/03/2021
+### 07/04/2021
 - Implemented Neighbor Count overlay.
 - User can change interval.
 - Implemented Open and Save As.
