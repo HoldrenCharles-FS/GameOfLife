@@ -164,6 +164,14 @@
     <value>Display Grid</value>
     <comment>Label for Display Grid</comment>
   </data>
+  <data name="labelDisplayHUD" xml:space="preserve">
+    <value>Display HUD</value>
+    <comment>Label for HUD</comment>
+  </data>
+  <data name="labelDisplayNeighborCount" xml:space="preserve">
+    <value>Display Neighbor Count</value>
+    <comment>label for neighbor count</comment>
+  </data>
   <data name="labelGenerations" xml:space="preserve">
     <value>Generations</value>
     <comment>Label for Generations</comment>
@@ -175,10 +183,6 @@
   <data name="labelGridx10Color" xml:space="preserve">
     <value>Grid x10 Color</value>
     <comment>Label for Grid 10x Color</comment>
-  </data>
-  <data name="labelHUD" xml:space="preserve">
-    <value>HUD</value>
-    <comment>Label for HUD</comment>
   </data>
   <data name="labelInterval" xml:space="preserve">
     <value>Interval</value>

@@ -10,6 +10,15 @@ namespace GameOfLife
         #region Fields and Contructor
         // Fields
         private bool[,] _universe;      // The universe array
+        Timer timer = new Timer();          // The Timer class
+        private int _cellCount = 0;         // Cell count
+        private bool _seedFlag = false;     // Keeps track if a seed should be displayed
+        private bool _importFlag = false;   // Keeps track if whether or not the user is importing
+        private bool _saveAsFlag = false;   // Keeps frack if whether or not the user is Saving As...
+        private bool _initFlag = true;      // Tells that where code is initializing data
+        private string _fileName;           // Save file
+
+        //  Settings
         private Color _backColor;       // Back color
         private Color _cellColor;       // Cell color
         private Color _gridColor;       // Grid color
@@ -24,12 +33,7 @@ namespace GameOfLife
         private bool _displayGrid;      // Display Grid
         private decimal _interval;      // Interval
 
-        Timer timer = new Timer();          // The Timer class
-        private int _cellCount = 0;         // Cell count
-        private bool _seedFlag = false;     // Keeps track if a seed should be displayed
-        private bool _importFlag = false;   // Keeps track if whether or not the user is importing
-        private bool _saveAsFlag = false;   // Keeps frack if whether or not the user is Saving As...
-        private string _fileName;           // Save file
+
 
         // Constructor
         public Game()
@@ -39,6 +43,13 @@ namespace GameOfLife
 
             // Initialize components for Windows Form (avoid editing)
             InitializeComponent();
+
+            // Initalize settings graphics
+            View_Grid();
+            View_NeighborCount();
+            View_HUD();
+            View_Torodial();
+            _initFlag = false;
 
             // Subscribe a custom method to the Mouse wheel
             // Used to enable scrolling
@@ -462,65 +473,131 @@ namespace GameOfLife
         #region Settings
         #region View
         // Toggle HUD
-        private void View_HUD(object sender, EventArgs e)
+        private void View_HUD(object sender = null, EventArgs e = null)
         {
-            // Toggle checked state
-            hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
-            hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
+            // Initializing data
+            if (_initFlag == true)
+            {
+                hUDToolStripMenuItem.Checked = _displayHUD;
+                hUDToolStripMenuItem.Checked = _displayHUD;
+            }
+            else
+            {
+                // Toggle checked state
+                hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
+                hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
 
-            // Update related field
-            _displayHUD = hUDToolStripMenuItem.Checked;
+                // Update related field
+                _displayHUD = hUDToolStripMenuItem.Checked;
+
+                // Autosave
+                Settings_Process_AutoSave();
+            }
+
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
 
         // Toggle Neighbor Count
-        private void View_NeighborCount(object sender, EventArgs e)
+        private void View_NeighborCount(object sender = null, EventArgs e = null)
         {
-            // Toggle checked state
-            neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
-            neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
+            // Initializing data
+            if (_initFlag == true)
+            {
+                neighborCountToolStripMenuItem.Checked = _displayNeighbors;
+                neighborCountToolStripMenuItem1.Checked = _displayNeighbors;
+            }
+            else
+            {
+                // Toggle checked state
+                neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
+                neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
 
-            // Update related field
-            _displayNeighbors = neighborCountToolStripMenuItem.Checked;
+                // Update related field
+                _displayNeighbors = neighborCountToolStripMenuItem.Checked;
+
+                // Autosave
+                Settings_Process_AutoSave();
+            }
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
 
         // Toggle Grid
-        private void View_Grid(object sender, EventArgs e)
+        private void View_Grid(object sender = null, EventArgs e = null)
         {
-            // Toggle checked state
-            gridToolStripMenuItem.Checked = !gridToolStripMenuItem.Checked;
-            gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
+            // Initializing data
+            if (_initFlag == true)
+            {
+                gridToolStripMenuItem.Checked = _displayGrid;
+                gridToolStripMenuItem1.Checked = _displayGrid;
+            }
+            else
+            {
+                // Toggle checked state
+                gridToolStripMenuItem.Checked = !gridToolStripMenuItem.Checked;
+                gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
 
-            // Update related field
-            _displayGrid = gridToolStripMenuItem.Checked;
+                // Update related field
+                _displayGrid = gridToolStripMenuItem.Checked;
+
+                // Autosave
+                Settings_Process_AutoSave();
+            }
+
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
 
         // Torodial
-        private void View_Torodial(object sender, EventArgs e)
+        private void View_Torodial(object sender = null, EventArgs e = null)
         {
-            // If boundary is finite
-            if (_boundary == false)
+            // Initializing data
+            if (_initFlag == true)
             {
-                // Boudary becomes Torodial
-                _boundary = true;
-
-                // Toggle checked state
-                torodialToolStripMenuItem.Checked = true;
-                finiteToolStripMenuItem.Checked = false;
-
-                // Update Status strip
-                Update_StatusStrip();
+                if (_boundary == true)
+                {
+                    torodialToolStripMenuItem.Checked = true;
+                    finiteToolStripMenuItem.Checked = false;
+                }
+                else
+                {
+                    torodialToolStripMenuItem.Checked = false;
+                    finiteToolStripMenuItem.Checked = true;
+                }
             }
+            else
+            {
+                // If boundary is finite
+                if (_boundary == false)
+                {
+                    // Boudary becomes Torodial
+                    _boundary = true;
+
+                    // Toggle checked state
+                    torodialToolStripMenuItem.Checked = true;
+                    finiteToolStripMenuItem.Checked = false;
+
+                    // Update Status strip
+                    Update_StatusStrip();
+                }
+
+                // Autosave
+                Settings_Process_AutoSave();
+
+            }
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
 
         // Finite
         private void View_Finite(object sender, EventArgs e)
         {
+
             // If boundary is torodial
             if (_boundary == true)
             {
@@ -534,6 +611,14 @@ namespace GameOfLife
                 // Update Status strip
                 Update_StatusStrip();
             }
+
+            // Autosave
+            Settings_Process_AutoSave();
+
+
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
         #endregion
 
@@ -550,6 +635,9 @@ namespace GameOfLife
             {
                 // Update the color when the user selects OK
                 color = dlg.Color;
+
+                // Autosave
+                Settings_Process_AutoSave();
 
                 // Tell Windows you need to repaint
                 GraphicsPanel.Invalidate();
@@ -603,6 +691,9 @@ namespace GameOfLife
                 // Update the timer's interval
                 timer.Interval = (int)dlg.Interval;
 
+                // Autosave
+                Settings_Process_AutoSave();
+
                 // Update status strip
                 Update_StatusStrip();
             }
@@ -612,7 +703,7 @@ namespace GameOfLife
         private void Settings_Reload(object sender = null, EventArgs e = null)
         {
             // An array to store data from each line
-            string[] data = new string[13];
+            string[] data = new string[11];
 
             // Array index #
             int i = 0;
@@ -649,8 +740,6 @@ namespace GameOfLife
             _cellColor = Color.FromName(data[i]); i++;
             _rows = Int32.Parse(data[i]); i++;
             _columns = Int32.Parse(data[i]); i++;
-            _generations = Int32.Parse(data[i]); i++;
-            _seed = Int32.Parse(data[i]); i++;
             _boundary = bool.Parse(data[i]); i++;
             _displayHUD = bool.Parse(data[i]); i++;
             _displayNeighbors = bool.Parse(data[i]); i++;
@@ -698,33 +787,79 @@ namespace GameOfLife
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelColumnCount);
                 sw.WriteLine(30);
 
-                // Generations
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGenerations);
-                sw.WriteLine(0);
-
-                // Seed
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelSeed);
-                sw.WriteLine(0);
-
                 // Boundary
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundary);
                 sw.WriteLine(true);
 
-                // HUD
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelHUD);
+                // Display HUD
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelDisplayHUD);
                 sw.WriteLine(true);
 
-                // Neighbors Count
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelHUD);
+                // Display Neighbors Count
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelDisplayNeighborCount);
                 sw.WriteLine(true);
 
-                // Grid
+                // Display Grid
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelDisplayGrid);
                 sw.WriteLine(true);
 
                 // Interval
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelInterval);
                 sw.WriteLine(20);
+            }
+        }
+
+        private void Settings_Process_AutoSave()
+        {
+            // Label and write default properties to file
+            using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
+            {
+                // All comments are prefixed with "// ", followed by label resource
+                // These are default values for the application
+
+                // Back Color
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBackColor);
+                sw.WriteLine(_backColor.Name);
+
+                // Grid Color
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridColor);
+                sw.WriteLine(_gridColor.Name);
+
+                // Grid 10x Color
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridx10Color);
+                sw.WriteLine(_grid10xColor.Name);
+
+                // Cell Color
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelCellColor);
+                sw.WriteLine(_cellColor.Name);
+
+                // Row Count
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelRowCount);
+                sw.WriteLine(_rows);
+
+                // Column Count
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelColumnCount);
+                sw.WriteLine(_columns);
+
+                // Boundary
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBoundary);
+                sw.WriteLine(_boundary);
+
+                // Display HUD
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelDisplayHUD);
+                sw.WriteLine(_displayHUD);
+
+                // Display Neighbor Count
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelDisplayNeighborCount);
+                sw.WriteLine(_displayNeighbors);
+
+                // Display Grid
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelDisplayGrid);
+                sw.WriteLine(_displayGrid);
+
+                // Interval
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelInterval);
+                sw.WriteLine(_interval);
             }
         }
         #endregion
@@ -969,6 +1104,7 @@ namespace GameOfLife
         // Paint graphics panel
         private void Process_GraphicsPanel_Paint(object sender, PaintEventArgs e)
         {
+            GraphicsPanel.BackColor = _backColor;
             // Covert to floats
             float clientWidth = GraphicsPanel.ClientSize.Width, zeroCount = _universe.GetLength(0),
                 clientHeight = GraphicsPanel.ClientSize.Height, oneCount = _universe.GetLength(1);
@@ -1058,7 +1194,7 @@ namespace GameOfLife
                             }
 
                             // Green / Cells that will live next generation
-                            if (count == 3 || (_universe[x,y] == true && count == 4))
+                            if (count == 3 || (_universe[x, y] == true && count == 4))
                             {
                                 neighborColor = Color.FromArgb(alpha, 0, 150, 0);
                                 neighborBrush = new SolidBrush(neighborColor);
