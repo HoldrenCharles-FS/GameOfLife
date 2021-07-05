@@ -79,6 +79,15 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save.cells.
+        /// </summary>
+        internal static string fileName {
+            get {
+                return ResourceManager.GetString("fileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Finite.
         /// </summary>
         internal static string finite {

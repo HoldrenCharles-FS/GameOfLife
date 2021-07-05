@@ -28,6 +28,8 @@ namespace GameOfLife
         private int _cellCount = 0;     // Cell count
         private bool _seedFlag = false;
         private bool _importFlag = false;
+        private bool _saveAsFlag = false;
+        private string _fileName;
 
         // Constructor
         public Game()
@@ -97,7 +99,7 @@ namespace GameOfLife
                     // Get the length of the current row string and adjust the maxWidth variable
                     rows = row.Length;
                 }
-                
+
                 if (_importFlag == false)
                 {
                     // Resize the universe
@@ -122,7 +124,7 @@ namespace GameOfLife
                     // If the row begins with '!' it is a comment
                     if (row[0] != '!')
                     {
-                        
+
                         if (_importFlag == false)
                         {
                             tempRow = row.Length;
@@ -142,9 +144,9 @@ namespace GameOfLife
                             else if (y < _universe.GetLength(1))
                             {
                                 tempUniverse[x, y] = (row[x] == 'O') ? true : false;
-                                _universe[x, y] = _universe[x, y] | tempUniverse[x,y];
+                                _universe[x, y] = _universe[x, y] | tempUniverse[x, y];
                             }
-                            
+
                         }
                     }
                     y++;
@@ -178,7 +180,45 @@ namespace GameOfLife
         // Save
         private void File_Save(object sender, EventArgs e)
         {
+            if (_saveAsFlag == false)
+            {
+                _fileName = Properties.Resources.fileName;
+            }
 
+            StreamWriter sw = new StreamWriter(_fileName);
+
+            // Iterate through the universe one row at a time.
+            for (int y = 0; y < _universe.GetLength(1); y++)
+            {
+                // Create a string to represent the current row.
+                String currentRow = string.Empty;
+
+                // Iterate through the current row one cell at a time.
+                for (int x = 0; x < _universe.GetLength(0); x++)
+                {
+                    // If the universe[x,y] is alive then append 'O' (capital O)
+                    // to the row string.
+                    if (_universe[x, y] == true)
+                    {
+                        currentRow += 'O';
+                    }
+                    // Else if the universe[x,y] is dead then append '.' (period)
+                    // to the row string.
+                    else
+                    {
+                        currentRow += '.';
+                    }
+
+
+                }
+
+                // Once the current row has been read through and the 
+                // string constructed then write it to the file using WriteLine.
+                sw.WriteLine(currentRow);
+            }
+
+            // After all rows and columns have been written then close the file.
+            sw.Close();
 
         }
         // Save As
@@ -191,41 +231,12 @@ namespace GameOfLife
 
             if (DialogResult.OK == dlg.ShowDialog())
             {
-                StreamWriter sw = new StreamWriter(dlg.FileName);
-
-                // Iterate through the universe one row at a time.
-                for (int y = 0; y < _universe.GetLength(1); y++)
-                {
-                    // Create a string to represent the current row.
-                    String currentRow = string.Empty;
-
-                    // Iterate through the current row one cell at a time.
-                    for (int x = 0; x < _universe.GetLength(0); x++)
-                    {
-                        // If the universe[x,y] is alive then append 'O' (capital O)
-                        // to the row string.
-                        if (_universe[x, y] == true)
-                        {
-                            currentRow += 'O';
-                        }
-                        // Else if the universe[x,y] is dead then append '.' (period)
-                        // to the row string.
-                        else
-                        {
-                            currentRow += '.';
-                        }
-
-
-                    }
-
-                    // Once the current row has been read through and the 
-                    // string constructed then write it to the file using WriteLine.
-                    sw.WriteLine(currentRow);
-                }
-
-                // After all rows and columns have been written then close the file.
-                sw.Close();
+                _saveAsFlag = true;
+                _fileName = dlg.FileName;
+                File_Save(sender, e);
+                _saveAsFlag = false;
             }
+
         }
 
         // Exit
@@ -1135,6 +1146,6 @@ namespace GameOfLife
 
         #endregion
 
-        
+
     }
 }
