@@ -395,13 +395,17 @@ namespace GameOfLife
             // Toggle tool strip Start icon to the Pause icon
             toolStripButtonStart.Image = Properties.Resources.startIcon;
 
-            // Enable File > Start
-            // The game is paused
-            startToolStripMenuItem.Enabled = true;
+            if (_cellCount != 0)
+            {
+                // Enable File > Start
+                // The game is paused
+                startToolStripMenuItem.Enabled = true;
 
-            // Disable File > Pause
-            // Can't pause what isn't running
-            pauseToolStripMenuItem.Enabled = false;
+                // Disable File > Pause
+                // Can't pause what isn't running
+                pauseToolStripMenuItem.Enabled = false;
+            }
+            
         }
 
         // Next
