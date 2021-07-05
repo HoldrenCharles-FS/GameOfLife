@@ -80,7 +80,7 @@ namespace GameOfLife
             // Update Status Strip
             Update_StatusStrip();
 
-             // Count alive cells
+            // Count alive cells
             Process_CountCells();
 
             // Update controls (will enable Start and Next if seed is blank)
@@ -143,7 +143,7 @@ namespace GameOfLife
                 // Reset the file pointer back to the beginning of the file.
                 sr.BaseStream.Seek(0, SeekOrigin.Begin);
 
-                
+
 
                 // Column indexer
                 int y = 0;
@@ -400,12 +400,14 @@ namespace GameOfLife
                 // Enable File > Start
                 // The game is paused
                 startToolStripMenuItem.Enabled = true;
-
-                // Disable File > Pause
-                // Can't pause what isn't running
-                pauseToolStripMenuItem.Enabled = false;
             }
             
+
+            // Disable File > Pause
+            // Can't pause what isn't running
+            pauseToolStripMenuItem.Enabled = false;
+
+
         }
 
         // Next
@@ -493,7 +495,7 @@ namespace GameOfLife
             // Open the dialog box
             if (DialogResult.OK == dlg.ShowDialog())
             {
-                
+
                 // Retrieve the seed from the form
                 _seed = dlg.Seed;
 
