@@ -17,19 +17,19 @@ namespace GameOfLife
         private int _rows;              // Rows count
         private int _columns;           // Column Count
         private int _generations;       // Generation count
-        private int _seed;              // Seed
+        private long _seed;             // Seed : Declared as long for validation. See SeedBox_ParseSeed()
         private bool _boundary;         // Boundary type : True = Torodial, False = Finite
-        private bool _hud;              // Display HUD
-        private bool _neighborCount;    // Display Neighbor Count
+        private bool _displayHUD;       // Display HUD
+        private bool _displayNeighbors; // Display Neighbor Count
         private bool _displayGrid;      // Display Grid
         private decimal _interval;      // Interval
 
-        Timer timer = new Timer();      // The Timer class
-        private int _cellCount = 0;     // Cell count
-        private bool _seedFlag = false;
-        private bool _importFlag = false;
-        private bool _saveAsFlag = false;
-        private string _fileName;
+        Timer timer = new Timer();          // The Timer class
+        private int _cellCount = 0;         // Cell count
+        private bool _seedFlag = false;     // Keeps track if a seed should be displayed
+        private bool _importFlag = false;   // Keeps track if whether or not the user is importing
+        private bool _saveAsFlag = false;   // Keeps frack if whether or not the user is Saving As...
+        private string _fileName;           // Save file
 
         // Constructor
         public Game()
@@ -40,6 +40,8 @@ namespace GameOfLife
             // Initialize components for Windows Form (avoid editing)
             InitializeComponent();
 
+            // Subscribe a custom method to the Mouse wheel
+            // Used to enable scrolling
             MouseWheel += OnMouseWheel_Zoom;
         }
         #endregion
@@ -53,6 +55,8 @@ namespace GameOfLife
             // Reset universe
             _seed = 0;
             _universe = new bool[_rows, _columns];
+
+            // Display N/A instead of _seed
             _seedFlag = false;
 
             // Display default message in seed box
@@ -71,16 +75,22 @@ namespace GameOfLife
         // Open
         private void File_Open(object sender, EventArgs e)
         {
+            // Instantiate a new OpenFileDialog
             OpenFileDialog dlg = new OpenFileDialog();
+
+            // Filters for file types
             dlg.Filter = "All Files|*.*|Cells|*.cells";
+
+            // Set default type to filter index 2 (.cells)
             dlg.FilterIndex = 2;
 
+            // Open Dialog Box until the user cancels or confirms
             if (DialogResult.OK == dlg.ShowDialog())
             {
+                // Read from file
                 StreamReader sr = new StreamReader(dlg.FileName);
 
-                // Create a couple variables to calculate the width and height
-                // of the data in the file.
+                // Calculate the width and height of the data in the file.
                 int rows = 0;
                 int columns = 0;
 
@@ -100,6 +110,7 @@ namespace GameOfLife
                     rows = row.Length;
                 }
 
+                // If the user is just opening, not importing
                 if (_importFlag == false)
                 {
                     // Resize the universe
@@ -111,44 +122,59 @@ namespace GameOfLife
                 // Reset the file pointer back to the beginning of the file.
                 sr.BaseStream.Seek(0, SeekOrigin.Begin);
 
+                // Column indexer
                 int y = 0;
 
                 // Iterate through the file again, this time reading in the cells.
                 while (!sr.EndOfStream)
                 {
+                    // Used only for Import
                     bool[,] tempUniverse = new bool[_universe.GetLength(0), _universe.GetLength(1)];
-                    int tempRow = 0, tempCol = 0;
+
+                    // Used for for loop
+                    int tempRow = 0;
+
                     // Read one row at a time.
                     string row = sr.ReadLine();
 
                     // If the row begins with '!' it is a comment
                     if (row[0] != '!')
                     {
-
+                        // If opening a file
                         if (_importFlag == false)
                         {
+                            // Loop for as long as the opened file's row
                             tempRow = row.Length;
                         }
+                        // Else importing a file
                         else
                         {
+                            // Else don't access what isn't resized
                             tempRow = _universe.GetLength(0);
                         }
 
+                        // Update the universe
                         for (int x = 0; x < tempRow; x++)
                         {
-                            // If row[xPos] is a 'O' (capital O) then it is alive
+                            // On open
                             if (_importFlag == false)
                             {
+                                // If row[xPos] is a 'O' (capital O) then it is alive
                                 _universe[x, y] = (row[x] == 'O') ? true : false;
                             }
+                            // On import
                             else if (y < _universe.GetLength(1))
                             {
+                                // If row[xPos] is a 'O' (capital O) then it is alive
                                 tempUniverse[x, y] = (row[x] == 'O') ? true : false;
+
+                                // Use the OR operator to keep alive cells, well, alive.
                                 _universe[x, y] = _universe[x, y] | tempUniverse[x, y];
                             }
 
                         }
                     }
+                    // Update indexer
                     y++;
 
                 }
@@ -156,14 +182,19 @@ namespace GameOfLife
                 // Close the file.
                 sr.Close();
 
+                // Display N/A instead of _seed
                 _seedFlag = false;
 
+                // Recount cells
                 Process_CountCells();
 
+                // Update status strip
                 Update_StatusStrip();
 
+                // Update controls
                 Update_Controls();
 
+                // Tell windows to repaint
                 GraphicsPanel.Invalidate();
 
             }
@@ -172,19 +203,25 @@ namespace GameOfLife
         // Import
         private void File_Import(object sender, EventArgs e)
         {
+            // Change the flag to true and call File_Open
             _importFlag = true;
             File_Open(sender, e);
+
+            // Done importing, reset to false
             _importFlag = false;
         }
 
         // Save
         private void File_Save(object sender, EventArgs e)
         {
+            // If the user is Saving, not Saving as
             if (_saveAsFlag == false)
             {
+                // Save to default location
                 _fileName = Properties.Resources.fileName;
             }
 
+            // Write to file
             StreamWriter sw = new StreamWriter(_fileName);
 
             // Iterate through the universe one row at a time.
@@ -212,8 +249,7 @@ namespace GameOfLife
 
                 }
 
-                // Once the current row has been read through and the 
-                // string constructed then write it to the file using WriteLine.
+                // Write row to file
                 sw.WriteLine(currentRow);
             }
 
@@ -224,16 +260,28 @@ namespace GameOfLife
         // Save As
         private void File_SaveAs(object sender, EventArgs e)
         {
+            // Instantiate new SaveFileDialog
             SaveFileDialog dlg = new SaveFileDialog();
+
+            // Filters for file types
             dlg.Filter = "All Files|*.*|Cells|*.cells";
+
+            // Set default type to filter index 2 (.cells)
             dlg.FilterIndex = 2; dlg.DefaultExt = "cells";
 
-
+            // Open Dialog Box until the user cancels or confirms
             if (DialogResult.OK == dlg.ShowDialog())
             {
+                // Mark Save As flag as true
                 _saveAsFlag = true;
+
+                // Update filename to user specified name
                 _fileName = dlg.FileName;
+
+                // Save file
                 File_Save(sender, e);
+
+                // Done saving as, reset flag
                 _saveAsFlag = false;
             }
 
@@ -242,6 +290,7 @@ namespace GameOfLife
         // Exit
         private void File_Exit(object sender, EventArgs e)
         {
+            // Exit the application
             Application.Exit();
         }
         #endregion
@@ -251,20 +300,25 @@ namespace GameOfLife
         private void Control_Start(object sender = null, EventArgs e = null)
         {
             // Toggle between Start / Pause states 
+
+            // When the timer is disabled
             if (timer.Enabled == false)
             {
-                // Start timer
+                // Start the timer
                 timer.Enabled = true;
 
                 // Toggle tool strip Start icon to the Pause icon
                 toolStripButtonStart.Image = Properties.Resources.pauseIcon;
 
                 // Disable File > Start
+                // The game is running
                 startToolStripMenuItem.Enabled = false;
 
                 // Enable File > Pause
+                // It can be paused
                 pauseToolStripMenuItem.Enabled = true;
             }
+            // Else the game is running, feel free to pause!
             else
             {
                 // Pause
@@ -282,20 +336,24 @@ namespace GameOfLife
             toolStripButtonStart.Image = Properties.Resources.startIcon;
 
             // Enable File > Start
+            // The game is paused
             startToolStripMenuItem.Enabled = true;
 
             // Disable File > Pause
+            // Can't pause what isn't running
             pauseToolStripMenuItem.Enabled = false;
         }
 
         // Next
         private void Control_Next(object sender = null, EventArgs e = null)
         {
+            // Update the controls before checking the cell count
             Update_Controls();
 
+            // Because if there are 0 alive cells, you shouldn't be able to...
             if (_cellCount > 0)
             {
-                // Pause
+                // Pause or
                 Control_Pause(sender, e);
 
                 // Step forward one generation
@@ -307,78 +365,77 @@ namespace GameOfLife
         #endregion
 
         #region Randomize
-        // Regenerate
+        // Generate
         private void Randomize_GenerateSeed(object sender = null, EventArgs e = null)
         {
+            // Generates user input inside text box
+
+            // Check that the user didn't click away
+            // and that the style is no longer italic
             if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
             {
+                // User has input a seed, so display it
                 _seedFlag = true;
 
-                // If user entered 0, seed is blank
-                if (_seed == 0)
-                {
-                    File_New(sender, e);
-                }
-                else if (_seed > Int32.MaxValue)
-                {
-                    _seed = Int32.MaxValue;
-                }
-                else if (_seed < Int32.MinValue)
-                {
-                    _seed = Int32.MinValue;
-                }
-
+                // Update the universe array
                 Randomize_Process_UpdateArray();
 
+                // Count alive cells
                 Process_CountCells();
 
+                // Update status strip
                 Update_StatusStrip();
 
+                // Update controls (will enable Start and Next if seed is blank)
                 Update_Controls();
 
                 // Tell Windows you need to repaint
                 GraphicsPanel.Invalidate();
             }
+            // Else nothing was entered
             else
             {
+                // Reset seed box style
                 SeedBox_SetStyle(true);
             }
         }
 
         // Random Seed
-        private void Randomize_RandomSeed(object sender, EventArgs e)
+        private void Randomize_RandomSeed(object sender = null, EventArgs e = null)
         {
+            // Seed generated, display it
             _seedFlag = true;
 
-            SeedBox_SetStyle();
+            // Instantiate a random object
+            Random rnd = new Random(); // <- Random seed from time (no parameters)
 
-            Random rnd = new Random();
-
+            // Generate random seed between all acceptable ranges
             _seed = rnd.Next(Int32.MinValue, Int32.MaxValue);
 
+            // Update the universe array
             Randomize_Process_UpdateArray();
 
-            SeedBox_ParseSeed();
-
+            // Recount cells
             Process_CountCells();
 
+            // Update the status strip
             Update_StatusStrip();
 
+            // Update Control buttons
             Update_Controls();
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
-
-
         }
 
         // Process that updates the universe with random values
         private void Randomize_Process_UpdateArray()
         {
-            // 0 is the shortcut for a blank canvas
+            // 0 is the shortcut for a blank canvas -> File_New()
             if (_seed != 0)
             {
-                Random rnd = new Random(_seed);
+                // Instantiate a random object
+                Random rnd = new Random((int)_seed); // <- based on seed
 
                 // Iterate through the universe in the y, top to bottom
                 for (int y = 0; y < _universe.GetLength(1); y++)
@@ -386,7 +443,10 @@ namespace GameOfLife
                     // Iterate through the universe in the x, left to right
                     for (int x = 0; x < _universe.GetLength(0); x++)
                     {
+                        // Get a random bool
                         bool result = (rnd.Next(0, 2) == 0) ? false : true;
+
+                        // Update the random value to the universe array
                         _universe[x, y] = result;
                     }
                 }
@@ -395,7 +455,102 @@ namespace GameOfLife
         #endregion
 
         #region Settings
+        #region View
+        // Toggle HUD
+        private void View_HUD(object sender, EventArgs e)
+        {
+            // Toggle checked state
+            hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
+            hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
+
+            // Update related field
+            _displayHUD = hUDToolStripMenuItem.Checked;
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
+        }
+
+        // Toggle Neighbor Count
+        private void View_NeighborCount(object sender, EventArgs e)
+        {
+            // Toggle checked state
+            neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
+            neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
+
+            // Update related field
+            _displayNeighbors = neighborCountToolStripMenuItem.Checked;
+        }
+
+        // Toggle Grid
+        private void View_Grid(object sender, EventArgs e)
+        {
+            // Toggle checked state
+            gridToolStripMenuItem.Checked = !gridToolStripMenuItem.Checked;
+            gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
+
+            // Update related field
+            _displayGrid = gridToolStripMenuItem.Checked;
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
+        }
+
+        // Torodial
+        private void View_Torodial(object sender, EventArgs e)
+        {
+            // If boundary is finite
+            if (_boundary == false)
+            {
+                // Boudary becomes Torodial
+                _boundary = true;
+
+                // Toggle checked state
+                torodialToolStripMenuItem.Checked = true;
+                finiteToolStripMenuItem.Checked = false;
+
+                // Update Status strip
+                Update_StatusStrip();
+            }
+        }
+
+        // Finite
+        private void View_Finite(object sender, EventArgs e)
+        {
+            // If boundary is torodial
+            if (_boundary == true)
+            {
+                // Boudary becomes Finite
+                _boundary = false;
+
+                // Toggle checked state
+                torodialToolStripMenuItem.Checked = false;
+                finiteToolStripMenuItem.Checked = true;
+
+                // Update Status strip
+                Update_StatusStrip();
+            }
+        }
+        #endregion
+
         #region Color
+        // Process that opens the Color Dialog Box
+        private void Settings_Process_ColorDialogBox(ref Color color)
+        {
+            // Used for all modifiable colors, Color sent by reference
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = color;
+
+            // Open the dialog box
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                // Update the color when the user selects OK
+                color = dlg.Color;
+
+                // Tell Windows you need to repaint
+                GraphicsPanel.Invalidate();
+            }
+        }
+
         // Back Color
         private void Settings_BackColor(object sender, EventArgs e)
         {
@@ -425,74 +580,25 @@ namespace GameOfLife
 
         #endregion
 
-        #region View
-        // Toggle HUD
-        private void View_HUD(object sender, EventArgs e)
-        {
-            hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
-            hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
-            _hud = hUDToolStripMenuItem.Checked;
-
-            // Tell Windows you need to repaint
-            GraphicsPanel.Invalidate();
-        }
-
-        // Toggle Neighbor Count
-        private void View_NeighborCount(object sender, EventArgs e)
-        {
-            neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
-            neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
-            _neighborCount = neighborCountToolStripMenuItem.Checked;
-        }
-
-        // Toggle Grid
-        private void View_Grid(object sender, EventArgs e)
-        {
-            gridToolStripMenuItem.Checked = !gridToolStripMenuItem.Checked;
-            gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
-            _displayGrid = gridToolStripMenuItem.Checked;
-
-            // Tell Windows you need to repaint
-            GraphicsPanel.Invalidate();
-        }
-
-        // Torodial
-        private void View_Torodial(object sender, EventArgs e)
-        {
-            if (_boundary == false)
-            {
-                _boundary = true;
-                torodialToolStripMenuItem.Checked = true;
-                finiteToolStripMenuItem.Checked = false;
-
-                Update_StatusStrip();
-            }
-        }
-
-        // Finite
-        private void View_Finite(object sender, EventArgs e)
-        {
-            if (_boundary == true)
-            {
-                _boundary = false;
-                torodialToolStripMenuItem.Checked = false;
-                finiteToolStripMenuItem.Checked = true;
-
-                Update_StatusStrip();
-            }
-        }
-        #endregion
-
+        // Speed
         private void Settings_Speed(object sender, EventArgs e)
         {
+            // Instantiate the interval dialog box
             ModalDialog_Interval dlg = new ModalDialog_Interval();
 
+            // Store the previous setting
             dlg.Interval = _interval;
 
+            // Open the dialog box
             if (DialogResult.OK == dlg.ShowDialog())
             {
+                // Update to new value if the user clicked OK
                 _interval = dlg.Interval;
+
+                // Update the timer's interval
                 timer.Interval = (int)dlg.Interval;
+
+                // Update status strip
                 Update_StatusStrip();
             }
         }
@@ -541,14 +647,16 @@ namespace GameOfLife
             _generations = Int32.Parse(data[i]); i++;
             _seed = Int32.Parse(data[i]); i++;
             _boundary = bool.Parse(data[i]); i++;
-            _hud = bool.Parse(data[i]); i++;
-            _neighborCount = bool.Parse(data[i]); i++;
+            _displayHUD = bool.Parse(data[i]); i++;
+            _displayNeighbors = bool.Parse(data[i]); i++;
             _displayGrid = bool.Parse(data[i]); i++;
             _interval = decimal.Parse(data[i]);
+
             // Setup the timer
             timer.Interval = Int32.Parse(data[i]); // milliseconds
             timer.Tick += Process_Timer_Tick;
 
+            // Allocate the universe
             _universe = new bool[_rows, _columns];
         }
 
@@ -558,6 +666,9 @@ namespace GameOfLife
             // Label and write default properties to file
             using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
             {
+                // All comments are prefixed with "// ", followed by label resource
+                // These are default values for the application
+
                 // Back Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBackColor);
                 sw.WriteLine(Color.White.Name);
@@ -611,68 +722,116 @@ namespace GameOfLife
                 sw.WriteLine(20);
             }
         }
-
-        // Process that opens the Color Dialog Box
-        private void Settings_Process_ColorDialogBox(ref Color color)
-        {
-            ColorDialog dlg = new ColorDialog();
-
-            dlg.Color = color;
-
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                color = dlg.Color;
-
-                // Tell Windows you need to repaint
-                GraphicsPanel.Invalidate();
-            }
-        }
-
         #endregion
 
         #region Seed Box
         // Sets the font style of the seed box
         private void SeedBox_SetStyle(bool defaultStyle = false)
         {
+            // Remove default styling
             if (defaultStyle == false)
             {
                 toolStripTextBoxSeed.ForeColor = Color.Black;
                 toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Regular);
             }
+            // Reset to default styling, update text to the seed prompt
             else
             {
                 toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Italic);
                 toolStripTextBoxSeed.ForeColor = Color.Gray;
                 toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
-
             }
-
         }
 
         // Parses seed value inside seed box
         private void SeedBox_ParseSeed(object sender = null, EventArgs e = null)
         {
+            // Executes when the user has clicked away from text box
+
+            // Used for parsing from text
             int stringSum = 0;
 
+
+            // If the text box isn't blank, equal to 0, and is not the seed prompt
             if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Text != "0"
                 && toolStripTextBoxSeed.Text != Properties.Resources.seedPrompt)
             {
                 // If seed can be parsed, it will be in _seed
-                // Add each char as a number to stringSum
-                if (!int.TryParse(toolStripTextBoxSeed.Text, out _seed))
+                if (!long.TryParse(toolStripTextBoxSeed.Text, out _seed))
                 {
+                    // Else generate seed from text
+
+                    // Multipliers for stringSum
+                    int multiplier1 = 1;
+                    int multiplier2 = 2;
+
+                    // Add each char as a number to stringSum
                     foreach (char letter in toolStripTextBoxSeed.Text)
                     {
-                        stringSum += letter;
+                        // Multiply the int value of each char
+                        // by 13 and by two incrementing multipliers
+
+                        // This is to hit higher number ranges and
+                        // prevent the letter values from adding up to the same number
+                        stringSum += letter * 13 * multiplier1 * multiplier2;
+
+                        // Increment multipliers
+                        multiplier1++;
+                        multiplier2++;
                     }
+
+                    // Update seed
                     _seed = stringSum;
                     toolStripTextBoxSeed.Text = Convert.ToString(_seed);
                 }
+
+                // Used to chop off a seed thats too long
+                string maxSeed = null;
+
+                // Used to update the seed if to low or high
+                int tempSeed = 0;
+
+                // If user entered 0, seed is blank
+                if (_seed == 0)
+                {
+                    // Empty the universe
+                    File_New(sender, e);
+                }
+                // Else if the seed exceeds the max or min value for the random class
+                else if ((_seed > Int32.MaxValue) || (_seed < Int32.MinValue))
+                {
+                    // Parameter for substring method
+                    int substringLength = 10;
+
+                    // Increment for negative numbers
+                    if ((_seed < Int32.MinValue))
+                    {
+                        substringLength++;
+                    }
+
+                    // Covert seed to string, limit to 10 characters
+                    maxSeed = _seed.ToString().Substring(0, substringLength);
+
+                    // Try to parse the seed within an int range
+                    if (!int.TryParse(maxSeed, out tempSeed))
+                    {
+                        // If that didn't work, cut off another character
+                        substringLength--;
+                        maxSeed = _seed.ToString().Substring(0, substringLength);
+
+                        // Parsing is safe now
+                        tempSeed = Int32.Parse(maxSeed);
+                    }
+
+                    // Update seed
+                    _seed = tempSeed;
+                }
             }
+            // Else the user entered nothing to parse
             else
             {
+                // Reset the seed box style
                 SeedBox_SetStyle(true);
-
             }
 
         }
@@ -680,10 +839,15 @@ namespace GameOfLife
         // When the seed box is clicked
         private void SeedBox_Click(object sender, EventArgs e)
         {
+            // Empty the seed box on click
+
+            // Change font to regular / black
             SeedBox_SetStyle();
+
+            // When focused
             if (toolStripTextBoxSeed.Focused == true)
             {
-
+                // Empty text box
                 toolStripTextBoxSeed.Text = "";
             }
 
@@ -696,83 +860,86 @@ namespace GameOfLife
         // Enables zoom scaling with mouse wheel
         private void OnMouseWheel_Zoom(object sender, MouseEventArgs e)
         {
-            bool zoomIn = false;
             // Scroll down (zoom out)
             if (e.Delta < 0)
             {
-                if (_rows < 300 && _columns < 300)
-                {
-                    _rows++;
-                    _columns++;
-                }
+                Process_UniverseGrow();
             }
             // Scroll up (zoom in)
             else
             {
-                if (_rows > 5 && _columns > 5)
-                {
-                    _rows--;
-                    _columns--;
-                    zoomIn = true;
-                }
+                Process_UniverseShrink();
             }
 
-            bool[,] tempUniverse = _universe;
-            _universe = new bool[_rows, _columns];
-
-            // Iterate through the universe in the y, top to bottom
-            for (int y = 0; y < _columns; y++)
-            {
-                // Iterate through the universe in the x, left to right
-                for (int x = 0; x < _rows; x++)
-                {
-                    if ((x == _rows - 1 || y == _columns - 1) && zoomIn == false)
-                    {
-                        _universe[x, y] = false;
-                    }
-                    else
-                    {
-                        _universe[x, y] = tempUniverse[x, y];
-                    }
-
-                }
-            }
-            Update_StatusStrip();
-
-            // Tell Windows you need to repaint
-            GraphicsPanel.Invalidate();
+            Process_Zoom();
         }
+
+
+
+
 
         // For key detection within the application
         protected override void OnKeyDown(KeyEventArgs e)
         {
+            // Enter = Generate
             if (e.KeyCode == Keys.Enter)
             {
+                // So Enter doesn't make an alert noise
                 e.SuppressKeyPress = true;
 
-                if (toolStripTextBoxSeed.Text == null)
-                {
-                    SeedBox_SetStyle();
-                }
-                else if (toolStripTextBoxSeed.Focused == true)
+                // If focus is on seed box, parse seed, then generate
+                if (toolStripTextBoxSeed.Focused == true)
                 {
                     SeedBox_ParseSeed();
                     Randomize_GenerateSeed();
                 }
+                // Else generate seed
                 else
                 {
-                    Randomize_GenerateSeed();
+                    // But only if the user entered something
+                    if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Text != Properties.Resources.seedPrompt)
+                    {
+                        Randomize_GenerateSeed();
+                    }
+
                 }
 
+                // Change focus to Graphics panel
+                GraphicsPanel.Focus();
+
+                // Reset seed box style
+                SeedBox_SetStyle(true);
+
             }
+
+            // Space = Start / Stop
             if (e.KeyCode == Keys.Space)
             {
                 Control_Start();
             }
-            if (e.KeyCode == Keys.OemBackslash)
+
+            // Right Arrow = Next
+            if (e.KeyCode == Keys.Right)
             {
                 Control_Next();
             }
+
+            // Up Arrow = Zoom In
+            if (e.KeyCode == Keys.Up)
+            {
+                Process_UniverseShrink();
+                Process_Zoom();
+            }
+
+            // Down Arrow = Zoom Out
+            if (e.KeyCode == Keys.Down)
+            {
+                Process_UniverseGrow();
+                Process_Zoom();
+            }
+
+            // Tell windows to repaint
+            GraphicsPanel.Invalidate();
         }
 
         #endregion
@@ -802,23 +969,19 @@ namespace GameOfLife
                 clientHeight = GraphicsPanel.ClientSize.Height, oneCount = _universe.GetLength(1);
 
             // Calculate the width and height of each cell in pixels
-            // CELL WIDTH = WINDOW WIDTH / NUMBER OF CELLS IN X
             float cellWidth = clientWidth / zeroCount;
-
-            // CELL HEIGHT = WINDOW HEIGHT / NUMBER OF CELLS IN Y
             float cellHeight = clientHeight / oneCount;
 
-            // A Pen for drawing the grid lines (color, width)
+            // Pen for drawing the grid lines
             Pen gridPen = new Pen(_gridColor, 1);
-            Pen grid10xPen = new Pen(_grid10xColor, 2);
+
+            // Pen for drawing the x10 Grid
+            Pen gridx10Pen = new Pen(_grid10xColor, 2);
+
+            // Brush for drawing the HUD
             Brush hudBrush = new SolidBrush(Color.FromArgb(0x78FF0000));
 
-
-            int r = (_cellColor.R + 127) % 255;
-            int g = (_cellColor.G + 127) % 255;
-            int b = (_cellColor.B + 127) % 255;
-
-            Color neighborColor = Color.FromArgb(255, r, g, b);
+            Color neighborColor = Color.FromArgb(255, 255, 0, 0);
 
             Brush neighborBrush = new SolidBrush(neighborColor);
             // A Brush for filling living cells interiors (color)
@@ -832,8 +995,11 @@ namespace GameOfLife
                 {
                     // A rectangle to represent each cell in pixels
                     RectangleF cellRect = RectangleF.Empty;
-                    //Rectangle cellRect = Rectangle.Empty;
+
+                    // Convert to floats for calculation
                     float fX = x, fY = y;
+
+                    // Calculate for window scaling / cell placement
                     cellRect.X = fX * cellWidth;
                     cellRect.Y = fY * cellHeight;
                     cellRect.Width = cellWidth;
@@ -845,6 +1011,7 @@ namespace GameOfLife
                         e.Graphics.FillRectangle(cellBrush, cellRect);
                     }
 
+                    // If the grid is enabled
                     if (_displayGrid == true)
                     {
                         // Outline the cell with a pen
@@ -853,41 +1020,61 @@ namespace GameOfLife
                         // Paint the 10x grid
                         if ((x % 10 == 0) || (y % 10 == 0))
                         {
-                            e.Graphics.DrawRectangle(grid10xPen, cellRect.X * 10, cellRect.Y * 10, clientWidth, clientHeight);
+                            e.Graphics.DrawRectangle(gridx10Pen, cellRect.X * 10, cellRect.Y * 10, clientWidth, clientHeight);
                         }
                     }
 
-                    if (_neighborCount == true)
+                    // If the neighbor count is enabled
+                    if (_displayNeighbors == true)
                     {
+                        // Font for neighbors
                         Font neighborsFont = new Font("Courier New", cellHeight * 0.4f, FontStyle.Regular);
 
+                        // Create an empty string to append to
                         StringFormat stringFormat = new StringFormat();
+
+                        // Center text
                         stringFormat.Alignment = StringAlignment.Center;
                         stringFormat.LineAlignment = StringAlignment.Center;
 
+                        // Get neighbor count for current x, y
                         int count = Process_CountNeighbors(x, y);
 
+                        // Alpha value
+                        int alpha = 255;
 
+                        // Display neighbors if there are more than 0
                         if (count > 0)
                         {
-                            if (count == 3)
+                            // If the cell isn't alive, change alpha
+                            if (_universe[x, y] != true)
                             {
-                                neighborColor = Color.FromArgb(255, r, 160, b);
+                                alpha = 190;
+                            }
+
+                            // Green / Cells that will live next generation
+                            if (count == 3 || (_universe[x,y] == true && count == 4))
+                            {
+                                neighborColor = Color.FromArgb(alpha, 0, 150, 0);
                                 neighborBrush = new SolidBrush(neighborColor);
                             }
-                            else if (count != 3)
+                            // Red / Cells that will die next generation
+                            else
                             {
-                                neighborColor = Color.FromArgb(255, 255, g, b);
+                                neighborColor = Color.FromArgb(alpha, 255, 0, 0);
                                 neighborBrush = new SolidBrush(neighborColor);
                             }
 
+                            // Decrement the count for active cells
                             if (_universe[x, y] == true)
                             {
                                 count--;
                             }
 
+                            // Check count after decrement
                             if (count > 0)
                             {
+                                // Draw neighbor count
                                 e.Graphics.DrawString(count.ToString(), neighborsFont, neighborBrush, cellRect, stringFormat);
                             }
                         }
@@ -897,10 +1084,14 @@ namespace GameOfLife
                 }
             }
 
-            if (_hud == true)
+
+            // If the HUD is enabled
+            if (_displayHUD == true)
             {
+                // Font for heads up display
                 Font hudFont = new Font("Consolas", 15, FontStyle.Bold);
 
+                // Draw the HUD
                 e.Graphics.DrawString($"Generations: {_generations}\nCell Count: {_cellCount}" +
                     $"\nBoundary Type: {GetBoundaryString()}\nUniverse Size: {_rows} x {_columns}",
                     hudFont, hudBrush, 3, clientHeight - 95);
@@ -908,7 +1099,7 @@ namespace GameOfLife
 
             // Cleaning up pens and brushes
             gridPen.Dispose();
-            grid10xPen.Dispose();
+            gridx10Pen.Dispose();
             cellBrush.Dispose();
             hudBrush.Dispose();
 
@@ -917,14 +1108,19 @@ namespace GameOfLife
         // Mouse click on graphics panel
         private void Process_GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
         {
+            // When the Seed Box loses focus
             if (toolStripTextBoxSeed.Focused == false)
             {
-                if (toolStripTextBoxSeed.Text.Length == 0)
+                // Check the value within text box
+                // If invalid
+                if (toolStripTextBoxSeed.Text.Length == 0 || toolStripTextBoxSeed.Text == Properties.Resources.seedPrompt)
                 {
+                    // Reset Seed Box style
                     SeedBox_SetStyle(true);
-                    toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
 
                 }
+                // Else parse seed in seed box
+                // Activates upon clicking GraphicsPanel
                 else
                 {
                     SeedBox_ParseSeed();
@@ -939,6 +1135,7 @@ namespace GameOfLife
                 float clientWidth = GraphicsPanel.ClientSize.Width, zeroCount = _universe.GetLength(0),
                 clientHeight = GraphicsPanel.ClientSize.Height, oneCount = _universe.GetLength(1),
                 eX = e.X, eY = e.Y;
+
                 // Calculate the width and height of each cell in pixels
                 float cellWidth = clientWidth / zeroCount;
                 float cellHeight = clientHeight / oneCount;
@@ -963,8 +1160,10 @@ namespace GameOfLife
                     _cellCount--;
                 }
 
+                // Update controls
                 Update_Controls();
 
+                // Update Status strip
                 Update_StatusStrip();
 
                 // Tell Windows you need to repaint
@@ -975,6 +1174,7 @@ namespace GameOfLife
         // Calculate the next generation of cells
         private void Process_NextGeneration()
         {
+            // 2-D bool array identical in size to _universe array
             bool[,] nextUniverse = new bool[_universe.GetLength(0), _universe.GetLength(1)];
 
             // Iterate through the universe in the y, top to bottom
@@ -983,23 +1183,24 @@ namespace GameOfLife
                 // Iterate through the universe in the x, left to right
                 for (int x = 0; x < _universe.GetLength(0); x++)
                 {
-                    int neighbors = Process_CountNeighbors(x, y);
+                    // Get neighbor count
+                    int count = Process_CountNeighbors(x, y);
 
                     // Decrement the count for the current cell
                     if (_universe[x, y] == true)
                     {
-                        neighbors--;
+                        count--;
                     }
 
 
                     // Game of Life Rules
                     // Cell is alive but has less than 2 neighbors or more than 3 neighbors
-                    if ((_universe[x, y] == true) && (neighbors < 2 || (neighbors > 3)))
+                    if ((_universe[x, y] == true) && (count < 2 || (count > 3)))
                     {
                         nextUniverse[x, y] = false;
                     }
                     // Cell is dead but has 3 alive neighbors will live next generation
-                    else if ((_universe[x, y] == false) && (neighbors == 3))
+                    else if ((_universe[x, y] == false) && (count == 3))
                     {
                         nextUniverse[x, y] = true;
                     }
@@ -1017,72 +1218,75 @@ namespace GameOfLife
             // Increment generation count
             _generations++;
 
+            // Update Status strip
             Update_StatusStrip();
 
+            // Recount cells
             Process_CountCells();
 
+            // Update Controls
             Update_Controls();
 
+            // Update Status strip
             Update_StatusStrip();
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
 
+        // Count Neighbors
         private int Process_CountNeighbors(int x, int y)
         {
-            // Count neighbors
-            int count = 0, horizontal = 0, vertical = 0, cntr = -1;
+            // Count will be returned
+            // Horizontal / Vertical are calculated dependent on boundary
+            int count = 0, horizontal = 0, vertical = 0;
 
             // Iterate each adjacent space next to the current cell
-            for (int i = -1; i <= 1; i++, cntr++)
+            for (int i = -1; i <= 1; i++)
             {
                 for (int j = -1; j <= 1; j++)
                 {
-                    // Torodial boundary check
+                    // Torodial boundary
                     if (_boundary == true)
                     {
+                        // Use modulous to wrap around the universe
                         horizontal = (x + i + _rows) % _rows;
                         vertical = (y + j + _columns) % _columns;
-                        if (_universe[horizontal, vertical] == true)
-                        {
-                            // Increment neighbors if the cell is alive
-                            count++;
-                        }
-
                     }
+                    // Finite boundary
                     else
                     {
                         // Checking for out of bounds
                         if ((x + i >= 0 && y + j >= 0) && (x + i < _universe.GetLength(0) && y + j < _universe.GetLength(1)))
                         {
+                            // Check each adjacent space through addition and iteration
                             horizontal = x + i;
                             vertical = y + j;
-                            if (_universe[horizontal, vertical] == true)
-                            {
-                                // Increment neighbors if the cell is alive
-                                count++;
-                            }
                         }
                     }
-
-
+                    // Increment neighbors if the cell is alive
+                    if (_universe[horizontal, vertical] == true)
+                    {
+                        count++;
+                    }
                 }
             }
+
+            // Return count
             return count;
         }
 
         // The event called by the timer every Interval milliseconds.
         private void Process_Timer_Tick(object sender, EventArgs e)
         {
-            // Pause if there are no living cells
+            // Pause timer if there are no living cells
             if (_cellCount == 0)
             {
                 Control_Pause(sender, e);
             }
+            // Else keep going
             else
             {
-                // Else keep going
                 Process_NextGeneration();
             }
 
@@ -1091,23 +1295,27 @@ namespace GameOfLife
         // Update controls for Control_Next
         private void Update_Controls()
         {
+            // If there is at least 1 alive cell
             if (_cellCount > 0)
             {
-                toolStripButtonStart.Enabled = true;
-                startToolStripMenuItem.Enabled = true;
-                startToolStripMenuItem1.Enabled = true;
-                nextToolStripMenuItem.Enabled = true;
-                nextToolStripMenuItem1.Enabled = true;
-                toolStripButtonNext.Enabled = true;
+                // Enable controls
+                toolStripButtonStart.Enabled = true;    // Enable Start
+                startToolStripMenuItem.Enabled = true;  // Enable Start
+                startToolStripMenuItem1.Enabled = true; // Enable Start
+                nextToolStripMenuItem.Enabled = true;   // Enable Next
+                nextToolStripMenuItem1.Enabled = true;  // Enable Next
+                toolStripButtonNext.Enabled = true;     // Enable Next
             }
+            // Else _cellcount = 0
             else
             {
-                toolStripButtonStart.Enabled = false;
-                startToolStripMenuItem.Enabled = false;
-                startToolStripMenuItem1.Enabled = false;
-                nextToolStripMenuItem.Enabled = false;
-                nextToolStripMenuItem1.Enabled = false;
-                toolStripButtonNext.Enabled = false;
+                // Disable controls
+                toolStripButtonStart.Enabled = false;       // Disable Start
+                startToolStripMenuItem.Enabled = false;     // Disable Start
+                startToolStripMenuItem1.Enabled = false;    // Disable Start    
+                nextToolStripMenuItem.Enabled = false;      // Disable Next
+                nextToolStripMenuItem1.Enabled = false;     // Disable Next
+                toolStripButtonNext.Enabled = false;        // Disable Next
             }
         }
 
@@ -1120,11 +1328,11 @@ namespace GameOfLife
                 // Update the current seed
                 toolStripStatusLabelSeed.Text = Properties.Resources.labelSeed + Properties.Resources.equalSign + _seed;
             }
+            // Else display "Seed = N/A"
             else
             {
                 toolStripStatusLabelSeed.Text = Properties.Resources.labelSeed + Properties.Resources.equalSign + Properties.Resources.labelTextNA;
             }
-
 
             // Update status strip generations
             toolStripStatusLabelGenerations.Text = Properties.Resources.labelGenerations + Properties.Resources.equalSign + _generations;
@@ -1137,13 +1345,71 @@ namespace GameOfLife
 
         }
 
+        // Shrink the universe's x and y by 1
+        private void Process_UniverseShrink()
+        {
+            // Universe min size is 3 rows or columns
+            // Useful for saving a basic glider with no padding
+            if (_rows > 3 && _columns > 3)
+            {
+                // Decrement until at 3
+                _rows--;
+                _columns--;
+            }
+        }
+
+        // Grow the universe's x and y by 1
+        private void Process_UniverseGrow()
+        {
+            // Universe max size is 300 rows or columns
+            if (_rows < 300 && _columns < 300)
+            {
+                // Increment until at 300
+                _rows++;
+                _columns++;
+            }
+        }
+
+        // Used by MouseWheel and Up/Down Arrow Keys
+        private void Process_Zoom()
+        {
+            // Copy current universe to a temporary one
+            bool[,] tempUniverse = _universe;
+
+            // Reallocate the universe
+            _universe = new bool[_rows, _columns];
+
+            // Iterate through the universe in the y, top to bottom
+            for (int y = 0; y < _columns; y++)
+            {
+                // Iterate through the universe in the x, left to right
+                for (int x = 0; x < _rows; x++)
+                {
+                    // Boudary limits, delete cells at boundry
+                    if ((x == _rows - 1 || y == _columns - 1))
+                    {
+                        _universe[x, y] = false;
+                    }
+                    // Else copy cells that fit within universe
+                    else
+                    {
+                        _universe[x, y] = tempUniverse[x, y];
+                    }
+
+                }
+            }
+            // Update statuses
+            Update_StatusStrip();
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
+        }
+
+        // Get a string value for the boundary
         private string GetBoundaryString()
         {
             return (_boundary == true) ? Properties.Resources.torodial : Properties.Resources.finite;
         }
-
-
-
         #endregion
 
 
