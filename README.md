@@ -14,6 +14,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Settings Autosave during runtime.
 - Settings save previous settings file upon closing.
 - User can manually change size of universe through settings.
+- Added about box under Help.
 ### 07/04/2021
 - Implemented Neighbor Count overlay.
 - User can change interval.
