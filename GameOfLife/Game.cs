@@ -10,7 +10,7 @@ namespace GameOfLife
     {
         #region Fields and Contructor
         // Fields
-        private bool[,] _universe;      // The universe array
+        private bool[,] _universe;          // The universe array
         Timer timer = new Timer();          // The Timer class
         private int _cellCount = 0;         // Cell count
         private bool _seedFlag = false;     // Keeps track if a seed should be displayed
@@ -21,7 +21,7 @@ namespace GameOfLife
         private bool _hideParse = false;    // Used to hide the parse process when text box is focsued
         private bool _cursorMove = false;   // Used for MouseDown/MouseUp
         private int _draw = 0;              // Cursor mode : 0 = Paint, 1 = Erase, 2 = Single Click
-        private bool[,] _universeCopy;
+        private bool[,] _universeCopy;      // Used to make a copy of the universe for cursor modes
 
         //  Settings
         private Color _backColor;       // Back color
@@ -38,8 +38,6 @@ namespace GameOfLife
         private bool _displayGrid;      // Display Grid
         private decimal _interval;      // Interval
 
-
-
         // Constructor
         public Game()
         {
@@ -55,19 +53,6 @@ namespace GameOfLife
             // Subscribe a custom method to the Mouse wheel
             // Used to enable scrolling
             MouseWheel += OnMouseWheel_Zoom;
-        }
-
-        private void Init_Graphics()
-        {
-
-            View_Process_InitGrid();
-            View_Process_InitNeighborCount();
-            View_Process_InitHUD();
-            View_Process_InitTorodial();
-            Control_Paint();
-
-            // Tell Windows you need to repaint
-            GraphicsPanel.Invalidate();
         }
         #endregion
 
@@ -453,7 +438,65 @@ namespace GameOfLife
             }
         }
 
+         private void Control_Paint(object sender = null, EventArgs e = null)
+        {
+            _draw = 0;
 
+            GraphicsPanel.Cursor = Cursors.Cross;
+
+            toolStripButtonSingleClick.Checked = false;
+            toolStripMenuItemSingleClick.Checked = false;
+
+            toolStripButtonPaint.Checked = true;
+            paintToolStripMenuItem.Checked = true;
+
+            eraseToolStripMenuItem.Checked = false;
+            toolStripButtonErase.Checked = false;
+
+            // Tell windows to repaint panel
+            GraphicsPanel.Invalidate();
+        }
+
+        private void Control_Erase(object sender = null, EventArgs e = null)
+        {
+            _draw = 1;
+
+
+            Cursor eraser = new Cursor(Properties.Resources.eraser.GetHicon());
+
+            GraphicsPanel.Cursor = eraser;
+
+            toolStripButtonSingleClick.Checked = false;
+            toolStripMenuItemSingleClick.Checked = false;
+
+            toolStripButtonPaint.Checked = false;
+            paintToolStripMenuItem.Checked = false;
+
+            eraseToolStripMenuItem.Checked = true;
+            toolStripButtonErase.Checked = true;
+
+            // Tell windows to repaint panel
+            GraphicsPanel.Invalidate();
+        }
+
+        private void Control_SingleClick(object sender = null, EventArgs e = null)
+        {
+            _draw = 2;
+
+            GraphicsPanel.Cursor = Cursors.Arrow;
+
+            toolStripButtonSingleClick.Checked = true;
+            toolStripMenuItemSingleClick.Checked = true;
+
+            toolStripButtonPaint.Checked = false;
+            paintToolStripMenuItem.Checked = false;
+
+            eraseToolStripMenuItem.Checked = false;
+            toolStripButtonErase.Checked = false;
+
+            // Tell windows to repaint panel
+            GraphicsPanel.Invalidate();
+        }
         #endregion
 
         #region Randomize
@@ -1227,6 +1270,28 @@ namespace GameOfLife
             Process_Zoom();
         }
 
+        private void GraphicsPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (_draw != 2)
+            {
+                _cursorMove = true;
+            }
+        }
+
+        private void GraphicsPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+
+            if (_cursorMove == true)
+            {
+                Process_GraphicsPanel_MouseClick(sender, e);
+            }
+        }
+
+        private void GraphicsPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            _cursorMove = false;
+        }
+
         // For key detection within the application
         protected override void OnKeyDown(KeyEventArgs e)
         {
@@ -1377,24 +1442,29 @@ namespace GameOfLife
 
         #endregion
 
-        #region Background Processes
-        // Count alive cells
-        private void Process_CountCells()
+        #region Graphics
+        // Initialize graphics
+        private void Init_Graphics()
         {
-            // Reset cell count
-            _cellCount = 0;
+            // Update Grid
+            View_Process_InitGrid();
 
-            // Get the current cell count
-            foreach (bool cell in _universe)
-            {
-                if (cell == true)
-                {
-                    _cellCount++;
-                }
-            }
+            // Update Neighbor Cound
+            View_Process_InitNeighborCount();
+
+            // Update HUD
+            View_Process_InitHUD();
+
+            // Update Boundary
+            View_Process_InitTorodial();
+
+            // Set the cursor to paint
+            Control_Paint();
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
 
-        // Paint graphics panel
         private void Process_GraphicsPanel_Paint(object sender, PaintEventArgs e)
         {
             // Covert to floats
@@ -1649,6 +1719,27 @@ namespace GameOfLife
                 GraphicsPanel.Invalidate();
             }
         }
+        #endregion
+
+        #region Background Processes
+        // Count alive cells
+        private void Process_CountCells()
+        {
+            // Reset cell count
+            _cellCount = 0;
+
+            // Get the current cell count
+            foreach (bool cell in _universe)
+            {
+                if (cell == true)
+                {
+                    _cellCount++;
+                }
+            }
+        }
+
+        // Paint graphics panel
+       
 
         // Calculate the next generation of cells
         private void Process_NextGeneration()
@@ -1933,91 +2024,5 @@ namespace GameOfLife
             Settings_Process_AutoSave(true);
         }
         #endregion
-
-        private void GraphicsPanel_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (_draw != 2)
-            {
-                _cursorMove = true;
-            }
-        }
-
-        private void GraphicsPanel_MouseMove(object sender, MouseEventArgs e)
-        {
-
-            if (_cursorMove == true)
-            {
-                Process_GraphicsPanel_MouseClick(sender, e);
-            }
-        }
-
-        private void GraphicsPanel_MouseUp(object sender, MouseEventArgs e)
-        {
-            _cursorMove = false;
-        }
-
-
-
-        private void Control_Paint(object sender = null, EventArgs e = null)
-        {
-            _draw = 0;
-
-            GraphicsPanel.Cursor = Cursors.Cross;
-
-            toolStripButtonSingleClick.Checked = false;
-            toolStripMenuItemSingleClick.Checked = false;
-
-            toolStripButtonPaint.Checked = true;
-            paintToolStripMenuItem.Checked = true;
-
-            eraseToolStripMenuItem.Checked = false;
-            toolStripButtonErase.Checked = false;
-
-            // Tell windows to repaint panel
-            GraphicsPanel.Invalidate();
-        }
-
-        private void Control_Erase(object sender = null, EventArgs e = null)
-        {
-            _draw = 1;
-
-
-            Cursor eraser = new Cursor(Properties.Resources.eraser.GetHicon());
-
-            GraphicsPanel.Cursor = eraser;
-
-            toolStripButtonSingleClick.Checked = false;
-            toolStripMenuItemSingleClick.Checked = false;
-
-            toolStripButtonPaint.Checked = false;
-            paintToolStripMenuItem.Checked = false;
-
-            eraseToolStripMenuItem.Checked = true;
-            toolStripButtonErase.Checked = true;
-
-            // Tell windows to repaint panel
-            GraphicsPanel.Invalidate();
-        }
-
-        private void Control_SingleClick(object sender = null, EventArgs e = null)
-        {
-            _draw = 2;
-
-            GraphicsPanel.Cursor = Cursors.Arrow;
-
-            toolStripButtonSingleClick.Checked = true;
-            toolStripMenuItemSingleClick.Checked = true;
-
-            toolStripButtonPaint.Checked = false;
-            paintToolStripMenuItem.Checked = false;
-
-            eraseToolStripMenuItem.Checked = false;
-            toolStripButtonErase.Checked = false;
-
-            // Tell windows to repaint panel
-            GraphicsPanel.Invalidate();
-        }
-
-
     }
 }
