@@ -108,16 +108,6 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon eraser1 {
-            get {
-                object obj = ResourceManager.GetObject("eraser1", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap eraserIcon {
@@ -440,6 +430,24 @@ namespace GameOfLife.Properties {
             get {
                 object obj = ResourceManager.GetObject("startIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pause (Spacebar).
+        /// </summary>
+        internal static string toolTipPause {
+            get {
+                return ResourceManager.GetString("toolTipPause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start (Spacebar).
+        /// </summary>
+        internal static string toolTipStart {
+            get {
+                return ResourceManager.GetString("toolTipStart", resourceCulture);
             }
         }
         

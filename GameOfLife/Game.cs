@@ -393,6 +393,7 @@ namespace GameOfLife
 
                 // Toggle tool strip Start icon to the Pause icon
                 toolStripButtonStart.Image = Properties.Resources.pauseIcon;
+                toolStripButtonStart.ToolTipText = Properties.Resources.toolTipPause;
 
 
                 Update_Controls();
@@ -419,6 +420,7 @@ namespace GameOfLife
 
             // Toggle tool strip Start icon to the Pause icon
             toolStripButtonStart.Image = Properties.Resources.startIcon;
+            toolStripButtonStart.ToolTipText = Properties.Resources.toolTipStart;
 
             if (_cellCount != 0)
             {
@@ -1350,19 +1352,19 @@ namespace GameOfLife
                 }
 
                 // 1 = Paint
-                if (e.KeyCode == Keys.D1)
+                if (e.KeyCode == Keys.D1 || e.KeyCode == Keys.NumPad1)
                 {
                     Control_Paint();
                 }
 
                 // 2 = Erase
-                if (e.KeyCode == Keys.D2)
+                if (e.KeyCode == Keys.D2 || e.KeyCode == Keys.NumPad2)
                 {
                     Control_Erase();
                 }
 
                 // 3 = Single-Click
-                if (e.KeyCode == Keys.D3)
+                if (e.KeyCode == Keys.D3 || e.KeyCode == Keys.NumPad3)
                 {
                     Control_SingleClick();
                 }
