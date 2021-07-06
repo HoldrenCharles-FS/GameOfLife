@@ -457,7 +457,7 @@ namespace GameOfLife
 
             // Check that the user didn't click away
             // and that the style is no longer italic
-            if ((toolStripTextBoxSeed.Text.Length > 0 || toolStripTextBoxSeed.Text != Properties.Resources.seedPrompt) 
+            if ((toolStripTextBoxSeed.Text.Length > 0 || toolStripTextBoxSeed.Text != Properties.Resources.seedPrompt)
                 && toolStripTextBoxSeed.Font.Italic == false)
             {
                 Randomize_Process_UpdateGraphics();
@@ -808,11 +808,49 @@ namespace GameOfLife
             }
         }
 
+        // Size
+        private void Settings_Size(object sender, EventArgs e)
+        {
+            // Instantiate the size dialog box
+            ModalDialog_Size dlg = new ModalDialog_Size();
+
+            // Temp variables for comparison
+            int tempRow = _rows, tempCol = _columns;
+
+            // Store the previous setting
+            dlg.Rows = _rows;
+            dlg.Columns = _columns;
+
+            // Open the dialog box
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                // Update to new values if the user clicked OK
+                _rows = (int)dlg.Rows;
+                _columns = (int)dlg.Columns;
+
+                Process_Resize();
+
+                // Autosave
+                Settings_Process_AutoSave();
+
+                // Update status strip
+                Update_StatusStrip();
+
+
+
+                // Tell windows to repaint
+                GraphicsPanel.Invalidate();
+            }
+        }
+
         // Reload / Loads settings from a file
         private void Settings_Reload(object sender = null, EventArgs e = null)
         {
             // Reload old settings
             Settings_Process_LoadSettings(true);
+
+            // Tell windows to repaint
+            GraphicsPanel.Invalidate();
         }
 
         private void Settings_Process_LoadSettings(bool loadPrevious = false)
@@ -1069,7 +1107,7 @@ namespace GameOfLife
                     {
                         toolStripTextBoxSeed.Text = Convert.ToString(_seed);
                     }
-                    
+
                 }
 
                 // Used to chop off a seed thats too long
@@ -1117,7 +1155,7 @@ namespace GameOfLife
                     {
                         toolStripTextBoxSeed.Text = Convert.ToString(_seed);
                     }
-                    
+
                 }
             }
             // Else the user entered nothing to parse
@@ -1739,6 +1777,34 @@ namespace GameOfLife
             // Reallocate the universe
             _universe = new bool[_rows, _columns];
 
+            Process_Crop(ref tempUniverse);
+        }
+
+        
+
+        private void Process_Resize()
+        {
+            // Allocate a temp universe to the current number of rows and columns
+            bool[,] tempUniverse = new bool[_rows, _columns];
+
+            int tempRow = (_rows < _universe.GetLength(0)) ? _rows : _universe.GetLength(0);
+            int tempCol = (_columns < _universe.GetLength(1)) ? _columns : _universe.GetLength(1);
+
+            // Iterate through the universe in the y, top to bottom
+            for (int y = 0; y < tempCol; y++)
+            {
+                // Iterate through the universe in the x, left to right
+                for (int x = 0; x < tempRow; x++)
+                {
+                    tempUniverse[x, y] = _universe[x, y];
+                }
+            }
+
+            Process_Crop(ref tempUniverse);
+        }
+
+        private void Process_Crop(ref bool[,] tempUniverse)
+        {
             // Iterate through the universe in the y, top to bottom
             for (int y = 0; y < _columns; y++)
             {
@@ -1778,8 +1844,7 @@ namespace GameOfLife
             Settings_Process_AutoSave(true);
         }
 
+
         #endregion
-
-
     }
 }

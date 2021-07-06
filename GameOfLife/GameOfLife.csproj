@@ -67,6 +67,12 @@
     <Compile Include="ModalDialog_Interval.Designer.cs">
       <DependentUpon>ModalDialog_Interval.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModalDialog_Size.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalDialog_Size.Designer.cs">
+      <DependentUpon>ModalDialog_Size.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Game.resx">
@@ -78,6 +84,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ModalDialog_Interval.resx">
       <DependentUpon>ModalDialog_Interval.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalDialog_Size.resx">
+      <DependentUpon>ModalDialog_Size.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
