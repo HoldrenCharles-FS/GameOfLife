@@ -64,6 +64,7 @@ namespace GameOfLife
             View_Process_InitNeighborCount();
             View_Process_InitHUD();
             View_Process_InitTorodial();
+            Control_Paint();
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
