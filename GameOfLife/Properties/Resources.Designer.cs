@@ -79,11 +79,31 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap cursorIcon {
+            get {
+                object obj = ResourceManager.GetObject("cursorIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to  = .
         /// </summary>
         internal static string equalSign {
             get {
                 return ResourceManager.GetString("equalSign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap eraserIcon {
+            get {
+                object obj = ResourceManager.GetObject("eraserIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
@@ -291,9 +311,29 @@ namespace GameOfLife.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap newIcon {
+            get {
+                object obj = ResourceManager.GetObject("newIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap nextIcon {
             get {
                 object obj = ResourceManager.GetObject("nextIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap paintIcon {
+            get {
+                object obj = ResourceManager.GetObject("paintIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace GameOfLife
 {
@@ -18,6 +19,8 @@ namespace GameOfLife
         private string _fileName;           // Save file
         private string _path;               // Full path to save
         private bool _hideParse = false;
+        private bool _cursorMove = false;
+        private int _draw = 1;
 
         //  Settings
         private Color _backColor;       // Back color
@@ -1552,18 +1555,39 @@ namespace GameOfLife
                 // CELL Y = MOUSE Y / CELL HEIGHT
                 float y = eY / cellHeight;
 
-                // Toggle the cell's state
-                _universe[(int)x, (int)y] = !_universe[(int)x, (int)y];
 
-                // If toggled on, increment cell count
-                if (_universe[(int)x, (int)y] == true)
+                if ((_draw == 1 || _draw == 2) && (x < _universe.GetLength(0)) && (y < _universe.GetLength(0))
+                    && x >= 0 && y >= 0)
                 {
-                    _cellCount++;
+                    if (_draw == 1)
+                    {
+                        _universe[(int)x, (int)y] = true;
+                    }
+                    else
+                    {
+                        _universe[(int)x, (int)y] = false;
+                    }
                 }
-                // Else if toggled off, decrement cell count
-                else
+                else if (_draw == 0)
                 {
-                    _cellCount--;
+                    // Toggle the cell's state
+                    _universe[(int)x, (int)y] = !_universe[(int)x, (int)y];
+                }
+
+
+                if (x < _universe.GetLength(0) && y < _universe.GetLength(0)
+                    && x >= 0 && y >= 0)
+                {
+                    // If toggled on, increment cell count
+                    if (_universe[(int)x, (int)y] == true)
+                    {
+                        _cellCount++;
+                    }
+                    // Else if toggled off, decrement cell count
+                    else
+                    {
+                        _cellCount--;
+                    }
                 }
 
                 // Update controls
@@ -1855,8 +1879,82 @@ namespace GameOfLife
         }
 
 
+
         #endregion
 
+        private void GraphicsPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (_draw != 0)
+            {
+                _cursorMove = true;
+            }
+        }
 
+        private void GraphicsPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+
+            if (_cursorMove == true)
+            {
+                Process_GraphicsPanel_MouseClick(sender, e);
+            }
+        }
+
+        private void GraphicsPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            _cursorMove = false;
+        }
+
+        private void Control_SingleClick(object sender, EventArgs e)
+        {
+            _draw = 0;
+
+            toolStripButtonSingleClick.Checked = true;
+            toolStripMenuItemSingleClick.Checked = true;
+
+            toolStripButtonPaint.Checked = false;
+            paintToolStripMenuItem.Checked = false;
+
+            eraseToolStripMenuItem.Checked = false;
+            toolStripButtonErase.Checked = false;
+
+            // Tell windows to repaint panel
+            GraphicsPanel.Invalidate();
+        }
+
+        private void Control_Paint(object sender, EventArgs e)
+        {
+            _draw = 1;
+
+            toolStripButtonSingleClick.Checked = false;
+            toolStripMenuItemSingleClick.Checked = false;
+
+            toolStripButtonPaint.Checked = true;
+            paintToolStripMenuItem.Checked = true;
+
+            eraseToolStripMenuItem.Checked = false;
+            toolStripButtonErase.Checked = false;
+
+            // Tell windows to repaint panel
+            GraphicsPanel.Invalidate();
+        }
+
+        private void Control_Erase(object sender, EventArgs e)
+        {
+            _draw = 2;
+
+            toolStripButtonSingleClick.Checked = false;
+            toolStripMenuItemSingleClick.Checked = false;
+
+            toolStripButtonPaint.Checked = false;
+            paintToolStripMenuItem.Checked = false;
+
+            eraseToolStripMenuItem.Checked = true;
+            toolStripButtonErase.Checked = true;
+
+            // Tell windows to repaint panel
+            GraphicsPanel.Invalidate();
+        }
+
+        
     }
 }
