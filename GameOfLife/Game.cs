@@ -1040,6 +1040,16 @@ namespace GameOfLife
         }
         #endregion
 
+        #region Help
+        private void Help_About(object sender, EventArgs e)
+        {
+            AboutBox dlg = new AboutBox();
+
+            dlg.ShowDialog();
+        }
+
+        #endregion
+
         #region Seed Box
         // Sets the font style of the seed box
         private void SeedBox_SetStyle(bool defaultStyle = false)
@@ -1780,7 +1790,7 @@ namespace GameOfLife
             Process_Crop(ref tempUniverse);
         }
 
-        
+
 
         private void Process_Resize()
         {
@@ -1846,5 +1856,7 @@ namespace GameOfLife
 
 
         #endregion
+
+
     }
 }
