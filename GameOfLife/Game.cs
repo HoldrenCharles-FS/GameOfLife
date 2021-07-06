@@ -2075,5 +2075,10 @@ namespace GameOfLife
             Settings_Process_AutoSave(true);
         }
         #endregion
+
+        private void Process_GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
     }
 }
