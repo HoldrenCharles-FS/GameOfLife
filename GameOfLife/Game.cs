@@ -17,6 +17,7 @@ namespace GameOfLife
         private bool _saveAsFlag = false;   // Keeps frack if whether or not the user is Saving As...
         private string _fileName;           // Save file
         private string _path;               // Full path to save
+        private bool _hideParse = false;
 
         //  Settings
         private Color _backColor;       // Back color
@@ -1063,7 +1064,12 @@ namespace GameOfLife
 
                     // Update seed
                     _seed = stringSum;
-                    toolStripTextBoxSeed.Text = Convert.ToString(_seed);
+
+                    if (_hideParse == false)
+                    {
+                        toolStripTextBoxSeed.Text = Convert.ToString(_seed);
+                    }
+                    
                 }
 
                 // Used to chop off a seed thats too long
@@ -1106,6 +1112,12 @@ namespace GameOfLife
 
                     // Update seed
                     _seed = tempSeed;
+
+                    if (_hideParse == false)
+                    {
+                        toolStripTextBoxSeed.Text = Convert.ToString(_seed);
+                    }
+                    
                 }
             }
             // Else the user entered nothing to parse
@@ -1171,8 +1183,10 @@ namespace GameOfLife
                 // If focus is on seed box, parse seed, then generate
                 if (toolStripTextBoxSeed.Focused == true)
                 {
+                    _hideParse = true;
                     SeedBox_ParseSeed();
                     Randomize_GenerateSeed();
+                    _hideParse = false;
                 }
                 // Else generate seed
                 else
