@@ -15,7 +15,6 @@ namespace GameOfLife
         private bool _seedFlag = false;     // Keeps track if a seed should be displayed
         private bool _importFlag = false;   // Keeps track if whether or not the user is importing
         private bool _saveAsFlag = false;   // Keeps frack if whether or not the user is Saving As...
-        private bool _initFlag = true;      // Tells that where code is initializing data
         private string _fileName;           // Save file
         private string _path;               // Full path to save
 
@@ -39,22 +38,30 @@ namespace GameOfLife
         // Constructor
         public Game()
         {
-            // Load settings from file
-            Settings_Reload();
-
             // Initialize components for Windows Form (avoid editing)
             InitializeComponent();
 
+            // Load settings from file
+            Settings_Process_LoadSettings();
+
             // Initalize settings graphics
-            View_Grid();
-            View_NeighborCount();
-            View_HUD();
-            View_Torodial();
-            _initFlag = false;
+            Init_Graphics();
 
             // Subscribe a custom method to the Mouse wheel
             // Used to enable scrolling
             MouseWheel += OnMouseWheel_Zoom;
+        }
+
+        private void Init_Graphics()
+        {
+
+            View_Process_InitGrid();
+            View_Process_InitNeighborCount();
+            View_Process_InitHUD();
+            View_Process_InitTorodial();
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
         #endregion
 
@@ -98,6 +105,11 @@ namespace GameOfLife
         {
             // Instantiate a new OpenFileDialog
             OpenFileDialog dlg = new OpenFileDialog();
+
+            if (_importFlag == true)
+            {
+                dlg.Title = Properties.Resources.import;
+            }
 
             // Filters for file types
             dlg.Filter = "All Files|*.*|Cells|*.cells";
@@ -375,7 +387,7 @@ namespace GameOfLife
 
                 // Toggle tool strip Start icon to the Pause icon
                 toolStripButtonStart.Image = Properties.Resources.pauseIcon;
-                
+
 
                 Update_Controls();
             }
@@ -575,123 +587,119 @@ namespace GameOfLife
         // Toggle HUD
         private void View_HUD(object sender = null, EventArgs e = null)
         {
-            // Initializing data
-            if (_initFlag == true)
-            {
-                hUDToolStripMenuItem.Checked = _displayHUD;
-                hUDToolStripMenuItem.Checked = _displayHUD;
-            }
-            else
-            {
-                // Toggle checked state
-                hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
-                hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
 
-                // Update related field
-                _displayHUD = hUDToolStripMenuItem.Checked;
+            // Toggle checked state
+            hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
+            hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
 
-                // Autosave
-                Settings_Process_AutoSave();
-            }
+            // Update related field
+            _displayHUD = hUDToolStripMenuItem.Checked;
+
+            // Autosave
+            Settings_Process_AutoSave();
+
 
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
+        }
+
+        private void View_Process_InitHUD()
+        {
+            hUDToolStripMenuItem.Checked = _displayHUD;
+            hUDToolStripMenuItem.Checked = _displayHUD;
         }
 
         // Toggle Neighbor Count
         private void View_NeighborCount(object sender = null, EventArgs e = null)
         {
-            // Initializing data
-            if (_initFlag == true)
-            {
-                neighborCountToolStripMenuItem.Checked = _displayNeighbors;
-                neighborCountToolStripMenuItem1.Checked = _displayNeighbors;
-            }
-            else
-            {
-                // Toggle checked state
-                neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
-                neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
 
-                // Update related field
-                _displayNeighbors = neighborCountToolStripMenuItem.Checked;
+            // Toggle checked state
+            neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
+            neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
 
-                // Autosave
-                Settings_Process_AutoSave();
-            }
+            // Update related field
+            _displayNeighbors = neighborCountToolStripMenuItem.Checked;
+
+            // Autosave
+            Settings_Process_AutoSave();
+
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
+        }
+
+        private void View_Process_InitNeighborCount()
+        {
+            neighborCountToolStripMenuItem.Checked = _displayNeighbors;
+            neighborCountToolStripMenuItem1.Checked = _displayNeighbors;
         }
 
         // Toggle Grid
         private void View_Grid(object sender = null, EventArgs e = null)
         {
-            // Initializing data
-            if (_initFlag == true)
-            {
-                gridToolStripMenuItem.Checked = _displayGrid;
-                gridToolStripMenuItem1.Checked = _displayGrid;
-            }
-            else
-            {
-                // Toggle checked state
-                gridToolStripMenuItem.Checked = !gridToolStripMenuItem.Checked;
-                gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
 
-                // Update related field
-                _displayGrid = gridToolStripMenuItem.Checked;
+            // Toggle checked state
+            gridToolStripMenuItem.Checked = !gridToolStripMenuItem.Checked;
+            gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
 
-                // Autosave
-                Settings_Process_AutoSave();
-            }
+            // Update related field
+            _displayGrid = gridToolStripMenuItem.Checked;
+
+            // Autosave
+            Settings_Process_AutoSave();
+
 
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
 
+        private void View_Process_InitGrid()
+        {
+            gridToolStripMenuItem.Checked = _displayGrid;
+            gridToolStripMenuItem1.Checked = _displayGrid;
+        }
+
         // Torodial
         private void View_Torodial(object sender = null, EventArgs e = null)
         {
-            // Initializing data
-            if (_initFlag == true)
+
+            // If boundary is finite
+            if (_boundary == false)
             {
-                if (_boundary == true)
-                {
-                    torodialToolStripMenuItem.Checked = true;
-                    finiteToolStripMenuItem.Checked = false;
-                }
-                else
-                {
-                    torodialToolStripMenuItem.Checked = false;
-                    finiteToolStripMenuItem.Checked = true;
-                }
+                // Boudary becomes Torodial
+                _boundary = true;
+
+                // Toggle checked state
+                torodialToolStripMenuItem.Checked = true;
+                finiteToolStripMenuItem.Checked = false;
+
+                // Update Status strip
+                Update_StatusStrip();
             }
-            else
-            {
-                // If boundary is finite
-                if (_boundary == false)
-                {
-                    // Boudary becomes Torodial
-                    _boundary = true;
 
-                    // Toggle checked state
-                    torodialToolStripMenuItem.Checked = true;
-                    finiteToolStripMenuItem.Checked = false;
+            // Autosave
+            Settings_Process_AutoSave();
 
-                    // Update Status strip
-                    Update_StatusStrip();
-                }
 
-                // Autosave
-                Settings_Process_AutoSave();
-
-            }
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
+        }
+
+        private void View_Process_InitTorodial()
+        {
+            if (_boundary == true)
+            {
+                torodialToolStripMenuItem.Checked = true;
+                finiteToolStripMenuItem.Checked = false;
+            }
+            else
+            {
+                torodialToolStripMenuItem.Checked = false;
+                finiteToolStripMenuItem.Checked = true;
+            }
         }
 
         // Finite
@@ -801,26 +809,41 @@ namespace GameOfLife
         // Reload / Loads settings from a file
         private void Settings_Reload(object sender = null, EventArgs e = null)
         {
+            // Reload old settings
+            Settings_Process_LoadSettings(true);
+        }
+
+        private void Settings_Process_LoadSettings(bool loadPrevious = false)
+        {
+            string fileName = (loadPrevious == false) ? Properties.Resources.settingsFile : Properties.Resources.settingsPrevious;
+
             // An array to store data from each line
             string[] data = new string[11];
 
             // Array index #
             int i = 0;
 
-            // Check if the file does not exist
+            // Check if the settings file does not exist
             if (!File.Exists(Properties.Resources.settingsFile))
             {
                 // If not create new settings file
-                Settings_Reset();
+                Settings_Process_CreateSettings();
+            }
+
+            // Check if the old version of settings exists
+            if (!File.Exists(Properties.Resources.settingsPrevious))
+            {
+                // If not create new settings file
+                Settings_Process_CreateSettings(true);
             }
 
             // Read data from file
-            using (StreamReader sr = new StreamReader(Properties.Resources.settingsFile))
+            using (StreamReader sr = new StreamReader(fileName))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    // Ignore labels within settings.cfg
+                    // Ignore labels "// " within settings.cfg
                     if (!(line.StartsWith(Properties.Resources.commentPrefix)))
                     {
                         data[i] = line;
@@ -849,6 +872,8 @@ namespace GameOfLife
             timer.Interval = Int32.Parse(data[i]); // milliseconds
             timer.Tick += Process_Timer_Tick;
 
+            GraphicsPanel.BackColor = _backColor;
+
             // Allocate the universe
             _universe = new bool[_rows, _columns];
         }
@@ -856,8 +881,17 @@ namespace GameOfLife
         // Reset / Create new settings file
         private void Settings_Reset(object sender = null, EventArgs e = null)
         {
+            Settings_Process_CreateSettings();
+            Settings_Process_LoadSettings();
+            Init_Graphics();
+        }
+
+        private void Settings_Process_CreateSettings(bool createOld = false)
+        {
+            string fileName = (createOld == false) ? Properties.Resources.settingsFile : Properties.Resources.settingsPrevious;
+
             // Label and write default properties to file
-            using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
+            using (StreamWriter sw = File.CreateText(fileName))
             {
                 // All comments are prefixed with "// ", followed by label resource
                 // These are default values for the application
@@ -906,16 +940,15 @@ namespace GameOfLife
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelInterval);
                 sw.WriteLine(20);
             }
-            if (_initFlag == false)
-            {
-                GraphicsPanel.Invalidate();
-            }
         }
 
-        private void Settings_Process_AutoSave()
+        private void Settings_Process_AutoSave(bool saveOld = false)
         {
+
+            string fileName = (saveOld == false) ? Properties.Resources.settingsFile : Properties.Resources.settingsPrevious;
+
             // Label and write default properties to file
-            using (StreamWriter sw = File.CreateText(Properties.Resources.settingsFile))
+            using (StreamWriter sw = File.CreateText(fileName))
             {
                 // All comments are prefixed with "// ", followed by label resource
                 // These are default values for the application
@@ -1270,12 +1303,6 @@ namespace GameOfLife
         // Paint graphics panel
         private void Process_GraphicsPanel_Paint(object sender, PaintEventArgs e)
         {
-            // Initalizing Data
-            if (_initFlag == true)
-            {
-                GraphicsPanel.BackColor = _backColor;
-            }
-
             // Covert to floats
             float clientWidth = GraphicsPanel.ClientSize.Width, zeroCount = _universe.GetLength(0),
                 clientHeight = GraphicsPanel.ClientSize.Height, oneCount = _universe.GetLength(1);
@@ -1614,7 +1641,7 @@ namespace GameOfLife
                 toolStripButtonStart.Enabled = true;    // Enable Start
                 startToolStripMenuItem.Enabled = true;  // Enable Start
                 startToolStripMenuItem1.Enabled = true; // Enable Start
-                
+
                 nextToolStripMenuItem.Enabled = true;   // Enable Next
                 nextToolStripMenuItem1.Enabled = true;  // Enable Next
                 toolStripButtonNext.Enabled = true;     // Enable Next
@@ -1725,7 +1752,15 @@ namespace GameOfLife
             return (_boundary == true) ? Properties.Resources.torodial : Properties.Resources.finite;
         }
 
+        // Psuedo Destructor
+        private void Game_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Settings_Process_AutoSave();
+            Settings_Process_AutoSave(true);
+        }
+
         #endregion
+
 
     }
 }

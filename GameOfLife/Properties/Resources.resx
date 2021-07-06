@@ -141,6 +141,10 @@
   <data name="goIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ico\goIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="import" xml:space="preserve">
+    <value>Import</value>
+    <comment>Used for OpenDialog Title property</comment>
+  </data>
   <data name="importIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\ico\importIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -231,6 +235,10 @@
   <data name="settingsFile" xml:space="preserve">
     <value>settings.cfg</value>
     <comment>Configuration file for settings</comment>
+  </data>
+  <data name="settingsPrevious" xml:space="preserve">
+    <value>old_settings.cfg</value>
+    <comment>Previous settings file</comment>
   </data>
   <data name="start" xml:space="preserve">
     <value>Start</value>

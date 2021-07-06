@@ -116,6 +116,15 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        internal static string import {
+            get {
+                return ResourceManager.GetString("import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap importIcon {
@@ -333,6 +342,15 @@ namespace GameOfLife.Properties {
         internal static string settingsFile {
             get {
                 return ResourceManager.GetString("settingsFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to old_settings.cfg.
+        /// </summary>
+        internal static string settingsPrevious {
+            get {
+                return ResourceManager.GetString("settingsPrevious", resourceCulture);
             }
         }
         
