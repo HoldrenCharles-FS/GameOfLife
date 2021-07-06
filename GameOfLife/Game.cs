@@ -21,6 +21,7 @@ namespace GameOfLife
         private bool _hideParse = false;
         private bool _cursorMove = false;
         private int _draw = 1;
+        private bool[,] _universeCopy;
 
         //  Settings
         private Color _backColor;       // Back color
@@ -662,6 +663,7 @@ namespace GameOfLife
 
         private void View_Process_InitGrid()
         {
+            _universeCopy = new bool[_universe.GetLength(0), _universe.GetLength(1)];
             gridToolStripMenuItem.Checked = _displayGrid;
             gridToolStripMenuItem1.Checked = _displayGrid;
         }
@@ -1345,6 +1347,25 @@ namespace GameOfLife
                 {
                     Application.Exit();
                 }
+
+                // 1 = Paint
+                if (e.KeyCode == Keys.D1)
+                {
+                    Control_Paint();
+                }
+
+                // 2 = Erase
+                if (e.KeyCode == Keys.D2)
+                {
+                    Control_Erase();
+                }
+
+                // 3 = Single-Click
+                if (e.KeyCode == Keys.D3)
+                {
+                    Control_SingleClick();
+                }
+
             }
 
             // Tell windows to repaint
@@ -1517,6 +1538,7 @@ namespace GameOfLife
         // Mouse click on graphics panel
         private void Process_GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
         {
+            
             // When the Seed Box loses focus
             if (toolStripTextBoxSeed.Focused == false)
             {
@@ -1540,6 +1562,8 @@ namespace GameOfLife
             // If the left mouse button was clicked
             if (e.Button == MouseButtons.Left)
             {
+                
+
                 // Covert to floats
                 float clientWidth = GraphicsPanel.ClientSize.Width, zeroCount = _universe.GetLength(0),
                 clientHeight = GraphicsPanel.ClientSize.Height, oneCount = _universe.GetLength(1),
@@ -1556,10 +1580,10 @@ namespace GameOfLife
                 float y = eY / cellHeight;
 
 
-                if ((_draw == 1 || _draw == 2) && (x < _universe.GetLength(0)) && (y < _universe.GetLength(0))
+                if ((_draw == 0 || _draw == 1) && (x < _universe.GetLength(0)) && (y < _universe.GetLength(0))
                     && x >= 0 && y >= 0)
                 {
-                    if (_draw == 1)
+                    if (_draw == 0)
                     {
                         _universe[(int)x, (int)y] = true;
                     }
@@ -1568,25 +1592,44 @@ namespace GameOfLife
                         _universe[(int)x, (int)y] = false;
                     }
                 }
-                else if (_draw == 0)
+                else if (_draw == 2)
                 {
                     // Toggle the cell's state
                     _universe[(int)x, (int)y] = !_universe[(int)x, (int)y];
                 }
 
 
-                if (x < _universe.GetLength(0) && y < _universe.GetLength(0)
+                if (x < _universe.GetLength(0) && y < _universe.GetLength(1)
                     && x >= 0 && y >= 0)
                 {
-                    // If toggled on, increment cell count
-                    if (_universe[(int)x, (int)y] == true)
+                    if (_draw == 0)
                     {
-                        _cellCount++;
+                        if (_universe[(int)x, (int)y] == true && _universeCopy[(int)x, (int)y] == false)
+                        {
+                            _universeCopy[(int)x, (int)y] = _universe[(int)x, (int)y];
+                            _cellCount++;
+                        }
                     }
-                    // Else if toggled off, decrement cell count
-                    else
+                    else if (_draw == 1)
                     {
-                        _cellCount--;
+                        if (_universe[(int)x, (int)y] == false && _universeCopy[(int)x, (int)y] == true)
+                        {
+                            _universeCopy[(int)x, (int)y] = _universe[(int)x, (int)y];
+                            _cellCount--;
+                        }
+                    }
+                    else if (_draw == 2)
+                    {
+                        // If toggled on, increment cell count
+                        if (_universe[(int)x, (int)y] == true)
+                        {
+                            _cellCount++;
+                        }
+                        // Else if toggled off, decrement cell count
+                        else
+                        {
+                            _cellCount--;
+                        }
                     }
                 }
 
@@ -1595,6 +1638,9 @@ namespace GameOfLife
 
                 // Update Status strip
                 Update_StatusStrip();
+
+                // Count cells
+                Process_CountCells();
 
                 // Tell Windows you need to repaint
                 GraphicsPanel.Invalidate();
@@ -1774,7 +1820,6 @@ namespace GameOfLife
 
             // Update status strip interval
             toolStripStatusLabelInterval.Text = Properties.Resources.labelInterval + Properties.Resources.equalSign + _interval;
-
         }
 
         // Shrink the universe's x and y by 1
@@ -1793,8 +1838,8 @@ namespace GameOfLife
         // Grow the universe's x and y by 1
         private void Process_UniverseGrow()
         {
-            // Universe max size is 300 rows or columns
-            if (_rows < 300 && _columns < 300)
+            // Universe max size is 100 rows or columns
+            if (_rows < 100 && _columns < 100)
             {
                 // Increment until at 300
                 _rows++;
@@ -1815,7 +1860,6 @@ namespace GameOfLife
         }
 
 
-
         private void Process_Resize()
         {
             // Allocate a temp universe to the current number of rows and columns
@@ -1833,6 +1877,9 @@ namespace GameOfLife
                     tempUniverse[x, y] = _universe[x, y];
                 }
             }
+
+            // Reallocate the universe
+            _universe = new bool[_rows, _columns];
 
             Process_Crop(ref tempUniverse);
         }
@@ -1855,11 +1902,16 @@ namespace GameOfLife
                     {
                         _universe[x, y] = tempUniverse[x, y];
                     }
-
                 }
             }
+
+            _universeCopy = new bool[_universe.GetLength(0), _universe.GetLength(1)];
+
             // Update statuses
             Update_StatusStrip();
+
+            // Update cell count
+            Process_CountCells();
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -1877,14 +1929,11 @@ namespace GameOfLife
             Settings_Process_AutoSave();
             Settings_Process_AutoSave(true);
         }
-
-
-
         #endregion
 
         private void GraphicsPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            if (_draw != 0)
+            if (_draw != 2)
             {
                 _cursorMove = true;
             }
@@ -1904,26 +1953,11 @@ namespace GameOfLife
             _cursorMove = false;
         }
 
-        private void Control_SingleClick(object sender, EventArgs e)
+        
+
+        private void Control_Paint(object sender = null, EventArgs e = null)
         {
             _draw = 0;
-
-            toolStripButtonSingleClick.Checked = true;
-            toolStripMenuItemSingleClick.Checked = true;
-
-            toolStripButtonPaint.Checked = false;
-            paintToolStripMenuItem.Checked = false;
-
-            eraseToolStripMenuItem.Checked = false;
-            toolStripButtonErase.Checked = false;
-
-            // Tell windows to repaint panel
-            GraphicsPanel.Invalidate();
-        }
-
-        private void Control_Paint(object sender, EventArgs e)
-        {
-            _draw = 1;
 
             toolStripButtonSingleClick.Checked = false;
             toolStripMenuItemSingleClick.Checked = false;
@@ -1938,9 +1972,9 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
-        private void Control_Erase(object sender, EventArgs e)
+        private void Control_Erase(object sender = null, EventArgs e = null)
         {
-            _draw = 2;
+            _draw = 1;
 
             toolStripButtonSingleClick.Checked = false;
             toolStripMenuItemSingleClick.Checked = false;
@@ -1955,6 +1989,23 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
-        
+        private void Control_SingleClick(object sender = null, EventArgs e = null)
+        {
+            _draw = 2;
+
+            toolStripButtonSingleClick.Checked = true;
+            toolStripMenuItemSingleClick.Checked = true;
+
+            toolStripButtonPaint.Checked = false;
+            paintToolStripMenuItem.Checked = false;
+
+            eraseToolStripMenuItem.Checked = false;
+            toolStripButtonErase.Checked = false;
+
+            // Tell windows to repaint panel
+            GraphicsPanel.Invalidate();
+        }
+
+
     }
 }

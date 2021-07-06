@@ -42,11 +42,6 @@ namespace GameOfLife
             // numericUpDownWidth
             // 
             this.numericUpDownWidth.Location = new System.Drawing.Point(53, 6);
-            this.numericUpDownWidth.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
             this.numericUpDownWidth.Minimum = new decimal(new int[] {
             5,
             0,
@@ -64,11 +59,6 @@ namespace GameOfLife
             // numericUpDownHeight
             // 
             this.numericUpDownHeight.Location = new System.Drawing.Point(53, 32);
-            this.numericUpDownHeight.Maximum = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
             this.numericUpDownHeight.Minimum = new decimal(new int[] {
             5,
             0,

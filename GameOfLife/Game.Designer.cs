@@ -543,9 +543,9 @@ namespace GameOfLife
             this.toolStripButtonGenerate,
             this.toolStripButton4,
             this.toolStripSeparator17,
-            this.toolStripButtonSingleClick,
             this.toolStripButtonPaint,
-            this.toolStripButtonErase});
+            this.toolStripButtonErase,
+            this.toolStripButtonSingleClick});
             this.ToolStrip.Location = new System.Drawing.Point(0, 24);
             this.ToolStrip.Name = "ToolStrip";
             this.ToolStrip.Size = new System.Drawing.Size(500, 25);
