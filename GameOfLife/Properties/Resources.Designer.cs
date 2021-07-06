@@ -341,6 +341,16 @@ namespace GameOfLife.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap openIcon {
+            get {
+                object obj = ResourceManager.GetObject("openIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap paintIcon {
             get {
                 object obj = ResourceManager.GetObject("paintIcon", resourceCulture);
@@ -383,6 +393,16 @@ namespace GameOfLife.Properties {
         internal static System.Drawing.Bitmap reloadIcon {
             get {
                 object obj = ResourceManager.GetObject("reloadIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap saveIcon {
+            get {
+                object obj = ResourceManager.GetObject("saveIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
