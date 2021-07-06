@@ -97,6 +97,7 @@ namespace GameOfLife
             // Instantiate a new OpenFileDialog
             OpenFileDialog dlg = new OpenFileDialog();
 
+            // Change the title to import if importing
             if (_importFlag == true)
             {
                 dlg.Title = Properties.Resources.import;
@@ -145,8 +146,6 @@ namespace GameOfLife
 
                 // Reset the file pointer back to the beginning of the file.
                 sr.BaseStream.Seek(0, SeekOrigin.Begin);
-
-
 
                 // Column indexer
                 int y = 0;
@@ -208,8 +207,10 @@ namespace GameOfLife
                 // Close the file.
                 sr.Close();
 
+                // Get path
                 string path = dlg.FileName;
 
+                // Update _path and _filename
                 File_Process_UpdatePath(ref path);
 
                 // Update Game.Text to include filename
@@ -255,12 +256,13 @@ namespace GameOfLife
             }
             else
             {
+                // Check if file exists
                 if (!File.Exists(_path))
                 {
                     File.Create(_path);
                 }
 
-
+                // Update _path and _filename
                 File_Process_UpdatePath(ref _path);
 
                 // Write to file
@@ -322,8 +324,10 @@ namespace GameOfLife
                 // Mark Save As flag as true
                 _saveAsFlag = true;
 
+                // Get path
                 string path = dlg.FileName;
 
+                // Update _path and _filename
                 File_Process_UpdatePath(ref path);
 
                 // Save file
@@ -339,8 +343,11 @@ namespace GameOfLife
         {
             // Update filename to user specified name
             _path = path;
+
+            // Split into an array
             string[] pathArr = path.Split('\\');
 
+            // Grab the filename (last element)
             for (int i = 0; i < pathArr.Length; i++)
             {
                 if (i == pathArr.Length - 1)
@@ -370,17 +377,15 @@ namespace GameOfLife
                 // Start the timer
                 timer.Enabled = true;
 
+                // Update properties to pause properties
                 startToolStripMenuItem.Image = Properties.Resources.pauseIcon;
                 startToolStripMenuItem.Text = Properties.Resources.pause;
-
                 startToolStripMenuItem1.Image = Properties.Resources.pauseIcon;
                 startToolStripMenuItem1.Text = Properties.Resources.pause;
-
-                // Toggle tool strip Start icon to the Pause icon
                 toolStripButtonStart.Image = Properties.Resources.pauseIcon;
                 toolStripButtonStart.ToolTipText = Properties.Resources.toolTipPause;
 
-
+                // Update controls
                 Update_Controls();
             }
             // Else the game is running, feel free to pause!
@@ -397,16 +402,15 @@ namespace GameOfLife
             // Stop timer
             timer.Enabled = false;
 
+            // Update properties to start properties
             startToolStripMenuItem.Image = Properties.Resources.startIcon;
             startToolStripMenuItem.Text = Properties.Resources.start;
-
             startToolStripMenuItem1.Image = Properties.Resources.startIcon;
             startToolStripMenuItem1.Text = Properties.Resources.start;
-
-            // Toggle tool strip Start icon to the Pause icon
             toolStripButtonStart.Image = Properties.Resources.startIcon;
             toolStripButtonStart.ToolTipText = Properties.Resources.toolTipStart;
 
+            // Update controls unless cell count is 0
             if (_cellCount != 0)
             {
                 Update_Controls();
@@ -417,8 +421,6 @@ namespace GameOfLife
                 // The world is empty
                 startToolStripMenuItem.Enabled = false;
             }
-
-
         }
 
         // Next
@@ -438,18 +440,20 @@ namespace GameOfLife
             }
         }
 
+        // Paint
          private void Control_Paint(object sender = null, EventArgs e = null)
         {
+            // Set cursor to paint
             _draw = 0;
 
+            // Update cursor style
             GraphicsPanel.Cursor = Cursors.Cross;
 
+            // Update cursor properties
             toolStripButtonSingleClick.Checked = false;
             toolStripMenuItemSingleClick.Checked = false;
-
             toolStripButtonPaint.Checked = true;
             paintToolStripMenuItem.Checked = true;
-
             eraseToolStripMenuItem.Checked = false;
             toolStripButtonErase.Checked = false;
 
@@ -457,21 +461,23 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
+        // Erase
         private void Control_Erase(object sender = null, EventArgs e = null)
         {
+            // Set cursor to erase
             _draw = 1;
 
-
+            // Load custom eraser cursor
             Cursor eraser = new Cursor(Properties.Resources.eraser.GetHicon());
 
+            // Update cursor
             GraphicsPanel.Cursor = eraser;
 
+            // Update cursor properties
             toolStripButtonSingleClick.Checked = false;
             toolStripMenuItemSingleClick.Checked = false;
-
             toolStripButtonPaint.Checked = false;
             paintToolStripMenuItem.Checked = false;
-
             eraseToolStripMenuItem.Checked = true;
             toolStripButtonErase.Checked = true;
 
@@ -479,18 +485,20 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
+        // Single-Click
         private void Control_SingleClick(object sender = null, EventArgs e = null)
         {
+            // Set cursor to single-click
             _draw = 2;
 
+            // Update cursor style
             GraphicsPanel.Cursor = Cursors.Arrow;
 
+            // Update cursor properties
             toolStripButtonSingleClick.Checked = true;
             toolStripMenuItemSingleClick.Checked = true;
-
             toolStripButtonPaint.Checked = false;
             paintToolStripMenuItem.Checked = false;
-
             eraseToolStripMenuItem.Checked = false;
             toolStripButtonErase.Checked = false;
 
@@ -556,16 +564,21 @@ namespace GameOfLife
         // Opens a modal dialog to enter seed
         private void Randomize_EnterSeed(object sender = null, EventArgs e = null)
         {
+            // Instantiate form for Enter a seed...
             ModalDialog_EnterSeed dlg = new ModalDialog_EnterSeed();
 
+            // Grab the current seed
             dlg.Seed = _seed;
+
+            // Grab the seed prompt
             dlg.Text = Properties.Resources.seedPrompt;
 
+            // Set Seedbox Style
             dlg.SeedBox_SetStyle();
+
             // Open the dialog box
             if (DialogResult.OK == dlg.ShowDialog())
             {
-
                 // Retrieve the seed from the form
                 _seed = dlg.Seed;
 
@@ -575,6 +588,7 @@ namespace GameOfLife
 
         }
 
+        // Used to update graphics after a seed has been generated
         private void Randomize_Process_UpdateGraphics()
         {
             // User has input a seed, so display it
@@ -634,12 +648,13 @@ namespace GameOfLife
         }
         #endregion
 
+
         #region Settings
+        
         #region View
         // Toggle HUD
         private void View_HUD(object sender = null, EventArgs e = null)
         {
-
             // Toggle checked state
             hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
             hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
@@ -650,14 +665,14 @@ namespace GameOfLife
             // Autosave
             Settings_Process_AutoSave();
 
-
-
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
 
+        // Initialize HUD
         private void View_Process_InitHUD()
         {
+            // Initialize checked state
             hUDToolStripMenuItem.Checked = _displayHUD;
             hUDToolStripMenuItem.Checked = _displayHUD;
         }
@@ -681,8 +696,10 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
+        // Initialize Neighbor Count
         private void View_Process_InitNeighborCount()
         {
+            // Initialize checked state
             neighborCountToolStripMenuItem.Checked = _displayNeighbors;
             neighborCountToolStripMenuItem1.Checked = _displayNeighbors;
         }
@@ -701,14 +718,14 @@ namespace GameOfLife
             // Autosave
             Settings_Process_AutoSave();
 
-
-
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
 
+        // Initialize Grid
         private void View_Process_InitGrid()
         {
+            // Initialize checked state
             _universeCopy = new bool[_universe.GetLength(0), _universe.GetLength(1)];
             gridToolStripMenuItem.Checked = _displayGrid;
             gridToolStripMenuItem1.Checked = _displayGrid;
@@ -741,8 +758,10 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
+        // Initialize Boundary
         private void View_Process_InitTorodial()
         {
+            // Initialize checked state
             if (_boundary == true)
             {
                 torodialToolStripMenuItem.Checked = true;
@@ -775,8 +794,6 @@ namespace GameOfLife
 
             // Autosave
             Settings_Process_AutoSave();
-
-
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -879,6 +896,7 @@ namespace GameOfLife
                 _rows = (int)dlg.Rows;
                 _columns = (int)dlg.Columns;
 
+                // Resize the universe
                 Process_Resize();
 
                 // Autosave
@@ -886,8 +904,6 @@ namespace GameOfLife
 
                 // Update status strip
                 Update_StatusStrip();
-
-
 
                 // Tell windows to repaint
                 GraphicsPanel.Invalidate();
@@ -906,6 +922,7 @@ namespace GameOfLife
 
         private void Settings_Process_LoadSettings(bool loadPrevious = false)
         {
+            // Get filename
             string fileName = (loadPrevious == false) ? Properties.Resources.settingsFile : Properties.Resources.settingsPrevious;
 
             // An array to store data from each line
@@ -963,6 +980,7 @@ namespace GameOfLife
             timer.Interval = Int32.Parse(data[i]); // milliseconds
             timer.Tick += Process_Timer_Tick;
 
+            // Initialoze back color
             GraphicsPanel.BackColor = _backColor;
 
             // Allocate the universe
@@ -972,13 +990,20 @@ namespace GameOfLife
         // Reset / Create new settings file
         private void Settings_Reset(object sender = null, EventArgs e = null)
         {
+            // Recreate Settings
             Settings_Process_CreateSettings();
+
+            // Reload Settins
             Settings_Process_LoadSettings();
+
+            // Reinitialize graphics
             Init_Graphics();
         }
 
+        // Creates settings files
         private void Settings_Process_CreateSettings(bool createOld = false)
         {
+            // Get filename
             string fileName = (createOld == false) ? Properties.Resources.settingsFile : Properties.Resources.settingsPrevious;
 
             // Label and write default properties to file
@@ -1033,9 +1058,10 @@ namespace GameOfLife
             }
         }
 
+        // Autosaves settings files
         private void Settings_Process_AutoSave(bool saveOld = false)
         {
-
+            // Get filename
             string fileName = (saveOld == false) ? Properties.Resources.settingsFile : Properties.Resources.settingsPrevious;
 
             // Label and write default properties to file
@@ -1092,16 +1118,22 @@ namespace GameOfLife
         #endregion
 
         #region Help
+        // About
         private void Help_About(object sender, EventArgs e)
         {
+            // Show dialog
             AboutBox dlg = new AboutBox();
-
             dlg.ShowDialog();
         }
 
         #endregion
 
+
+
+        #endregion
+
         #region Seed Box
+
         // Sets the font style of the seed box
         private void SeedBox_SetStyle(bool defaultStyle = false)
         {
@@ -1250,8 +1282,6 @@ namespace GameOfLife
         }
         #endregion
 
-        #endregion
-
         #region Keyboard / MouseWheel
         // Enables zoom scaling with mouse wheel
         private void OnMouseWheel_Zoom(object sender, MouseEventArgs e)
@@ -1267,28 +1297,35 @@ namespace GameOfLife
                 Process_UniverseShrink();
             }
 
+            // Process zoom
             Process_Zoom();
         }
 
+        // Detects MouseDown on Graphics panel
         private void GraphicsPanel_MouseDown(object sender, MouseEventArgs e)
         {
+            // If cursor is not single-click
             if (_draw != 2)
             {
                 _cursorMove = true;
             }
         }
 
+        // Detects Mouse movement on Graphics panel
         private void GraphicsPanel_MouseMove(object sender, MouseEventArgs e)
         {
-
+            // If cursor movement is valid
             if (_cursorMove == true)
             {
-                Process_GraphicsPanel_MouseClick(sender, e);
+                // Click when moving
+                GraphicsPanel_MouseClick(sender, e);
             }
         }
-
+        
+        // Detects MouseUp on Graphics Panel
         private void GraphicsPanel_MouseUp(object sender, MouseEventArgs e)
         {
+            // Invalidate cursor movement
             _cursorMove = false;
         }
 
@@ -1304,6 +1341,7 @@ namespace GameOfLife
                 // If focus is on seed box, parse seed, then generate
                 if (toolStripTextBoxSeed.Focused == true)
                 {
+                    // Hide the seed parsing (seed parses when clicked outside of Seed Box)
                     _hideParse = true;
                     SeedBox_ParseSeed();
                     Randomize_GenerateSeed();
@@ -1609,7 +1647,7 @@ namespace GameOfLife
         }
 
         // Mouse click on graphics panel
-        private void Process_GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
+        private void GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
         {
 
             // When the Seed Box loses focus
@@ -1635,8 +1673,6 @@ namespace GameOfLife
             // If the left mouse button was clicked
             if (e.Button == MouseButtons.Left)
             {
-
-
                 // Covert to floats
                 float clientWidth = GraphicsPanel.ClientSize.Width, zeroCount = _universe.GetLength(0),
                 clientHeight = GraphicsPanel.ClientSize.Height, oneCount = _universe.GetLength(1),
@@ -1652,45 +1688,57 @@ namespace GameOfLife
                 // CELL Y = MOUSE Y / CELL HEIGHT
                 float y = eY / cellHeight;
 
-
+                // If MouseDown is enabled, execute within panel bounds
                 if ((_draw == 0 || _draw == 1) && (x < _universe.GetLength(0)) && (y < _universe.GetLength(0))
                     && x >= 0 && y >= 0)
                 {
+                    // Paint
                     if (_draw == 0)
                     {
                         _universe[(int)x, (int)y] = true;
                     }
+                    // Erase
                     else
                     {
                         _universe[(int)x, (int)y] = false;
                     }
                 }
+                // Single-Click
                 else if (_draw == 2)
                 {
                     // Toggle the cell's state
                     _universe[(int)x, (int)y] = !_universe[(int)x, (int)y];
                 }
 
+                // Count cells
 
+                // Only count what is in range
                 if (x < _universe.GetLength(0) && y < _universe.GetLength(1)
                     && x >= 0 && y >= 0)
                 {
+                    // Paint
                     if (_draw == 0)
                     {
+                        // If the universe copy hasn't been updated with painted
+                        // cell, add it to array and increment count.
                         if (_universe[(int)x, (int)y] == true && _universeCopy[(int)x, (int)y] == false)
                         {
                             _universeCopy[(int)x, (int)y] = _universe[(int)x, (int)y];
                             _cellCount++;
                         }
                     }
+                    // Erase
                     else if (_draw == 1)
                     {
+                        // If the universe copy hasn't been updated with deleted
+                        // cell, remove it from array and decrement count.
                         if (_universe[(int)x, (int)y] == false && _universeCopy[(int)x, (int)y] == true)
                         {
                             _universeCopy[(int)x, (int)y] = _universe[(int)x, (int)y];
                             _cellCount--;
                         }
                     }
+                    // Single-Click
                     else if (_draw == 2)
                     {
                         // If toggled on, increment cell count
@@ -1737,9 +1785,6 @@ namespace GameOfLife
                 }
             }
         }
-
-        // Paint graphics panel
-       
 
         // Calculate the next generation of cells
         private void Process_NextGeneration()
@@ -1954,11 +1999,13 @@ namespace GameOfLife
         }
 
 
+        // Resize / Alternate version of Process_Crop, but used for Settings_Size
         private void Process_Resize()
         {
             // Allocate a temp universe to the current number of rows and columns
             bool[,] tempUniverse = new bool[_rows, _columns];
 
+            // Get the smaller row and column count
             int tempRow = (_rows < _universe.GetLength(0)) ? _rows : _universe.GetLength(0);
             int tempCol = (_columns < _universe.GetLength(1)) ? _columns : _universe.GetLength(1);
 
@@ -1975,9 +2022,11 @@ namespace GameOfLife
             // Reallocate the universe
             _universe = new bool[_rows, _columns];
 
+            // Crop universe
             Process_Crop(ref tempUniverse);
         }
 
+        // Crop universe
         private void Process_Crop(ref bool[,] tempUniverse)
         {
             // Iterate through the universe in the y, top to bottom
@@ -1999,6 +2048,7 @@ namespace GameOfLife
                 }
             }
 
+            // Reallocate the universe copy upon resize
             _universeCopy = new bool[_universe.GetLength(0), _universe.GetLength(1)];
 
             // Update statuses
@@ -2020,6 +2070,7 @@ namespace GameOfLife
         // Psuedo Destructor
         private void Game_FormClosed(object sender, FormClosedEventArgs e)
         {
+            // Save settings.cfg and old_settings.cfg upon exit
             Settings_Process_AutoSave();
             Settings_Process_AutoSave(true);
         }

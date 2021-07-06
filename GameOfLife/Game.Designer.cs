@@ -964,7 +964,7 @@ namespace GameOfLife
             this.GraphicsPanel.Size = new System.Drawing.Size(500, 500);
             this.GraphicsPanel.TabIndex = 3;
             this.GraphicsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.Process_GraphicsPanel_Paint);
-            this.GraphicsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Process_GraphicsPanel_MouseClick);
+            this.GraphicsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.GraphicsPanel_MouseClick);
             this.GraphicsPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GraphicsPanel_MouseDown);
             this.GraphicsPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GraphicsPanel_MouseMove);
             this.GraphicsPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.GraphicsPanel_MouseUp);
