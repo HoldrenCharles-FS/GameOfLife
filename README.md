@@ -15,6 +15,7 @@ This project was created for the course Project and Portfolio I: Online at Full 
 - Settings save previous settings file upon closing.
 - User can manually change size of universe through settings.
 - Added about box under Help.
+- User now has 3 cursor options, Single-Click, Paint, and Erase.
 ### 07/04/2021
 - Implemented Neighbor Count overlay.
 - User can change interval.

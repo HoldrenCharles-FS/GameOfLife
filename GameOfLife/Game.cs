@@ -18,9 +18,9 @@ namespace GameOfLife
         private bool _saveAsFlag = false;   // Keeps frack if whether or not the user is Saving As...
         private string _fileName;           // Save file
         private string _path;               // Full path to save
-        private bool _hideParse = false;
-        private bool _cursorMove = false;
-        private int _draw = 1;
+        private bool _hideParse = false;    // Used to hide the parse process when text box is focsued
+        private bool _cursorMove = false;   // Used for MouseDown/MouseUp
+        private int _draw = 0;              // Cursor mode : 0 = Paint, 1 = Erase, 2 = Single Click
         private bool[,] _universeCopy;
 
         //  Settings
@@ -1539,7 +1539,7 @@ namespace GameOfLife
         // Mouse click on graphics panel
         private void Process_GraphicsPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            
+
             // When the Seed Box loses focus
             if (toolStripTextBoxSeed.Focused == false)
             {
@@ -1563,7 +1563,7 @@ namespace GameOfLife
             // If the left mouse button was clicked
             if (e.Button == MouseButtons.Left)
             {
-                
+
 
                 // Covert to floats
                 float clientWidth = GraphicsPanel.ClientSize.Width, zeroCount = _universe.GetLength(0),
@@ -1954,11 +1954,13 @@ namespace GameOfLife
             _cursorMove = false;
         }
 
-        
+
 
         private void Control_Paint(object sender = null, EventArgs e = null)
         {
             _draw = 0;
+
+            GraphicsPanel.Cursor = Cursors.Cross;
 
             toolStripButtonSingleClick.Checked = false;
             toolStripMenuItemSingleClick.Checked = false;
@@ -1977,6 +1979,11 @@ namespace GameOfLife
         {
             _draw = 1;
 
+
+            Cursor eraser = new Cursor(Properties.Resources.eraser.GetHicon());
+
+            GraphicsPanel.Cursor = eraser;
+
             toolStripButtonSingleClick.Checked = false;
             toolStripMenuItemSingleClick.Checked = false;
 
@@ -1993,6 +2000,8 @@ namespace GameOfLife
         private void Control_SingleClick(object sender = null, EventArgs e = null)
         {
             _draw = 2;
+
+            GraphicsPanel.Cursor = Cursors.Arrow;
 
             toolStripButtonSingleClick.Checked = true;
             toolStripMenuItemSingleClick.Checked = true;
