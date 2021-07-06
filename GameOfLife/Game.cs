@@ -456,7 +456,8 @@ namespace GameOfLife
 
             // Check that the user didn't click away
             // and that the style is no longer italic
-            if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Font.Italic == false)
+            if ((toolStripTextBoxSeed.Text.Length > 0 || toolStripTextBoxSeed.Text != Properties.Resources.seedPrompt) 
+                && toolStripTextBoxSeed.Font.Italic == false)
             {
                 Randomize_Process_UpdateGraphics();
             }
@@ -1016,6 +1017,10 @@ namespace GameOfLife
                 toolStripTextBoxSeed.Font = new Font(toolStripTextBoxSeed.Font, FontStyle.Italic);
                 toolStripTextBoxSeed.ForeColor = Color.Gray;
                 toolStripTextBoxSeed.Text = Properties.Resources.seedPrompt;
+
+                // Disable Generate
+                generateToolStripMenuItem.Enabled = false;
+                toolStripButtonGenerate.Enabled = false;
             }
         }
 
