@@ -156,6 +156,16 @@ namespace GameOfLife.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap growIcon {
+            get {
+                object obj = ResourceManager.GetObject("growIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import.
         /// </summary>
         internal static string import {
@@ -431,6 +441,16 @@ namespace GameOfLife.Properties {
         internal static string settingsPrevious {
             get {
                 return ResourceManager.GetString("settingsPrevious", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap shrinkIcon {
+            get {
+                object obj = ResourceManager.GetObject("shrinkIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

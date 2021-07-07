@@ -93,6 +93,9 @@ namespace GameOfLife
             this.toolStripButtonPaint = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonErase = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSingleClick = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonShrink = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonGrow = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStrip_Start = new System.Windows.Forms.ToolStripButton();
             this.ToolStrip_Next = new System.Windows.Forms.ToolStripButton();
@@ -354,7 +357,7 @@ namespace GameOfLife
             this.neighborCountToolStripMenuItem,
             this.gridToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.viewToolStripMenuItem.Text = "View";
             // 
             // hUDToolStripMenuItem
@@ -395,7 +398,7 @@ namespace GameOfLife
             this.gridColorToolStripMenuItem,
             this.gridX10ColorToolStripMenuItem});
             this.colorToolStripMenuItem1.Name = "colorToolStripMenuItem1";
-            this.colorToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.colorToolStripMenuItem1.Size = new System.Drawing.Size(143, 22);
             this.colorToolStripMenuItem1.Text = "Color";
             // 
             // backColorToolStripMenuItem
@@ -433,13 +436,13 @@ namespace GameOfLife
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator11.Size = new System.Drawing.Size(140, 6);
             // 
             // torodialToolStripMenuItem
             // 
             this.torodialToolStripMenuItem.Name = "torodialToolStripMenuItem";
             this.torodialToolStripMenuItem.ShortcutKeyDisplayString = "B";
-            this.torodialToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.torodialToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.torodialToolStripMenuItem.Text = "Torodial";
             this.torodialToolStripMenuItem.Click += new System.EventHandler(this.View_Torodial);
             // 
@@ -447,39 +450,39 @@ namespace GameOfLife
             // 
             this.finiteToolStripMenuItem.Name = "finiteToolStripMenuItem";
             this.finiteToolStripMenuItem.ShortcutKeyDisplayString = "B";
-            this.finiteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.finiteToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.finiteToolStripMenuItem.Text = "Finite";
             this.finiteToolStripMenuItem.Click += new System.EventHandler(this.View_Finite);
             // 
             // toolStripSeparator12
             // 
             this.toolStripSeparator12.Name = "toolStripSeparator12";
-            this.toolStripSeparator12.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator12.Size = new System.Drawing.Size(140, 6);
             // 
             // toolStripMenuItemSpeed
             // 
             this.toolStripMenuItemSpeed.Name = "toolStripMenuItemSpeed";
             this.toolStripMenuItemSpeed.ShortcutKeyDisplayString = "S";
-            this.toolStripMenuItemSpeed.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItemSpeed.Size = new System.Drawing.Size(143, 22);
             this.toolStripMenuItemSpeed.Text = "Speed";
             this.toolStripMenuItemSpeed.Click += new System.EventHandler(this.Settings_Speed);
             // 
             // sizeToolStripMenuItem
             // 
             this.sizeToolStripMenuItem.Name = "sizeToolStripMenuItem";
-            this.sizeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sizeToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.sizeToolStripMenuItem.Text = "Size";
             this.sizeToolStripMenuItem.Click += new System.EventHandler(this.Settings_Size);
             // 
             // toolStripSeparator16
             // 
             this.toolStripSeparator16.Name = "toolStripSeparator16";
-            this.toolStripSeparator16.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator16.Size = new System.Drawing.Size(140, 6);
             // 
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.reloadToolStripMenuItem.Text = "Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.Settings_Reload);
             // 
@@ -488,7 +491,7 @@ namespace GameOfLife
             this.resetToolStripMenuItem.Enabled = false;
             this.resetToolStripMenuItem.Name = "resetToolStripMenuItem";
             this.resetToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.resetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resetToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
             this.resetToolStripMenuItem.Text = "Reset";
             this.resetToolStripMenuItem.Click += new System.EventHandler(this.Settings_Reset);
             // 
@@ -503,7 +506,7 @@ namespace GameOfLife
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.Help_About);
             // 
@@ -549,7 +552,10 @@ namespace GameOfLife
             this.toolStripSeparator17,
             this.toolStripButtonPaint,
             this.toolStripButtonErase,
-            this.toolStripButtonSingleClick});
+            this.toolStripButtonSingleClick,
+            this.toolStripSeparator19,
+            this.toolStripButtonShrink,
+            this.toolStripButtonGrow});
             this.ToolStrip.Location = new System.Drawing.Point(0, 24);
             this.ToolStrip.Name = "ToolStrip";
             this.ToolStrip.Size = new System.Drawing.Size(500, 25);
@@ -692,6 +698,35 @@ namespace GameOfLife
             this.toolStripButtonSingleClick.Text = "toolStripButtonSingleClick";
             this.toolStripButtonSingleClick.ToolTipText = "Single-Click (3)";
             this.toolStripButtonSingleClick.Click += new System.EventHandler(this.Control_SingleClick);
+            // 
+            // toolStripSeparator19
+            // 
+            this.toolStripSeparator19.Name = "toolStripSeparator19";
+            this.toolStripSeparator19.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonShrink
+            // 
+            this.toolStripButtonShrink.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonShrink.Image = global::GameOfLife.Properties.Resources.shrinkIcon;
+            this.toolStripButtonShrink.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonShrink.Name = "toolStripButtonShrink";
+            this.toolStripButtonShrink.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonShrink.ToolTipText = "Shrink";
+            this.toolStripButtonShrink.Click += new System.EventHandler(this.Process_UniverseShrink);
+            this.toolStripButtonShrink.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonShrink_MouseDown);
+            this.toolStripButtonShrink.MouseUp += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonShrink_MouseUp);
+            // 
+            // toolStripButtonGrow
+            // 
+            this.toolStripButtonGrow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonGrow.Image = global::GameOfLife.Properties.Resources.growIcon;
+            this.toolStripButtonGrow.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGrow.Name = "toolStripButtonGrow";
+            this.toolStripButtonGrow.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonGrow.ToolTipText = "Grow";
+            this.toolStripButtonGrow.Click += new System.EventHandler(this.Process_UniverseGrow);
+            this.toolStripButtonGrow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonGrow_MouseDown);
+            this.toolStripButtonGrow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonGrow_MouseUp);
             // 
             // toolStripSeparator6
             // 
@@ -1093,6 +1128,9 @@ namespace GameOfLife
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSingleClick;
         private System.Windows.Forms.ToolStripMenuItem paintToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem eraseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
+        private System.Windows.Forms.ToolStripButton toolStripButtonGrow;
+        private System.Windows.Forms.ToolStripButton toolStripButtonShrink;
     }
 }
 

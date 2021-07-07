@@ -12,6 +12,8 @@ namespace GameOfLife
         // Fields
         private bool[,] _universe;          // The universe array
         Timer timer = new Timer();          // The Timer class
+        Timer shrinkTimer = new Timer();    // For mouse down event
+        Timer growTimer = new Timer();      // For mouse down event
         private int _cellCount = 0;         // Cell count
         private bool _seedFlag = false;     // Keeps track if a seed should be displayed
         private bool _importFlag = false;   // Keeps track if whether or not the user is importing
@@ -53,6 +55,10 @@ namespace GameOfLife
             // Subscribe a custom method to the Mouse wheel
             // Used to enable scrolling
             MouseWheel += OnMouseWheel_Zoom;
+            shrinkTimer.Interval = 80;
+            shrinkTimer.Tick += Process_ShrinkTimer_Tick;
+            growTimer.Interval = 80;
+            growTimer.Tick += Process_GrowTimer_Tick;
         }
         #endregion
 
@@ -208,7 +214,7 @@ namespace GameOfLife
                                     // Use the OR operator to keep alive cells, well, alive.
                                     _universe[x, y] = _universe[x, y] | tempUniverse[x, y];
                                 }
-                                
+
                             }
 
                         }
@@ -352,22 +358,22 @@ namespace GameOfLife
 
         private void File_Process_UpdatePath(ref string path)
         {
-            
-                // Update filename to user specified name
-                _path = path;
 
-                // Split into an array
-                string[] pathArr = path.Split('\\');
+            // Update filename to user specified name
+            _path = path;
 
-                // Grab the filename (last element)
-                for (int i = 0; i < pathArr.Length; i++)
+            // Split into an array
+            string[] pathArr = path.Split('\\');
+
+            // Grab the filename (last element)
+            for (int i = 0; i < pathArr.Length; i++)
+            {
+                if (i == pathArr.Length - 1)
                 {
-                    if (i == pathArr.Length - 1)
-                    {
-                        _fileName = pathArr[i];
-                    }
+                    _fileName = pathArr[i];
                 }
-            
+            }
+
         }
 
         // Exit
@@ -1143,9 +1149,9 @@ namespace GameOfLife
             // Check if settings are equal to fields, if returned false
             // Reset should be enabled upon reload
             _backColor = Color.FromName(data[i]); i++;
+            _cellColor = Color.FromName(data[i]); i++;
             _gridColor = Color.FromName(data[i]); i++;
             _gridX10Color = Color.FromName(data[i]); i++;
-            _cellColor = Color.FromName(data[i]); i++;
             _rows = Int32.Parse(data[i]); i++;
             _columns = Int32.Parse(data[i]); i++;
             _boundary = bool.Parse(data[i]); i++;
@@ -1163,7 +1169,20 @@ namespace GameOfLife
 
             // Allocate the universe
             _universe = new bool[_rows, _columns];
+
+            // Option to reset Settings
+            if (_backColor.Name != Color.White.Name || _cellColor.Name != Color.LightGray.Name
+                || _gridColor.Name != Color.Gray.Name || _gridX10Color.Name != Color.DarkSlateGray.Name
+                || _rows != 30 || _columns != 30 
+                || _boundary != true || _displayHUD != true 
+                || _displayNeighbors != true || _displayGrid != true
+                || _interval != 20)
+            {
+                resetToolStripMenuItem.Enabled = true;
+            }
         }
+
+        
 
         // Creates settings files
         private void Settings_Process_CreateSettings(bool createOld = false)
@@ -1181,6 +1200,10 @@ namespace GameOfLife
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBackColor);
                 sw.WriteLine(Color.White.Name);
 
+                // Cell Color
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelCellColor);
+                sw.WriteLine(Color.LightGray.Name);
+
                 // Grid Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridColor);
                 sw.WriteLine(Color.Gray.Name);
@@ -1188,10 +1211,6 @@ namespace GameOfLife
                 // Grid 10x Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridx10Color);
                 sw.WriteLine(Color.DarkSlateGray.Name);
-
-                // Cell Color
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelCellColor);
-                sw.WriteLine(Color.LightGray.Name);
 
                 // Row Count
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelRowCount);
@@ -1239,6 +1258,10 @@ namespace GameOfLife
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelBackColor);
                 sw.WriteLine(_backColor.Name);
 
+                // Cell Color
+                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelCellColor);
+                sw.WriteLine(_cellColor.Name);
+
                 // Grid Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridColor);
                 sw.WriteLine(_gridColor.Name);
@@ -1246,10 +1269,6 @@ namespace GameOfLife
                 // Grid 10x Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridx10Color);
                 sw.WriteLine(_gridX10Color.Name);
-
-                // Cell Color
-                sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelCellColor);
-                sw.WriteLine(_cellColor.Name);
 
                 // Row Count
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelRowCount);
@@ -1461,9 +1480,6 @@ namespace GameOfLife
             {
                 Process_UniverseShrink();
             }
-
-            // Process zoom
-            Process_Zoom();
         }
 
         // Detects MouseDown on Graphics panel
@@ -1554,14 +1570,12 @@ namespace GameOfLife
                 if (e.KeyCode == Keys.Up)
                 {
                     Process_UniverseShrink();
-                    Process_Zoom();
                 }
 
                 // Down Arrow = Zoom Out
                 if (e.KeyCode == Keys.Down)
                 {
                     Process_UniverseGrow();
-                    Process_Zoom();
                 }
 
                 // H = HUD
@@ -2141,7 +2155,7 @@ namespace GameOfLife
         }
 
         // Shrink the universe's x and y by 1
-        private void Process_UniverseShrink()
+        private void Process_UniverseShrink(object sender = null, EventArgs e = null)
         {
             // Universe min size is 3 rows or columns
             // Useful for saving a basic glider with no padding
@@ -2151,11 +2165,19 @@ namespace GameOfLife
                 _rows--;
                 _columns--;
             }
+            if (_rows != 30 || _columns != 30)
+            {
+                resetToolStripMenuItem.Enabled = true;
+            }
+
+            // Process zoom
+            Process_Zoom();
         }
 
         // Grow the universe's x and y by 1
-        private void Process_UniverseGrow()
+        private void Process_UniverseGrow(object sender = null, EventArgs e = null)
         {
+            
             // Universe max size is 200 rows or columns
             if (_rows < 200 && _columns < 200)
             {
@@ -2163,6 +2185,13 @@ namespace GameOfLife
                 _rows++;
                 _columns++;
             }
+            if (_rows != 30 || _columns != 30)
+            {
+                resetToolStripMenuItem.Enabled = true;
+            }
+
+            // Process zoom
+            Process_Zoom();
         }
 
         // Used by MouseWheel and Up/Down Arrow Keys
@@ -2254,5 +2283,37 @@ namespace GameOfLife
             Settings_Process_AutoSave(true);
         }
         #endregion
+
+        private void toolStripButtonShrink_MouseDown(object sender, MouseEventArgs e)
+        {
+            shrinkTimer.Enabled = true;
+            
+        }
+
+        private void toolStripButtonGrow_MouseDown(object sender, MouseEventArgs e)
+        {
+            growTimer.Enabled = true;
+            
+        }
+
+        private void Process_ShrinkTimer_Tick(object sender, EventArgs e)
+        {
+            Process_UniverseShrink();
+        }
+
+        private void Process_GrowTimer_Tick(object sender, EventArgs e)
+        {
+            Process_UniverseGrow();
+        }
+
+        private void toolStripButtonShrink_MouseUp(object sender, MouseEventArgs e)
+        {
+            shrinkTimer.Enabled = false;
+        }
+
+        private void toolStripButtonGrow_MouseUp(object sender, MouseEventArgs e)
+        {
+            growTimer.Enabled = false;
+        }
     }
 }
