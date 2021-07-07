@@ -655,12 +655,12 @@ namespace GameOfLife
         // Toggle HUD
         private void View_HUD(object sender = null, EventArgs e = null)
         {
-            // Toggle checked state
-            hUDToolStripMenuItem.Checked = !hUDToolStripMenuItem.Checked;
-            hUDToolStripMenuItem1.Checked = !hUDToolStripMenuItem1.Checked;
-
             // Update related field
-            _displayHUD = hUDToolStripMenuItem.Checked;
+            _displayHUD = !_displayHUD;
+
+            // Toggle checked state
+            hUDToolStripMenuItem.Checked = _displayHUD;
+            hUDToolStripMenuItem1.Checked = _displayHUD;
 
             // Autosave
             Settings_Process_AutoSave();
@@ -715,6 +715,13 @@ namespace GameOfLife
             // Update related field
             _displayGrid = gridToolStripMenuItem.Checked;
 
+            // Enable / disable color buttons
+            gridColorToolStripMenuItem.Enabled = _displayGrid;
+            gridColorToolStripMenuItem1.Enabled = _displayGrid;
+            gridX10ColorToolStripMenuItem.Enabled = _displayGrid;
+            gridX10ColorToolStripMenuItem1.Enabled = _displayGrid;
+
+
             // Autosave
             Settings_Process_AutoSave();
 
@@ -729,6 +736,12 @@ namespace GameOfLife
             _universeCopy = new bool[_universe.GetLength(0), _universe.GetLength(1)];
             gridToolStripMenuItem.Checked = _displayGrid;
             gridToolStripMenuItem1.Checked = _displayGrid;
+
+            // Enable / disable color buttons
+            gridColorToolStripMenuItem.Enabled = _displayGrid;
+            gridColorToolStripMenuItem1.Enabled = _displayGrid;
+            gridX10ColorToolStripMenuItem.Enabled = _displayGrid;
+            gridX10ColorToolStripMenuItem1.Enabled = _displayGrid;
         }
 
         // Torodial
