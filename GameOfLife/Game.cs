@@ -64,6 +64,7 @@ namespace GameOfLife
         {
             // Reset universe
             _seed = 0;
+            _generations = 0;
             _universe = new bool[_rows, _columns];
 
             // Update Game.Text to New World
@@ -531,6 +532,9 @@ namespace GameOfLife
         // Random Seed
         private void Randomize_RandomSeed(object sender = null, EventArgs e = null)
         {
+            // Reset generations
+            _generations = 0;
+
             // If timer is enabled, pause
             if (timer.Enabled == true)
             {
