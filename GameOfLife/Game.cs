@@ -143,10 +143,18 @@ namespace GameOfLife
                 }
 
                 // Resize the universe
-                _rows = rows;
-                _columns = columns;
-                _universe = new bool[rows, columns];
+                if (_importFlag == true)
+                {
+                    _rows = _universeCopy.GetLength(0);
+                    _columns = _universeCopy.GetLength(1);
+                }
+                else
+                {
+                    _rows = rows;
+                    _columns = columns;
 
+                }
+                _universe = new bool[_rows, _columns];
 
                 if (_importFlag == true)
                 {
@@ -337,18 +345,21 @@ namespace GameOfLife
 
         private void File_Process_UpdatePath(ref string path)
         {
-            // Update filename to user specified name
-            _path = path;
-
-            // Split into an array
-            string[] pathArr = path.Split('\\');
-
-            // Grab the filename (last element)
-            for (int i = 0; i < pathArr.Length; i++)
+            if (_importFlag == false || Text == (Properties.Resources.fileNewWorld + Properties.Resources.appendTitle))
             {
-                if (i == pathArr.Length - 1)
+                // Update filename to user specified name
+                _path = path;
+
+                // Split into an array
+                string[] pathArr = path.Split('\\');
+
+                // Grab the filename (last element)
+                for (int i = 0; i < pathArr.Length; i++)
                 {
-                    _fileName = pathArr[i];
+                    if (i == pathArr.Length - 1)
+                    {
+                        _fileName = pathArr[i];
+                    }
                 }
             }
         }
