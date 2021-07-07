@@ -203,8 +203,12 @@ namespace GameOfLife
                                 // If row[xPos] is a 'O' (capital O) then it is alive
                                 tempUniverse[x, y] = (row[x] == 'O') ? true : false;
 
-                                // Use the OR operator to keep alive cells, well, alive.
-                                _universe[x, y] = _universe[x, y] | tempUniverse[x, y];
+                                if (x < _universe.GetLength(0) && y < _universe.GetLength(1))
+                                {
+                                    // Use the OR operator to keep alive cells, well, alive.
+                                    _universe[x, y] = _universe[x, y] | tempUniverse[x, y];
+                                }
+                                
                             }
 
                         }
