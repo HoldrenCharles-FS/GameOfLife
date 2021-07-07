@@ -27,7 +27,7 @@ namespace GameOfLife
         private Color _backColor;       // Back color
         private Color _cellColor;       // Cell color
         private Color _gridColor;       // Grid color
-        private Color _grid10xColor;    // Grid 10x color
+        private Color _gridX10Color;    // Grid 10x color
         private int _rows;              // Rows count
         private int _columns;           // Column Count
         private int _generations;       // Generation count
@@ -838,13 +838,36 @@ namespace GameOfLife
         // Grid Color
         private void Settings_GridColor(object sender = null, EventArgs e = null)
         {
-            Settings_Process_ColorDialogBox(ref _gridColor);
+            if (_displayGrid == true)
+            {
+                gridColorToolStripMenuItem.Enabled = true;
+                gridColorToolStripMenuItem1.Enabled = true;
+
+                Settings_Process_ColorDialogBox(ref _gridColor);
+            }
+            else
+            {
+                gridColorToolStripMenuItem.Enabled = false;
+                gridColorToolStripMenuItem1.Enabled = false;
+            }
+            
         }
 
         // Grid x10 color
         private void Settings_GridX10Color(object sender = null, EventArgs e = null)
         {
-            Settings_Process_ColorDialogBox(ref _grid10xColor);
+            if (_displayGrid == true)
+            {
+                gridX10ColorToolStripMenuItem.Enabled = true;
+                gridX10ColorToolStripMenuItem1.Enabled = true;
+
+                Settings_Process_ColorDialogBox(ref _gridX10Color);
+            }
+            else
+            {
+                gridX10ColorToolStripMenuItem.Enabled = false;
+                gridX10ColorToolStripMenuItem1.Enabled = false;
+            }
         }
 
 
@@ -966,7 +989,7 @@ namespace GameOfLife
             // Initialize data members here
             _backColor = Color.FromName(data[i]); i++;
             _gridColor = Color.FromName(data[i]); i++;
-            _grid10xColor = Color.FromName(data[i]); i++;
+            _gridX10Color = Color.FromName(data[i]); i++;
             _cellColor = Color.FromName(data[i]); i++;
             _rows = Int32.Parse(data[i]); i++;
             _columns = Int32.Parse(data[i]); i++;
@@ -1080,7 +1103,7 @@ namespace GameOfLife
 
                 // Grid 10x Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelGridx10Color);
-                sw.WriteLine(_grid10xColor.Name);
+                sw.WriteLine(_gridX10Color.Name);
 
                 // Cell Color
                 sw.WriteLine(Properties.Resources.commentPrefix + Properties.Resources.labelCellColor);
@@ -1517,7 +1540,7 @@ namespace GameOfLife
             Pen gridPen = new Pen(_gridColor, 1);
 
             // Pen for drawing the x10 Grid
-            Pen gridx10Pen = new Pen(_grid10xColor, 2);
+            Pen gridx10Pen = new Pen(_gridX10Color, 2);
 
             // Brush for drawing the HUD
             Brush hudBrush = new SolidBrush(Color.FromArgb(0x78FF0000));
@@ -1883,15 +1906,13 @@ namespace GameOfLife
                             // Check each adjacent space through addition and iteration
                             horizontal = x + i;
                             vertical = y + j;
-
-                            // Increment neighbors if the cell is alive
-                            if (_universe[horizontal, vertical] == true)
-                            {
-                                count++;
-                            }
                         }
                     }
-                    
+                    // Increment neighbors if the cell is alive
+                    if (_universe[horizontal, vertical] == true)
+                    {
+                        count++;
+                    }
                 }
             }
 
