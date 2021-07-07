@@ -830,18 +830,68 @@ namespace GameOfLife
             }
         }
 
+        // Initialize all colors upon load
+        private void Settings_Process_InitColors()
+        {
+            Settings_Process_ColorImage(ref _backColor);
+            backColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _backColor);
+            backColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _backColor);
+
+            Settings_Process_ColorImage(ref _cellColor);
+            cellColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _cellColor);
+            cellColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _cellColor);
+
+            Settings_Process_ColorImage(ref _gridColor);
+            gridColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridColor);
+            gridColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridColor);
+
+            Settings_Process_ColorImage(ref _gridX10Color);
+            gridX10ColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridX10Color);
+            gridX10ColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridX10Color);
+        }
+
+        private Bitmap Settings_Process_ColorImage(ref Color color)
+        {
+            Bitmap bmp = new Bitmap(16, 16);
+            using (Graphics gfx = Graphics.FromImage(bmp))
+            {
+                using (SolidBrush brush = new SolidBrush(Color.FromArgb(color.A, color.R, color.G, color.B)))
+                {
+                    gfx.FillRectangle(brush, 0, 0, 16, 16);
+                }
+            }
+            return bmp;
+        }
+
         // Back Color
         private void Settings_BackColor(object sender = null, EventArgs e = null)
         {
             Settings_Process_ColorDialogBox(ref _backColor);
             GraphicsPanel.BackColor = _backColor;
+
+            Settings_Process_ColorImage(ref _backColor);
+            
+            backColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _backColor);
+            backColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _backColor);
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
+
+        
 
         // Cell Color
         private void Settings_CellColor(object sender = null, EventArgs e = null)
         {
             Settings_Process_ColorDialogBox(ref _cellColor);
 
+            Settings_Process_ColorImage(ref _cellColor);
+
+            cellColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _cellColor);
+            cellColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _cellColor);
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
 
         // Grid Color
@@ -851,15 +901,27 @@ namespace GameOfLife
             {
                 gridColorToolStripMenuItem.Enabled = true;
                 gridColorToolStripMenuItem1.Enabled = true;
+                gridX10ColorToolStripMenuItem.Enabled = true;
+                gridX10ColorToolStripMenuItem1.Enabled = true;
 
                 Settings_Process_ColorDialogBox(ref _gridColor);
+
+                Settings_Process_ColorImage(ref _gridColor);
+
+                gridColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridColor);
+                gridColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridColor);
             }
             else
             {
                 gridColorToolStripMenuItem.Enabled = false;
                 gridColorToolStripMenuItem1.Enabled = false;
+                gridX10ColorToolStripMenuItem.Enabled = false;
+                gridX10ColorToolStripMenuItem1.Enabled = false;
             }
-            
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
+
         }
 
         // Grid x10 color
@@ -867,16 +929,28 @@ namespace GameOfLife
         {
             if (_displayGrid == true)
             {
+                gridColorToolStripMenuItem.Enabled = true;
+                gridColorToolStripMenuItem1.Enabled = true;
                 gridX10ColorToolStripMenuItem.Enabled = true;
                 gridX10ColorToolStripMenuItem1.Enabled = true;
 
                 Settings_Process_ColorDialogBox(ref _gridX10Color);
+
+                Settings_Process_ColorImage(ref _gridX10Color);
+
+                gridX10ColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridX10Color);
+                gridX10ColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridX10Color);
             }
             else
             {
+                gridColorToolStripMenuItem.Enabled = false;
+                gridColorToolStripMenuItem1.Enabled = false;
                 gridX10ColorToolStripMenuItem.Enabled = false;
                 gridX10ColorToolStripMenuItem1.Enabled = false;
             }
+
+            // Tell Windows you need to repaint
+            GraphicsPanel.Invalidate();
         }
 
 
@@ -1528,12 +1602,17 @@ namespace GameOfLife
             // Update Boundary
             View_Process_InitTorodial();
 
+            // Update Colors
+            Settings_Process_InitColors();
+
             // Set the cursor to paint
             Control_Paint();
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
+
+       
 
         private void Process_GraphicsPanel_Paint(object sender, PaintEventArgs e)
         {
