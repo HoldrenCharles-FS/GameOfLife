@@ -231,7 +231,6 @@ namespace GameOfLife
 
                 // Tell windows to repaint
                 GraphicsPanel.Invalidate();
-
             }
         }
 
