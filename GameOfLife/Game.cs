@@ -1566,16 +1566,16 @@ namespace GameOfLife
                     Control_Next();
                 }
 
-                // Up Arrow = Zoom In
+                // Up Arrow = Zoom Out
                 if (e.KeyCode == Keys.Up)
                 {
-                    Process_UniverseShrink();
+                    
+                    Process_UniverseGrow();
                 }
-
-                // Down Arrow = Zoom Out
+                // Down Arrow = Zoom In
                 if (e.KeyCode == Keys.Down)
                 {
-                    Process_UniverseGrow();
+                    Process_UniverseShrink();
                 }
 
                 // H = HUD

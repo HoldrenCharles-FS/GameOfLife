@@ -235,9 +235,9 @@ namespace GameOfLife
             this.startToolStripMenuItem,
             this.nextToolStripMenuItem,
             this.toolStripSeparator18,
-            this.toolStripMenuItemSingleClick,
             this.paintToolStripMenuItem,
-            this.eraseToolStripMenuItem});
+            this.eraseToolStripMenuItem,
+            this.toolStripMenuItemSingleClick});
             this.controlToolStripMenuItem.Name = "controlToolStripMenuItem";
             this.controlToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.controlToolStripMenuItem.Text = "Control";
@@ -271,7 +271,7 @@ namespace GameOfLife
             // 
             this.toolStripMenuItemSingleClick.Image = global::GameOfLife.Properties.Resources.cursorIcon;
             this.toolStripMenuItemSingleClick.Name = "toolStripMenuItemSingleClick";
-            this.toolStripMenuItemSingleClick.ShortcutKeyDisplayString = "1";
+            this.toolStripMenuItemSingleClick.ShortcutKeyDisplayString = "3";
             this.toolStripMenuItemSingleClick.Size = new System.Drawing.Size(169, 22);
             this.toolStripMenuItemSingleClick.Text = "Single-Click";
             this.toolStripMenuItemSingleClick.Click += new System.EventHandler(this.Control_SingleClick);
@@ -280,7 +280,7 @@ namespace GameOfLife
             // 
             this.paintToolStripMenuItem.Image = global::GameOfLife.Properties.Resources.paintIcon;
             this.paintToolStripMenuItem.Name = "paintToolStripMenuItem";
-            this.paintToolStripMenuItem.ShortcutKeyDisplayString = "2";
+            this.paintToolStripMenuItem.ShortcutKeyDisplayString = "1";
             this.paintToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.paintToolStripMenuItem.Text = "Paint";
             this.paintToolStripMenuItem.Click += new System.EventHandler(this.Control_Paint);
@@ -289,7 +289,7 @@ namespace GameOfLife
             // 
             this.eraseToolStripMenuItem.Image = global::GameOfLife.Properties.Resources.eraserIcon;
             this.eraseToolStripMenuItem.Name = "eraseToolStripMenuItem";
-            this.eraseToolStripMenuItem.ShortcutKeyDisplayString = "3";
+            this.eraseToolStripMenuItem.ShortcutKeyDisplayString = "2";
             this.eraseToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.eraseToolStripMenuItem.Text = "Erase";
             this.eraseToolStripMenuItem.Click += new System.EventHandler(this.Control_Erase);
@@ -711,7 +711,7 @@ namespace GameOfLife
             this.toolStripButtonShrink.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonShrink.Name = "toolStripButtonShrink";
             this.toolStripButtonShrink.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonShrink.ToolTipText = "Shrink";
+            this.toolStripButtonShrink.ToolTipText = "Shrink (Down Arrow)";
             this.toolStripButtonShrink.Click += new System.EventHandler(this.Process_UniverseShrink);
             this.toolStripButtonShrink.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonShrink_MouseDown);
             this.toolStripButtonShrink.MouseUp += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonShrink_MouseUp);
@@ -723,7 +723,7 @@ namespace GameOfLife
             this.toolStripButtonGrow.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonGrow.Name = "toolStripButtonGrow";
             this.toolStripButtonGrow.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonGrow.ToolTipText = "Grow";
+            this.toolStripButtonGrow.ToolTipText = "Grow (Up Arrow)";
             this.toolStripButtonGrow.Click += new System.EventHandler(this.Process_UniverseGrow);
             this.toolStripButtonGrow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonGrow_MouseDown);
             this.toolStripButtonGrow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonGrow_MouseUp);
