@@ -223,8 +223,11 @@ namespace GameOfLife
                 // Update _path and _filename
                 File_Process_UpdatePath(ref path);
 
-                // Update Game.Text to include filename
-                Text = _fileName + Properties.Resources.appendTitle;
+                if (_importFlag == false || Text != (Properties.Resources.fileNewWorld + Properties.Resources.appendTitle))
+                {
+                    // Update Game.Text to include filename
+                    Text = _fileName + Properties.Resources.appendTitle;
+                }
 
                 // Display N/A instead of _seed
                 _seedFlag = false;
@@ -345,8 +348,7 @@ namespace GameOfLife
 
         private void File_Process_UpdatePath(ref string path)
         {
-            if (_importFlag == false || Text == (Properties.Resources.fileNewWorld + Properties.Resources.appendTitle))
-            {
+            
                 // Update filename to user specified name
                 _path = path;
 
@@ -361,7 +363,7 @@ namespace GameOfLife
                         _fileName = pathArr[i];
                     }
                 }
-            }
+            
         }
 
         // Exit
