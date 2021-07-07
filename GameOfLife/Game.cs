@@ -113,7 +113,6 @@ namespace GameOfLife
             // Open Dialog Box until the user cancels or confirms
             if (DialogResult.OK == dlg.ShowDialog())
             {
-
                 // Read from file
                 StreamReader sr = new StreamReader(dlg.FileName);
 
@@ -137,29 +136,13 @@ namespace GameOfLife
                     rows = row.Length;
                 }
 
-                if (_importFlag == true)
+                // If the user is just opening, not importing
+                if (_importFlag == false)
                 {
-                    _universeCopy = _universe;
-                }
-
-                // Resize the universe
-                _rows = rows;
-                _columns = columns;
-                _universe = new bool[rows, columns];
-
-
-                if (_importFlag == true)
-                {
-                    // Iterate through the universe one row at a time.
-                    for (int height = 0; height < _universeCopy.GetLength(1); height++)
-                    {
-
-                        // Iterate through the current row one cell at a time.
-                        for (int length = 0; length < _universeCopy.GetLength(0); length++)
-                        {
-                            _universe[length, height] = _universeCopy[length, height];
-                        }
-                    }
+                    // Resize the universe
+                    _rows = rows;
+                    _columns = columns;
+                    _universe = new bool[rows, columns];
                 }
 
                 // Reset the file pointer back to the beginning of the file.
@@ -171,17 +154,33 @@ namespace GameOfLife
                 // Iterate through the file again, this time reading in the cells.
                 while (!sr.EndOfStream)
                 {
+                    // Used only for Import
+                    bool[,] tempUniverse = new bool[_universe.GetLength(0), _universe.GetLength(1)];
+
+                    // Used for for loop
+                    int tempRow = 0;
+
                     // Read one row at a time.
                     string row = sr.ReadLine();
-
-                    // Used only for Import
-                    bool[,] tempUniverse = new bool[row.Length, columns];
 
                     // If the row begins with '!' it is a comment
                     if (row[0] != '!')
                     {
+                        // If opening a file
+                        if (_importFlag == false)
+                        {
+                            // Loop for as long as the opened file's row
+                            tempRow = row.Length;
+                        }
+                        // Else importing a file
+                        else
+                        {
+                            // Else don't access what isn't resized
+                            tempRow = _universe.GetLength(0);
+                        }
+
                         // Update the universe
-                        for (int x = 0; x < row.Length; x++)
+                        for (int x = 0; x < tempRow; x++)
                         {
                             // On open
                             if (_importFlag == false)
@@ -190,7 +189,7 @@ namespace GameOfLife
                                 _universe[x, y] = (row[x] == 'O') ? true : false;
                             }
                             // On import
-                            else
+                            else if (y < _universe.GetLength(1))
                             {
                                 // If row[xPos] is a 'O' (capital O) then it is alive
                                 tempUniverse[x, y] = (row[x] == 'O') ? true : false;
@@ -257,6 +256,11 @@ namespace GameOfLife
             }
             else
             {
+                // Check if file exists
+                if (!File.Exists(_path))
+                {
+                    File.Create(_path);
+                }
 
                 // Update _path and _filename
                 File_Process_UpdatePath(ref _path);
@@ -437,7 +441,7 @@ namespace GameOfLife
         }
 
         // Paint
-        private void Control_Paint(object sender = null, EventArgs e = null)
+         private void Control_Paint(object sender = null, EventArgs e = null)
         {
             // Set cursor to paint
             _draw = 0;
@@ -649,7 +653,7 @@ namespace GameOfLife
 
 
         #region Settings
-
+        
         #region View
         // Toggle HUD
         private void View_HUD(object sender = null, EventArgs e = null)
@@ -887,7 +891,7 @@ namespace GameOfLife
             GraphicsPanel.BackColor = _backColor;
 
             Settings_Process_ColorImage(ref _backColor);
-
+            
             backColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _backColor);
             backColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _backColor);
 
@@ -898,7 +902,7 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
-
+        
 
         // Cell Color
         private void Settings_CellColor(object sender = null, EventArgs e = null)
@@ -1469,7 +1473,7 @@ namespace GameOfLife
                 GraphicsPanel_MouseClick(sender, e);
             }
         }
-
+        
         // Detects MouseUp on Graphics Panel
         private void GraphicsPanel_MouseUp(object sender, MouseEventArgs e)
         {
@@ -1654,7 +1658,7 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
-
+       
 
         private void Process_GraphicsPanel_Paint(object sender, PaintEventArgs e)
         {
@@ -2045,7 +2049,7 @@ namespace GameOfLife
 
                         }
                     }
-
+                    
                 }
             }
 
