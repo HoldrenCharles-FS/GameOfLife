@@ -1803,7 +1803,7 @@ namespace GameOfLife
                 float y = eY / cellHeight;
 
                 // If MouseDown is enabled, execute within panel bounds
-                if ((_draw == 0 || _draw == 1) && (x < _universe.GetLength(0)) && (y < _universe.GetLength(0))
+                if ((_draw == 0 || _draw == 1) && (x < _universe.GetLength(0)) && (y < _universe.GetLength(1))
                     && x >= 0 && y >= 0)
                 {
                     // Paint
@@ -2100,10 +2100,10 @@ namespace GameOfLife
         // Grow the universe's x and y by 1
         private void Process_UniverseGrow()
         {
-            // Universe max size is 100 rows or columns
-            if (_rows < 100 && _columns < 100)
+            // Universe max size is 200 rows or columns
+            if (_rows < 200 && _columns < 200)
             {
-                // Increment until at 300
+                // Increment until at 200
                 _rows++;
                 _columns++;
             }
