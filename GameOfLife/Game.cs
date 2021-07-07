@@ -1906,13 +1906,16 @@ namespace GameOfLife
                             // Check each adjacent space through addition and iteration
                             horizontal = x + i;
                             vertical = y + j;
+
+                            // Increment neighbors if the cell is alive
+                            if (_universe[horizontal, vertical] == true)
+                            {
+                                count++;
+                            }
+
                         }
                     }
-                    // Increment neighbors if the cell is alive
-                    if (_universe[horizontal, vertical] == true)
-                    {
-                        count++;
-                    }
+                    
                 }
             }
 
