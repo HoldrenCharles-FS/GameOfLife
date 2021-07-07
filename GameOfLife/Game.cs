@@ -668,6 +668,9 @@ namespace GameOfLife
             // Autosave
             Settings_Process_AutoSave();
 
+            // Enable reset button
+            resetToolStripMenuItem.Enabled = true;
+
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
@@ -692,6 +695,9 @@ namespace GameOfLife
 
             // Autosave
             Settings_Process_AutoSave();
+
+            // Enable reset button
+            resetToolStripMenuItem.Enabled = true;
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -723,6 +729,9 @@ namespace GameOfLife
 
             // Autosave
             Settings_Process_AutoSave();
+
+            // Enable reset button
+            resetToolStripMenuItem.Enabled = true;
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -764,7 +773,8 @@ namespace GameOfLife
             // Autosave
             Settings_Process_AutoSave();
 
-
+            // Enable reset button
+            resetToolStripMenuItem.Enabled = true;
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -807,32 +817,15 @@ namespace GameOfLife
             // Autosave
             Settings_Process_AutoSave();
 
+            // Enable reset button
+            resetToolStripMenuItem.Enabled = true;
+
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
         #endregion
 
         #region Color
-        // Process that opens the Color Dialog Box
-        private void Settings_Process_ColorDialogBox(ref Color color)
-        {
-            // Used for all modifiable colors, Color sent by reference
-            ColorDialog dlg = new ColorDialog();
-
-            // Open the dialog box
-            if (DialogResult.OK == dlg.ShowDialog())
-            {
-                // Update the color when the user selects OK
-                color = dlg.Color;
-
-                // Autosave
-                Settings_Process_AutoSave();
-
-                // Tell Windows you need to repaint
-                GraphicsPanel.Invalidate();
-            }
-        }
-
         // Initialize all colors upon load
         private void Settings_Process_InitColors()
         {
@@ -853,6 +846,30 @@ namespace GameOfLife
             gridX10ColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridX10Color);
         }
 
+        // Process that opens the Color Dialog Box
+        private void Settings_Process_ColorDialogBox(ref Color color)
+        {
+            // Used for all modifiable colors, Color sent by reference
+            ColorDialog dlg = new ColorDialog();
+
+            // Open the dialog box
+            if (DialogResult.OK == dlg.ShowDialog())
+            {
+                // Update the color when the user selects OK
+                color = dlg.Color;
+
+                // Autosave
+                Settings_Process_AutoSave();
+
+                // Enable reset button
+                resetToolStripMenuItem.Enabled = true;
+
+                // Tell Windows you need to repaint
+                GraphicsPanel.Invalidate();
+            }
+        }
+
+
         private Bitmap Settings_Process_ColorImage(ref Color color)
         {
             Bitmap bmp = new Bitmap(16, 16);
@@ -863,6 +880,7 @@ namespace GameOfLife
                     gfx.FillRectangle(brush, 0, 0, 16, 16);
                 }
             }
+
             return bmp;
         }
 
@@ -876,6 +894,9 @@ namespace GameOfLife
             
             backColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _backColor);
             backColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _backColor);
+
+            // Enable reset button
+            resetToolStripMenuItem.Enabled = true;
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -892,6 +913,9 @@ namespace GameOfLife
 
             cellColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _cellColor);
             cellColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _cellColor);
+
+            // Enable reset button
+            resetToolStripMenuItem.Enabled = true;
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -913,6 +937,9 @@ namespace GameOfLife
 
                 gridColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridColor);
                 gridColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridColor);
+
+                // Enable reset button
+                resetToolStripMenuItem.Enabled = true;
             }
             else
             {
@@ -943,6 +970,9 @@ namespace GameOfLife
 
                 gridX10ColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridX10Color);
                 gridX10ColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridX10Color);
+
+                // Enable reset button
+                resetToolStripMenuItem.Enabled = true;
             }
             else
             {
@@ -982,6 +1012,9 @@ namespace GameOfLife
 
                 // Update status strip
                 Update_StatusStrip();
+
+                // Enable reset button
+                resetToolStripMenuItem.Enabled = true;
             }
         }
 
@@ -1014,6 +1047,9 @@ namespace GameOfLife
                 // Update status strip
                 Update_StatusStrip();
 
+                // Enable reset button
+                resetToolStripMenuItem.Enabled = true;
+
                 // Tell windows to repaint
                 GraphicsPanel.Invalidate();
             }
@@ -1029,8 +1065,26 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
+        // Reset / Create new settings file
+        private void Settings_Reset(object sender = null, EventArgs e = null)
+        {
+            // Disable until settings have changed
+            resetToolStripMenuItem.Enabled = false;
+
+            // Recreate Settings
+            Settings_Process_CreateSettings();
+
+            // Reload Settins
+            Settings_Process_LoadSettings();
+
+            // Reinitialize graphics
+            Init_Graphics();
+        }
+
+        // Load settings from file
         private void Settings_Process_LoadSettings(bool loadPrevious = false)
         {
+
             // Get filename
             string fileName = (loadPrevious == false) ? Properties.Resources.settingsFile : Properties.Resources.settingsPrevious;
 
@@ -1073,6 +1127,8 @@ namespace GameOfLife
             i = 0;
 
             // Initialize data members here
+            // Check if settings are equal to fields, if returned false
+            // Reset should be enabled upon reload
             _backColor = Color.FromName(data[i]); i++;
             _gridColor = Color.FromName(data[i]); i++;
             _gridX10Color = Color.FromName(data[i]); i++;
@@ -1094,19 +1150,6 @@ namespace GameOfLife
 
             // Allocate the universe
             _universe = new bool[_rows, _columns];
-        }
-
-        // Reset / Create new settings file
-        private void Settings_Reset(object sender = null, EventArgs e = null)
-        {
-            // Recreate Settings
-            Settings_Process_CreateSettings();
-
-            // Reload Settins
-            Settings_Process_LoadSettings();
-
-            // Reinitialize graphics
-            Init_Graphics();
         }
 
         // Creates settings files
