@@ -680,17 +680,15 @@ namespace GameOfLife
         // Toggle Neighbor Count
         private void View_NeighborCount(object sender = null, EventArgs e = null)
         {
+            // Update related field
+            _displayNeighbors = !_displayNeighbors;
 
             // Toggle checked state
-            neighborCountToolStripMenuItem.Checked = !neighborCountToolStripMenuItem.Checked;
-            neighborCountToolStripMenuItem1.Checked = !neighborCountToolStripMenuItem1.Checked;
-
-            // Update related field
-            _displayNeighbors = neighborCountToolStripMenuItem.Checked;
+            neighborCountToolStripMenuItem.Checked = _displayNeighbors;
+            neighborCountToolStripMenuItem1.Checked = _displayNeighbors;
 
             // Autosave
             Settings_Process_AutoSave();
-
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -707,20 +705,18 @@ namespace GameOfLife
         // Toggle Grid
         private void View_Grid(object sender = null, EventArgs e = null)
         {
+            // Update related field
+            _displayGrid = !_displayGrid;
 
             // Toggle checked state
-            gridToolStripMenuItem.Checked = !gridToolStripMenuItem.Checked;
-            gridToolStripMenuItem1.Checked = !gridToolStripMenuItem1.Checked;
-
-            // Update related field
-            _displayGrid = gridToolStripMenuItem.Checked;
+            gridToolStripMenuItem.Checked = _displayGrid;
+            gridToolStripMenuItem1.Checked = _displayGrid;
 
             // Enable / disable color buttons
             gridColorToolStripMenuItem.Enabled = _displayGrid;
             gridColorToolStripMenuItem1.Enabled = _displayGrid;
             gridX10ColorToolStripMenuItem.Enabled = _displayGrid;
             gridX10ColorToolStripMenuItem1.Enabled = _displayGrid;
-
 
             // Autosave
             Settings_Process_AutoSave();
