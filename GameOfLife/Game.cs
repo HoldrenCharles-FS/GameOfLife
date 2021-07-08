@@ -783,7 +783,9 @@ namespace GameOfLife
 
                 // Toggle checked state
                 torodialToolStripMenuItem.Checked = true;
+                torodialToolStripMenuItem1.Checked = true;
                 finiteToolStripMenuItem.Checked = false;
+                finiteToolStripMenuItem1.Checked = false;
 
                 // Update Status strip
                 Update_StatusStrip();
@@ -806,12 +808,16 @@ namespace GameOfLife
             if (_boundary == true)
             {
                 torodialToolStripMenuItem.Checked = true;
+                torodialToolStripMenuItem1.Checked = true;
                 finiteToolStripMenuItem.Checked = false;
+                finiteToolStripMenuItem1.Checked = false;
             }
             else
             {
                 torodialToolStripMenuItem.Checked = false;
+                torodialToolStripMenuItem1.Checked = false;
                 finiteToolStripMenuItem.Checked = true;
+                finiteToolStripMenuItem1.Checked = true;
             }
         }
 
@@ -827,7 +833,9 @@ namespace GameOfLife
 
                 // Toggle checked state
                 torodialToolStripMenuItem.Checked = false;
+                torodialToolStripMenuItem1.Checked = false;
                 finiteToolStripMenuItem.Checked = true;
+                finiteToolStripMenuItem1.Checked = true;
 
                 // Update Status strip
                 Update_StatusStrip();
