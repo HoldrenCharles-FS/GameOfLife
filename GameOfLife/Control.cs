@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace GameOfLife
@@ -26,18 +28,18 @@ namespace GameOfLife
                 toolStripButtonStart.ToolTipText = Properties.Resources.toolTipPause;
 
                 // Update controls
-                UpdateControls();
+                Update_Controls();
             }
             // Else the game is running, feel free to pause!
             else
             {
                 // Pause
-                Pause(sender, e);
+                Control_Process_Pause(sender, e);
             }
         }
 
         // Pause
-        private void Pause(object sender = null, EventArgs e = null)
+        private void Control_Process_Pause(object sender = null, EventArgs e = null)
         {
             // Stop timer
             timer.Enabled = false;
@@ -53,7 +55,7 @@ namespace GameOfLife
             // Update controls unless cell count is 0
             if (_cellCount != 0)
             {
-                UpdateControls();
+                Update_Controls();
             }
             else
             {
@@ -67,16 +69,16 @@ namespace GameOfLife
         private void Control_Next(object sender = null, EventArgs e = null)
         {
             // Update the controls before checking the cell count
-            UpdateControls();
+            Update_Controls();
 
             // Because if there are 0 alive cells, you shouldn't be able to...
             if (_cellCount > 0)
             {
                 // Pause or
-                Pause(sender, e);
+                Control_Process_Pause(sender, e);
 
                 // Step forward one generation
-                NextGeneration();
+                Process_NextGeneration();
             }
         }
 

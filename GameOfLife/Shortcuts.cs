@@ -1,4 +1,7 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.IO;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace GameOfLife
 {
@@ -11,12 +14,12 @@ namespace GameOfLife
             // Scroll down (zoom out)
             if (e.Delta < 0)
             {
-                UniverseGrow();
+                Process_UniverseGrow();
             }
             // Scroll up (zoom in)
             else
             {
-                UniverseShrink();
+                Process_UniverseShrink();
             }
         }
 
@@ -63,7 +66,7 @@ namespace GameOfLife
                     // Hide the seed parsing (seed parses when clicked outside of Seed Box)
                     _hideParse = true;
                     SeedBox_ParseSeed();
-                    Randomize_Generate();
+                    Randomize_GenerateSeed();
                     _hideParse = false;
                 }
                 // Else generate seed
@@ -72,7 +75,7 @@ namespace GameOfLife
                     // But only if the user entered something
                     if (toolStripTextBoxSeed.Text.Length > 0 && toolStripTextBoxSeed.Text != Properties.Resources.seedPrompt)
                     {
-                        Randomize_Generate();
+                        Randomize_GenerateSeed();
                     }
 
                 }
@@ -108,12 +111,12 @@ namespace GameOfLife
                 if (e.KeyCode == Keys.Up)
                 {
 
-                    UniverseGrow();
+                    Process_UniverseGrow();
                 }
                 // Down Arrow = Zoom In
                 if (e.KeyCode == Keys.Down)
                 {
-                    UniverseShrink();
+                    Process_UniverseShrink();
                 }
 
                 // H = HUD

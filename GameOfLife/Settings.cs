@@ -11,30 +11,30 @@ namespace GameOfLife
         
         #region Color
         // Initialize all colors upon load
-        private void InitializeColors()
+        private void Settings_Process_InitColors()
         {
-            ColorPreview(ref _backColor);
-            backColorToolStripMenuItem.Image = ColorPreview(ref _backColor);
-            backColorToolStripMenuItem1.Image = ColorPreview(ref _backColor);
+            Settings_Process_ColorImage(ref _backColor);
+            backColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _backColor);
+            backColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _backColor);
 
-            ColorPreview(ref _cellColor);
-            cellColorToolStripMenuItem.Image = ColorPreview(ref _cellColor);
-            cellColorToolStripMenuItem1.Image = ColorPreview(ref _cellColor);
+            Settings_Process_ColorImage(ref _cellColor);
+            cellColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _cellColor);
+            cellColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _cellColor);
 
             if (_displayGrid == true)
             {
-                ColorPreview(ref _gridColor);
-                gridColorToolStripMenuItem.Image = ColorPreview(ref _gridColor);
-                gridColorToolStripMenuItem1.Image = ColorPreview(ref _gridColor);
+                Settings_Process_ColorImage(ref _gridColor);
+                gridColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridColor);
+                gridColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridColor);
 
-                ColorPreview(ref _gridX10Color);
-                gridX10ColorToolStripMenuItem.Image = ColorPreview(ref _gridX10Color);
-                gridX10ColorToolStripMenuItem1.Image = ColorPreview(ref _gridX10Color);
+                Settings_Process_ColorImage(ref _gridX10Color);
+                gridX10ColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridX10Color);
+                gridX10ColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridX10Color);
             }
         }
 
         // Process that opens the Color Dialog Box
-        private void ColorDialogBox(ref Color color)
+        private void Settings_Process_ColorDialogBox(ref Color color)
         {
             // Used for all modifiable colors, Color sent by reference
             ColorDialog dlg = new ColorDialog();
@@ -57,7 +57,7 @@ namespace GameOfLife
         }
 
 
-        private Bitmap ColorPreview(ref Color color)
+        private Bitmap Settings_Process_ColorImage(ref Color color)
         {
             Bitmap bmp = new Bitmap(16, 16);
             using (Graphics gfx = Graphics.FromImage(bmp))
@@ -74,13 +74,13 @@ namespace GameOfLife
         // Back Color
         private void Settings_BackColor(object sender = null, EventArgs e = null)
         {
-            ColorDialogBox(ref _backColor);
+            Settings_Process_ColorDialogBox(ref _backColor);
             GraphicsPanel.BackColor = _backColor;
 
-            ColorPreview(ref _backColor);
+            Settings_Process_ColorImage(ref _backColor);
 
-            backColorToolStripMenuItem.Image = ColorPreview(ref _backColor);
-            backColorToolStripMenuItem1.Image = ColorPreview(ref _backColor);
+            backColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _backColor);
+            backColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _backColor);
 
             // Enable reset button
             resetToolStripMenuItem.Enabled = true;
@@ -89,15 +89,17 @@ namespace GameOfLife
             GraphicsPanel.Invalidate();
         }
 
+
+
         // Cell Color
         private void Settings_CellColor(object sender = null, EventArgs e = null)
         {
-            ColorDialogBox(ref _cellColor);
+            Settings_Process_ColorDialogBox(ref _cellColor);
 
-            ColorPreview(ref _cellColor);
+            Settings_Process_ColorImage(ref _cellColor);
 
-            cellColorToolStripMenuItem.Image = ColorPreview(ref _cellColor);
-            cellColorToolStripMenuItem1.Image = ColorPreview(ref _cellColor);
+            cellColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _cellColor);
+            cellColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _cellColor);
 
             // Enable reset button
             resetToolStripMenuItem.Enabled = true;
@@ -116,12 +118,12 @@ namespace GameOfLife
                 gridX10ColorToolStripMenuItem.Enabled = true;
                 gridX10ColorToolStripMenuItem1.Enabled = true;
 
-                ColorDialogBox(ref _gridColor);
+                Settings_Process_ColorDialogBox(ref _gridColor);
 
-                ColorPreview(ref _gridColor);
+                Settings_Process_ColorImage(ref _gridColor);
 
-                gridColorToolStripMenuItem.Image = ColorPreview(ref _gridColor);
-                gridColorToolStripMenuItem1.Image = ColorPreview(ref _gridColor);
+                gridColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridColor);
+                gridColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridColor);
 
                 // Enable reset button
                 resetToolStripMenuItem.Enabled = true;
@@ -155,12 +157,12 @@ namespace GameOfLife
                 gridX10ColorToolStripMenuItem.Enabled = true;
                 gridX10ColorToolStripMenuItem1.Enabled = true;
 
-                ColorDialogBox(ref _gridX10Color);
+                Settings_Process_ColorDialogBox(ref _gridX10Color);
 
-                ColorPreview(ref _gridX10Color);
+                Settings_Process_ColorImage(ref _gridX10Color);
 
-                gridX10ColorToolStripMenuItem.Image = ColorPreview(ref _gridX10Color);
-                gridX10ColorToolStripMenuItem1.Image = ColorPreview(ref _gridX10Color);
+                gridX10ColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridX10Color);
+                gridX10ColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridX10Color);
 
                 // Enable reset button
                 resetToolStripMenuItem.Enabled = true;
@@ -202,7 +204,7 @@ namespace GameOfLife
                 Settings_Process_AutoSave();
 
                 // Update status strip
-                UpdateStatusStrip();
+                Update_StatusStrip();
 
                 // Enable reset button
                 resetToolStripMenuItem.Enabled = true;
@@ -230,13 +232,13 @@ namespace GameOfLife
                 _columns = (int)dlg.Columns;
 
                 // Resize the universe
-                UpdateUniverseSize();
+                Process_Resize();
 
                 // Autosave
                 Settings_Process_AutoSave();
 
                 // Update status strip
-                UpdateStatusStrip();
+                Update_StatusStrip();
 
                 // Enable reset button
                 resetToolStripMenuItem.Enabled = true;
@@ -269,10 +271,10 @@ namespace GameOfLife
             Settings_Process_LoadSettings();
 
             // Recount cells
-            CountCells();
+            Process_CountCells();
 
             // Update Status Strip
-            UpdateStatusStrip();
+            Update_StatusStrip();
 
             // Reinitialize graphics
             Init_Graphics();
@@ -502,7 +504,7 @@ namespace GameOfLife
         }
 
         // Resize / Alternate version of Process_Crop, but used for Settings_Size
-        private void UpdateUniverseSize()
+        private void Process_Resize()
         {
             // Allocate a temp universe to the current number of rows and columns
             bool[,] tempUniverse = new bool[_rows, _columns];
@@ -525,7 +527,7 @@ namespace GameOfLife
             _universe = new bool[_rows, _columns];
 
             // Crop universe
-            Crop(ref tempUniverse);
+            Process_Crop(ref tempUniverse);
         }
 
         #endregion

@@ -25,16 +25,16 @@ namespace GameOfLife
             SeedBox_SetStyle(true);
 
             // Update Status Strip
-            UpdateStatusStrip();
+            Update_StatusStrip();
 
             // Count alive cells
-            CountCells();
+            Process_CountCells();
 
             // Update controls (will enable Start and Next if seed is blank)
-            UpdateControls();
+            Update_Controls();
 
             // Pause in the case that it is running
-            Pause(sender, e);
+            Control_Process_Pause(sender, e);
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -185,13 +185,13 @@ namespace GameOfLife
                 _seedFlag = false;
 
                 // Recount cells
-                CountCells();
+                Process_CountCells();
 
                 // Update status strip
-                UpdateStatusStrip();
+                Update_StatusStrip();
 
                 // Update controls
-                UpdateControls();
+                Update_Controls();
 
                 // Tell windows to repaint
                 GraphicsPanel.Invalidate();
