@@ -55,9 +55,9 @@ namespace GameOfLife
             // Subscribe a custom method to the Mouse wheel
             // Used to enable scrolling
             MouseWheel += OnMouseWheel_Zoom;
-            shrinkTimer.Interval = 80;
+            shrinkTimer.Interval = 30;
             shrinkTimer.Tick += Process_ShrinkTimer_Tick;
-            growTimer.Interval = 80;
+            growTimer.Interval = 30;
             growTimer.Tick += Process_GrowTimer_Tick;
         }
         #endregion
@@ -2294,12 +2294,20 @@ namespace GameOfLife
 
         private void toolStripButtonShrink_MouseDown(object sender, MouseEventArgs e)
         {
+            if (growTimer.Enabled == true)
+            {
+                growTimer.Enabled = false;
+            }
             shrinkTimer.Enabled = true;
             
         }
 
         private void toolStripButtonGrow_MouseDown(object sender, MouseEventArgs e)
         {
+            if (shrinkTimer.Enabled == true)
+            {
+                shrinkTimer.Enabled = false;
+            }
             growTimer.Enabled = true;
             
         }
@@ -2320,6 +2328,16 @@ namespace GameOfLife
         }
 
         private void toolStripButtonGrow_MouseUp(object sender, MouseEventArgs e)
+        {
+            growTimer.Enabled = false;
+        }
+
+        private void toolStripButtonShrink_MouseLeave(object sender, EventArgs e)
+        {
+            shrinkTimer.Enabled = false;
+        }
+
+        private void toolStripButtonGrow_MouseLeave(object sender, EventArgs e)
         {
             growTimer.Enabled = false;
         }
