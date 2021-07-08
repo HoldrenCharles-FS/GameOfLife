@@ -59,6 +59,7 @@ namespace GameOfLife
             shrinkTimer.Tick += Process_ShrinkTimer_Tick;
             growTimer.Interval = 30;
             growTimer.Tick += Process_GrowTimer_Tick;
+            timer.Tick += Process_Timer_Tick;
         }
         #endregion
 
@@ -1176,7 +1177,6 @@ namespace GameOfLife
 
             // Setup the timer
             timer.Interval = Int32.Parse(data[i]); // milliseconds
-            timer.Tick += Process_Timer_Tick;
 
             // Initialoze back color
             GraphicsPanel.BackColor = _backColor;
@@ -1199,7 +1199,7 @@ namespace GameOfLife
                 // Iterate through the current row one cell at a time.
                 for (int length = 0; length < _universe.GetLength(0); length++)
                 {
-                    if (length < _universe.GetLength(0) && height < _universe.GetLength(1))
+                    if (length < _universeCopy.GetLength(0) && height < _universeCopy.GetLength(1))
                     {
                         _universe[length, height] = _universeCopy[length, height];
                     }
