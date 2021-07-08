@@ -537,6 +537,7 @@ namespace GameOfLife
             if ((toolStripTextBoxSeed.Text.Length > 0 || toolStripTextBoxSeed.Text != Properties.Resources.seedPrompt)
                 && toolStripTextBoxSeed.Font.Italic == false)
             {
+                Control_Process_Pause();
                 Randomize_Process_UpdateGraphics();
             }
             // Else nothing was entered
@@ -1180,7 +1181,14 @@ namespace GameOfLife
             // Initialoze back color
             GraphicsPanel.BackColor = _backColor;
 
-            _universeCopy = _universe;
+            if (_universe != null)
+            {
+                _universeCopy = _universe;
+            }
+            else
+            {
+                _universeCopy = new bool[_rows, _columns];
+            }
 
             // Allocate the universe
             _universe = new bool[_rows, _columns];
