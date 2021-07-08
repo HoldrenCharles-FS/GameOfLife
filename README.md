@@ -9,6 +9,8 @@
 This project was created for the course Project and Portfolio I: Online at Full Sail University.
 
 ## Updates
+### 07/06/2021
+- Colors now show preview.
 ### 07/05/2021
 - Added shortcuts for most buttons.
 - Settings Autosave during runtime.
