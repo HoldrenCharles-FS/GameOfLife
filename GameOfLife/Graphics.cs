@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace GameOfLife
@@ -11,19 +10,19 @@ namespace GameOfLife
         private void Init_Graphics()
         {
             // Update Grid
-            View_Process_InitGrid();
+            InitializeGrid();
 
-            // Update Neighbor Cound
-            View_Process_InitNeighborCount();
+            // Update Neighbor Count
+            InitializeNeighborCount();
 
             // Update HUD
-            View_Process_InitHUD();
+            InitializeHUD();
 
             // Update Boundary
-            View_Process_InitTorodial();
+            InitializeBoundary();
 
             // Update Colors
-            Settings_Process_InitColors();
+            InitializeColors();
 
             // Set the cursor to paint
             Control_Paint();
@@ -34,7 +33,7 @@ namespace GameOfLife
 
 
 
-        private void Process_GraphicsPanel_Paint(object sender, PaintEventArgs e)
+        private void GraphicsPanel_Paint(object sender, PaintEventArgs e)
         {
             // Covert to floats
             float clientWidth = GraphicsPanel.ClientSize.Width, zeroCount = _universe.GetLength(0),
@@ -110,7 +109,7 @@ namespace GameOfLife
                         stringFormat.LineAlignment = StringAlignment.Center;
 
                         // Get neighbor count for current x, y
-                        int count = Process_CountNeighbors(x, y);
+                        int count = CountNeighbors(x, y);
 
                         // Alpha value
                         int alpha = 255;
@@ -286,13 +285,13 @@ namespace GameOfLife
                 }
 
                 // Update controls
-                Update_Controls();
+                UpdateControls();
 
                 // Update Status strip
-                Update_StatusStrip();
+                UpdateStatusStrip();
 
                 // Count cells
-                Process_CountCells();
+                CountCells();
 
                 // Tell Windows you need to repaint
                 GraphicsPanel.Invalidate();

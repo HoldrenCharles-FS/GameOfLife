@@ -27,7 +27,7 @@ namespace GameOfLife
         }
 
         // Initialize HUD
-        private void View_Process_InitHUD()
+        private void InitializeHUD()
         {
             // Initialize checked state
             hUDToolStripMenuItem.Checked = _displayHUD;
@@ -55,7 +55,7 @@ namespace GameOfLife
         }
 
         // Initialize Neighbor Count
-        private void View_Process_InitNeighborCount()
+        private void InitializeNeighborCount()
         {
             // Initialize checked state
             neighborCountToolStripMenuItem.Checked = _displayNeighbors;
@@ -87,7 +87,7 @@ namespace GameOfLife
             }
             else
             {
-                Settings_Process_InitColors();
+                InitializeColors();
             }
 
             // Autosave
@@ -101,7 +101,7 @@ namespace GameOfLife
         }
 
         // Initialize Grid
-        private void View_Process_InitGrid()
+        private void InitializeGrid()
         {
             // Initialize checked state
             _universeCopy = new bool[_universe.GetLength(0), _universe.GetLength(1)];
@@ -132,7 +132,7 @@ namespace GameOfLife
                 finiteToolStripMenuItem1.Checked = false;
 
                 // Update Status strip
-                Update_StatusStrip();
+                UpdateStatusStrip();
             }
 
             // Autosave
@@ -146,7 +146,7 @@ namespace GameOfLife
         }
 
         // Initialize Boundary
-        private void View_Process_InitTorodial()
+        private void InitializeBoundary()
         {
             // Initialize checked state
             if (_boundary == true)
@@ -182,7 +182,7 @@ namespace GameOfLife
                 finiteToolStripMenuItem1.Checked = true;
 
                 // Update Status strip
-                Update_StatusStrip();
+                UpdateStatusStrip();
             }
 
             // Autosave

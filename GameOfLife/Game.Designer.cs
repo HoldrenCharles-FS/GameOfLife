@@ -312,7 +312,7 @@ namespace GameOfLife
             this.generateToolStripMenuItem.ShortcutKeyDisplayString = "Enter";
             this.generateToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.generateToolStripMenuItem.Text = "Generate";
-            this.generateToolStripMenuItem.Click += new System.EventHandler(this.Randomize_GenerateSeed);
+            this.generateToolStripMenuItem.Click += new System.EventHandler(this.Randomize_Generate);
             // 
             // randomSeedToolStripMenuItem
             // 
@@ -648,7 +648,7 @@ namespace GameOfLife
             this.toolStripButtonGenerate.Name = "toolStripButtonGenerate";
             this.toolStripButtonGenerate.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonGenerate.ToolTipText = "Generate (Enter)";
-            this.toolStripButtonGenerate.Click += new System.EventHandler(this.Randomize_GenerateSeed);
+            this.toolStripButtonGenerate.Click += new System.EventHandler(this.Randomize_Generate);
             // 
             // toolStripButton4
             // 
@@ -712,7 +712,7 @@ namespace GameOfLife
             this.toolStripButtonShrink.Name = "toolStripButtonShrink";
             this.toolStripButtonShrink.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonShrink.ToolTipText = "Shrink (Down Arrow)";
-            this.toolStripButtonShrink.Click += new System.EventHandler(this.Process_UniverseShrink);
+            this.toolStripButtonShrink.Click += new System.EventHandler(this.UniverseShrink);
             this.toolStripButtonShrink.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonShrink_MouseDown);
             this.toolStripButtonShrink.MouseLeave += new System.EventHandler(this.toolStripButtonShrink_MouseLeave);
             this.toolStripButtonShrink.MouseUp += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonShrink_MouseUp);
@@ -725,7 +725,7 @@ namespace GameOfLife
             this.toolStripButtonGrow.Name = "toolStripButtonGrow";
             this.toolStripButtonGrow.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonGrow.ToolTipText = "Grow (Up Arrow)";
-            this.toolStripButtonGrow.Click += new System.EventHandler(this.Process_UniverseGrow);
+            this.toolStripButtonGrow.Click += new System.EventHandler(this.UniverseGrow);
             this.toolStripButtonGrow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonGrow_MouseDown);
             this.toolStripButtonGrow.MouseLeave += new System.EventHandler(this.toolStripButtonGrow_MouseLeave);
             this.toolStripButtonGrow.MouseUp += new System.Windows.Forms.MouseEventHandler(this.toolStripButtonGrow_MouseUp);
@@ -780,7 +780,7 @@ namespace GameOfLife
             this.ToolStrip_Generate.Name = "ToolStrip_Generate";
             this.ToolStrip_Generate.Size = new System.Drawing.Size(23, 22);
             this.ToolStrip_Generate.ToolTipText = "Generate";
-            this.ToolStrip_Generate.Click += new System.EventHandler(this.Randomize_GenerateSeed);
+            this.ToolStrip_Generate.Click += new System.EventHandler(this.Randomize_Generate);
             // 
             // ToolStrip_RandomSeed
             // 
@@ -1001,7 +1001,7 @@ namespace GameOfLife
             this.GraphicsPanel.Name = "GraphicsPanel";
             this.GraphicsPanel.Size = new System.Drawing.Size(500, 500);
             this.GraphicsPanel.TabIndex = 3;
-            this.GraphicsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.Process_GraphicsPanel_Paint);
+            this.GraphicsPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.GraphicsPanel_Paint);
             this.GraphicsPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.GraphicsPanel_MouseClick);
             this.GraphicsPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GraphicsPanel_MouseDown);
             this.GraphicsPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.GraphicsPanel_MouseMove);

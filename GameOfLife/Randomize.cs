@@ -1,8 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Drawing;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace GameOfLife
 {
@@ -10,7 +7,7 @@ namespace GameOfLife
     {
         #region Randomize
         // Generate
-        private void Randomize_GenerateSeed(object sender = null, EventArgs e = null)
+        private void Randomize_Generate(object sender = null, EventArgs e = null)
         {
             // Generates user input inside text box
 
@@ -19,8 +16,8 @@ namespace GameOfLife
             if ((toolStripTextBoxSeed.Text.Length > 0 || toolStripTextBoxSeed.Text != Properties.Resources.seedPrompt)
                 && toolStripTextBoxSeed.Font.Italic == false)
             {
-                Control_Process_Pause();
-                Randomize_Process_UpdateGraphics();
+                Pause();
+                UpdateGraphics();
             }
             // Else nothing was entered
             else
@@ -39,7 +36,7 @@ namespace GameOfLife
             // If timer is enabled, pause
             if (timer.Enabled == true)
             {
-                Control_Process_Pause();
+                Pause();
             }
             // Seed generated, display it
             _seedFlag = true;
@@ -51,16 +48,16 @@ namespace GameOfLife
             _seed = rnd.Next(Int32.MinValue, Int32.MaxValue);
 
             // Update the universe array
-            Randomize_Process_UpdateArray();
+            Populate();
 
             // Recount cells
-            Process_CountCells();
+            CountCells();
 
             // Update the status strip
-            Update_StatusStrip();
+            UpdateStatusStrip();
 
             // Update Control buttons
-            Update_Controls();
+            UpdateControls();
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
@@ -88,35 +85,35 @@ namespace GameOfLife
                 _seed = dlg.Seed;
 
                 // Update graphics
-                Randomize_Process_UpdateGraphics();
+                UpdateGraphics();
             }
 
         }
 
         // Used to update graphics after a seed has been generated
-        private void Randomize_Process_UpdateGraphics()
+        private void UpdateGraphics()
         {
             // User has input a seed, so display it
             _seedFlag = true;
 
             // Update the universe array
-            Randomize_Process_UpdateArray();
+            Populate();
 
             // Count alive cells
-            Process_CountCells();
+            CountCells();
 
             // Update status strip
-            Update_StatusStrip();
+            UpdateStatusStrip();
 
             // Update controls (will enable Start and Next if seed is blank)
-            Update_Controls();
+            UpdateControls();
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();
         }
 
         // Process that updates the universe with random values
-        private void Randomize_Process_UpdateArray()
+        private void Populate()
         {
             // 0 is the shortcut for a blank canvas -> File_New()
             if (_seed != 0)
@@ -140,13 +137,13 @@ namespace GameOfLife
             }
 
             // Count alive cells
-            Process_CountCells();
+            CountCells();
 
             // Update status strip
-            Update_StatusStrip();
+            UpdateStatusStrip();
 
             // Update controls (will enable Start and Next if seed is blank)
-            Update_Controls();
+            UpdateControls();
 
             // Tell Windows you need to repaint
             GraphicsPanel.Invalidate();

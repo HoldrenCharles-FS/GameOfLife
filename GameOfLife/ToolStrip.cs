@@ -177,12 +177,12 @@ namespace GameOfLife
 
         private void Process_ShrinkTimer_Tick(object sender, EventArgs e)
         {
-            Process_UniverseShrink();
+            UniverseShrink();
         }
 
         private void Process_GrowTimer_Tick(object sender, EventArgs e)
         {
-            Process_UniverseGrow();
+            UniverseGrow();
         }
 
         private void toolStripButtonShrink_MouseUp(object sender, MouseEventArgs e)
