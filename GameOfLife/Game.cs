@@ -1104,6 +1104,12 @@ namespace GameOfLife
             // Reload Settins
             Settings_Process_LoadSettings();
 
+            // Recount cells
+            Process_CountCells();
+
+            // Update Status Strip
+            Update_StatusStrip();
+
             // Reinitialize graphics
             Init_Graphics();
         }
@@ -1111,7 +1117,6 @@ namespace GameOfLife
         // Load settings from file
         private void Settings_Process_LoadSettings(bool loadPrevious = false)
         {
-
             // Get filename
             string fileName = (loadPrevious == false) ? Properties.Resources.settingsFile : Properties.Resources.settingsPrevious;
 
@@ -1175,8 +1180,26 @@ namespace GameOfLife
             // Initialoze back color
             GraphicsPanel.BackColor = _backColor;
 
+            _universeCopy = _universe;
+
             // Allocate the universe
             _universe = new bool[_rows, _columns];
+
+            // Iterate through the universe one row at a time.
+            for (int height = 0; height < _universe.GetLength(1); height++)
+            {
+                // Iterate through the current row one cell at a time.
+                for (int length = 0; length < _universe.GetLength(0); length++)
+                {
+                    if (length < _universe.GetLength(0) && height < _universe.GetLength(1))
+                    {
+                        _universe[length, height] = _universeCopy[length, height];
+                    }
+                    
+                }
+            }
+
+            
 
             // Option to reset Settings
             if (_backColor.Name != Color.White.Name || _cellColor.Name != Color.LightGray.Name
