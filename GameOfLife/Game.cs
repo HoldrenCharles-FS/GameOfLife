@@ -748,6 +748,18 @@ namespace GameOfLife
             gridX10ColorToolStripMenuItem.Enabled = _displayGrid;
             gridX10ColorToolStripMenuItem1.Enabled = _displayGrid;
 
+            if (_displayGrid == false)
+            {
+                gridColorToolStripMenuItem.Image = null;
+                gridColorToolStripMenuItem1.Image = null;
+                gridX10ColorToolStripMenuItem.Image = null;
+                gridX10ColorToolStripMenuItem1.Image = null;
+            }
+            else
+            {
+                Settings_Process_InitColors();
+            }
+
             // Autosave
             Settings_Process_AutoSave();
 
@@ -866,13 +878,16 @@ namespace GameOfLife
             cellColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _cellColor);
             cellColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _cellColor);
 
-            Settings_Process_ColorImage(ref _gridColor);
-            gridColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridColor);
-            gridColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridColor);
+            if (_displayGrid == true)
+            {
+                Settings_Process_ColorImage(ref _gridColor);
+                gridColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridColor);
+                gridColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridColor);
 
-            Settings_Process_ColorImage(ref _gridX10Color);
-            gridX10ColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridX10Color);
-            gridX10ColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridX10Color);
+                Settings_Process_ColorImage(ref _gridX10Color);
+                gridX10ColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridX10Color);
+                gridX10ColorToolStripMenuItem1.Image = Settings_Process_ColorImage(ref _gridX10Color);
+            }
         }
 
         // Process that opens the Color Dialog Box
@@ -976,6 +991,12 @@ namespace GameOfLife
                 gridColorToolStripMenuItem1.Enabled = false;
                 gridX10ColorToolStripMenuItem.Enabled = false;
                 gridX10ColorToolStripMenuItem1.Enabled = false;
+
+                gridColorToolStripMenuItem.Image = null;
+                gridColorToolStripMenuItem1.Image = null;
+                gridX10ColorToolStripMenuItem.Image = null;
+                gridX10ColorToolStripMenuItem1.Image = null;
+
             }
 
             // Tell Windows you need to repaint
