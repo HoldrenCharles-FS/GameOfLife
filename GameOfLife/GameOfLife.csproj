@@ -130,9 +130,6 @@
     <None Include="ico\nextIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\reloadIcon.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ico\reloadIcon.png" />
   </ItemGroup>
   <ItemGroup>
@@ -140,9 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ico\goIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ico\timeIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ico\importIcon.png" />
@@ -166,9 +160,6 @@
     <None Include="ico\eraser.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ico\eraser.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="ico\openIcon.png" />
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +170,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ico\shrinkIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
