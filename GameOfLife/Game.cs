@@ -55,6 +55,8 @@ namespace GameOfLife
             // Subscribe a custom method to the Mouse wheel
             // Used to enable scrolling
             MouseWheel += OnMouseWheel_Zoom;
+
+            // Setup timers
             shrinkTimer.Interval = 30;
             shrinkTimer.Tick += Process_ShrinkTimer_Tick;
             growTimer.Interval = 30;
@@ -120,7 +122,6 @@ namespace GameOfLife
             // Open Dialog Box until the user cancels or confirms
             if (DialogResult.OK == dlg.ShowDialog())
             {
-
                 // Read from file
                 StreamReader sr = new StreamReader(dlg.FileName);
 
@@ -144,37 +145,20 @@ namespace GameOfLife
                     rows = row.Length;
                 }
 
+                // If importing, copy the current universe over to a seperate array
                 if (_importFlag == true)
                 {
                     _universeCopy = _universe;
                 }
-
-                // Resize the universe
-                if (_importFlag == true)
-                {
-                    _rows = _universeCopy.GetLength(0);
-                    _columns = _universeCopy.GetLength(1);
-                }
+                // Else update the row / column members to the new count
                 else
                 {
                     _rows = rows;
                     _columns = columns;
 
-                }
-                _universe = new bool[_rows, _columns];
+                    // Reallocate the universe
+                    _universe = new bool[_rows, _columns];
 
-                if (_importFlag == true)
-                {
-                    // Iterate through the universe one row at a time.
-                    for (int height = 0; height < _universeCopy.GetLength(1); height++)
-                    {
-
-                        // Iterate through the current row one cell at a time.
-                        for (int length = 0; length < _universeCopy.GetLength(0); length++)
-                        {
-                            _universe[length, height] = _universeCopy[length, height];
-                        }
-                    }
                 }
 
                 // Reset the file pointer back to the beginning of the file.
@@ -210,19 +194,17 @@ namespace GameOfLife
                                 // If row[xPos] is a 'O' (capital O) then it is alive
                                 tempUniverse[x, y] = (row[x] == 'O') ? true : false;
 
+                                // Also, don't compare if out of range
                                 if (x < _universe.GetLength(0) && y < _universe.GetLength(1))
                                 {
                                     // Use the OR operator to keep alive cells, well, alive.
                                     _universe[x, y] = _universe[x, y] | tempUniverse[x, y];
                                 }
-
                             }
-
                         }
                     }
                     // Update indexer
                     y++;
-
                 }
 
                 // Close the file.
@@ -234,6 +216,7 @@ namespace GameOfLife
                 // Update _path and _filename
                 File_Process_UpdatePath(ref path);
 
+                // If opening, or could be importing but a file is opened
                 if (_importFlag == false || Text != (Properties.Resources.fileNewWorld + Properties.Resources.appendTitle))
                 {
                     // Update Game.Text to include filename
@@ -279,7 +262,6 @@ namespace GameOfLife
             }
             else
             {
-
                 // Update _path and _filename
                 File_Process_UpdatePath(ref _path);
 
@@ -307,8 +289,6 @@ namespace GameOfLife
                         {
                             currentRow += '.';
                         }
-
-
                     }
 
                     // Write row to file
@@ -318,12 +298,11 @@ namespace GameOfLife
                 // After all rows and columns have been written then close the file.
                 sw.Close();
 
-
                 // Update Game.Text to include filename
                 Text = _fileName + Properties.Resources.appendTitle;
             }
-
         }
+
         // Save As
         private void File_SaveAs(object sender, EventArgs e)
         {
@@ -359,7 +338,6 @@ namespace GameOfLife
 
         private void File_Process_UpdatePath(ref string path)
         {
-
             // Update filename to user specified name
             _path = path;
 
@@ -367,14 +345,7 @@ namespace GameOfLife
             string[] pathArr = path.Split('\\');
 
             // Grab the filename (last element)
-            for (int i = 0; i < pathArr.Length; i++)
-            {
-                if (i == pathArr.Length - 1)
-                {
-                    _fileName = pathArr[i];
-                }
-            }
-
+            _fileName = pathArr[pathArr.Length - 1];
         }
 
         // Exit
@@ -533,12 +504,14 @@ namespace GameOfLife
         {
             // Generates user input inside text box
 
-            // Check that the user didn't click away
-            // and that the style is no longer italic
+            // Check if the user actually entered a seed
             if ((toolStripTextBoxSeed.Text.Length > 0 || toolStripTextBoxSeed.Text != Properties.Resources.seedPrompt)
                 && toolStripTextBoxSeed.Font.Italic == false)
             {
+                // Pause upon generation
                 Control_Process_Pause();
+
+                // Update graphics
                 Randomize_Process_UpdateGraphics();
             }
             // Else nothing was entered
@@ -672,7 +645,6 @@ namespace GameOfLife
         }
         #endregion
 
-
         #region Settings
 
         #region View
@@ -747,7 +719,8 @@ namespace GameOfLife
             gridColorToolStripMenuItem1.Enabled = _displayGrid;
             gridX10ColorToolStripMenuItem.Enabled = _displayGrid;
             gridX10ColorToolStripMenuItem1.Enabled = _displayGrid;
-
+            
+            // If no grid is being displayed, disable color options for grids
             if (_displayGrid == false)
             {
                 gridColorToolStripMenuItem.Image = null;
@@ -755,9 +728,10 @@ namespace GameOfLife
                 gridX10ColorToolStripMenuItem.Image = null;
                 gridX10ColorToolStripMenuItem1.Image = null;
             }
+            // Else if true, Initialize colors again
             else
             {
-                Settings_Process_InitColors();
+                Settings_Process_InitColorPreview();
             }
 
             // Autosave
@@ -788,7 +762,6 @@ namespace GameOfLife
         // Torodial
         private void View_Torodial(object sender = null, EventArgs e = null)
         {
-
             // If boundary is finite
             if (_boundary == false)
             {
@@ -867,17 +840,20 @@ namespace GameOfLife
         #endregion
 
         #region Color
-        // Initialize all colors upon load
-        private void Settings_Process_InitColors()
+        // Initialize color previews
+        private void Settings_Process_InitColorPreview()
         {
+            // Initalize Back Color preview
             Settings_Process_ColorImage(ref _backColor);
             backColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _backColor);
             backColorToolStripMenuItem1.Image = backColorToolStripMenuItem.Image;
 
+            // Initialize Cell Color preview
             Settings_Process_ColorImage(ref _cellColor);
             cellColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _cellColor);
             cellColorToolStripMenuItem1.Image = cellColorToolStripMenuItem.Image;
 
+            // Initialize Grid Color previews
             if (_displayGrid == true)
             {
                 Settings_Process_ColorImage(ref _gridColor);
@@ -913,10 +889,13 @@ namespace GameOfLife
             }
         }
 
-
+        // Generates the preview image for colors
         private Bitmap Settings_Process_ColorImage(ref Color color)
         {
+            // Create a blank canvas
             Bitmap bmp = new Bitmap(16, 16);
+
+            // Fill the canvas with the desired color
             using (Graphics gfx = Graphics.FromImage(bmp))
             {
                 using (SolidBrush brush = new SolidBrush(Color.FromArgb(color.A, color.R, color.G, color.B)))
@@ -925,17 +904,21 @@ namespace GameOfLife
                 }
             }
 
+            // Return image
             return bmp;
         }
 
         // Back Color
         private void Settings_BackColor(object sender = null, EventArgs e = null)
         {
+            // Open the Color dialogue box
             Settings_Process_ColorDialogBox(ref _backColor);
+
+            // Update the panel's background color
             GraphicsPanel.BackColor = _backColor;
 
+            // Update the preview image
             Settings_Process_ColorImage(ref _backColor);
-
             backColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _backColor);
             backColorToolStripMenuItem1.Image = backColorToolStripMenuItem.Image;
 
@@ -951,10 +934,11 @@ namespace GameOfLife
         // Cell Color
         private void Settings_CellColor(object sender = null, EventArgs e = null)
         {
+            // Open the Color dialogue box
             Settings_Process_ColorDialogBox(ref _cellColor);
 
+            // Update the preview image
             Settings_Process_ColorImage(ref _cellColor);
-
             cellColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _cellColor);
             cellColorToolStripMenuItem1.Image = cellColorToolStripMenuItem.Image;
 
@@ -968,30 +952,36 @@ namespace GameOfLife
         // Grid Color
         private void Settings_GridColor(object sender = null, EventArgs e = null)
         {
+            // If the grid is enabled
             if (_displayGrid == true)
             {
+                // Keep checked states up-to-date
                 gridColorToolStripMenuItem.Enabled = true;
                 gridColorToolStripMenuItem1.Enabled = true;
                 gridX10ColorToolStripMenuItem.Enabled = true;
                 gridX10ColorToolStripMenuItem1.Enabled = true;
 
+                // Open the Color dialogue box
                 Settings_Process_ColorDialogBox(ref _gridColor);
 
+                // Update the preview image
                 Settings_Process_ColorImage(ref _gridColor);
-
                 gridColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridColor);
                 gridColorToolStripMenuItem1.Image = gridColorToolStripMenuItem.Image;
 
                 // Enable reset button
                 resetToolStripMenuItem.Enabled = true;
             }
+            // Else the grid is disabled
             else
             {
+                // Keep checked states up-to-date
                 gridColorToolStripMenuItem.Enabled = false;
                 gridColorToolStripMenuItem1.Enabled = false;
                 gridX10ColorToolStripMenuItem.Enabled = false;
                 gridX10ColorToolStripMenuItem1.Enabled = false;
 
+                // Remove preview images
                 gridColorToolStripMenuItem.Image = null;
                 gridColorToolStripMenuItem1.Image = null;
                 gridX10ColorToolStripMenuItem.Image = null;
@@ -1007,25 +997,30 @@ namespace GameOfLife
         // Grid x10 color
         private void Settings_GridX10Color(object sender = null, EventArgs e = null)
         {
+            // If the grid is enabled
             if (_displayGrid == true)
             {
+                // Keep checked states up-to-date
                 gridColorToolStripMenuItem.Enabled = true;
                 gridColorToolStripMenuItem1.Enabled = true;
                 gridX10ColorToolStripMenuItem.Enabled = true;
                 gridX10ColorToolStripMenuItem1.Enabled = true;
 
+                // Open the Color dialogue box
                 Settings_Process_ColorDialogBox(ref _gridX10Color);
 
+                // Update the preview image
                 Settings_Process_ColorImage(ref _gridX10Color);
-
                 gridX10ColorToolStripMenuItem.Image = Settings_Process_ColorImage(ref _gridX10Color);
                 gridX10ColorToolStripMenuItem1.Image = gridX10ColorToolStripMenuItem.Image;
 
                 // Enable reset button
                 resetToolStripMenuItem.Enabled = true;
             }
+            // Else the grid is disabled
             else
             {
+                // Keep checked states up-to-date
                 gridColorToolStripMenuItem.Enabled = false;
                 gridColorToolStripMenuItem1.Enabled = false;
                 gridX10ColorToolStripMenuItem.Enabled = false;
@@ -1202,6 +1197,7 @@ namespace GameOfLife
             // Initialoze back color
             GraphicsPanel.BackColor = _backColor;
 
+            // Allocate the universe copy
             if (_universe != null)
             {
                 _universeCopy = _universe;
@@ -1220,29 +1216,31 @@ namespace GameOfLife
                 // Iterate through the current row one cell at a time.
                 for (int length = 0; length < _universe.GetLength(0); length++)
                 {
+                    // Copy the universe over to it's copy version
                     if (length < _universeCopy.GetLength(0) && height < _universeCopy.GetLength(1))
                     {
                         _universe[length, height] = _universeCopy[length, height];
                     }
-                    
+
                 }
             }
 
-            
 
-            // Option to reset Settings
+
+            // Check for default settings
             if (_backColor.Name != Color.White.Name || _cellColor.Name != Color.LightGray.Name
                 || _gridColor.Name != Color.Gray.Name || _gridX10Color.Name != Color.DarkSlateGray.Name
-                || _rows != 30 || _columns != 30 
-                || _boundary != true || _displayHUD != true 
+                || _rows != 30 || _columns != 30
+                || _boundary != true || _displayHUD != true
                 || _displayNeighbors != true || _displayGrid != true
                 || _interval != 20)
             {
+                // If one setting isn't default, enable the reset button.
                 resetToolStripMenuItem.Enabled = true;
             }
         }
 
-        
+
 
         // Creates settings files
         private void Settings_Process_CreateSettings(bool createOld = false)
@@ -1372,9 +1370,8 @@ namespace GameOfLife
 
         #endregion
 
-
-
         #endregion
+
 
         #region Seed Box
 
@@ -1440,6 +1437,7 @@ namespace GameOfLife
                     // Update seed
                     _seed = stringSum;
 
+                    // Only executes after the text box loses focus
                     if (_hideParse == false)
                     {
                         toolStripTextBoxSeed.Text = Convert.ToString(_seed);
@@ -1525,6 +1523,7 @@ namespace GameOfLife
 
         }
         #endregion
+
 
         #region Keyboard / MouseWheel
         // Enables zoom scaling with mouse wheel
@@ -1629,7 +1628,7 @@ namespace GameOfLife
                 // Up Arrow = Zoom Out
                 if (e.KeyCode == Keys.Up)
                 {
-                    
+
                     Process_UniverseGrow();
                 }
                 // Down Arrow = Zoom In
@@ -1719,6 +1718,7 @@ namespace GameOfLife
 
         #endregion
 
+
         #region Graphics
         // Initialize graphics
         private void Init_Graphics()
@@ -1736,7 +1736,7 @@ namespace GameOfLife
             View_Process_InitTorodial();
 
             // Update Colors
-            Settings_Process_InitColors();
+            Settings_Process_InitColorPreview();
 
             // Set the cursor to paint
             Control_Paint();
@@ -2013,6 +2013,7 @@ namespace GameOfLife
         }
         #endregion
 
+
         #region Background Processes
         // Count alive cells
         private void Process_CountCells()
@@ -2237,7 +2238,7 @@ namespace GameOfLife
         // Grow the universe's x and y by 1
         private void Process_UniverseGrow(object sender = null, EventArgs e = null)
         {
-            
+
             // Universe max size is 200 rows or columns
             if (_rows < 200 && _columns < 200)
             {
@@ -2342,60 +2343,79 @@ namespace GameOfLife
             Settings_Process_AutoSave();
             Settings_Process_AutoSave(true);
         }
-        #endregion
 
+        // Shrink button's mouse down event
         private void toolStripButtonShrink_MouseDown(object sender, MouseEventArgs e)
         {
+            // To distinguish between a mouse click or mouse down
             Thread.Sleep(200);
 
+            // While the mouse is down, shrink the universe
             if (growTimer.Enabled == true)
             {
                 growTimer.Enabled = false;
             }
             shrinkTimer.Enabled = true;
-            
+
         }
 
+        // Grow buttons mouse down event
         private void toolStripButtonGrow_MouseDown(object sender, MouseEventArgs e)
         {
+            // To distinguish between a mouse click or mouse down
             Thread.Sleep(200);
 
+            // While the mouse is down, grow the universe
             if (shrinkTimer.Enabled == true)
             {
                 shrinkTimer.Enabled = false;
             }
             growTimer.Enabled = true;
-            
+
         }
 
+
+        // While the shrink timer is enabled
         private void Process_ShrinkTimer_Tick(object sender, EventArgs e)
         {
             Process_UniverseShrink();
         }
 
+        // While the grow timer is enabled
         private void Process_GrowTimer_Tick(object sender, EventArgs e)
         {
             Process_UniverseGrow();
         }
 
+        // MouseUp event for the shrink button
         private void toolStripButtonShrink_MouseUp(object sender, MouseEventArgs e)
         {
             shrinkTimer.Enabled = false;
         }
 
+        // MouseUp event for the grow button
         private void toolStripButtonGrow_MouseUp(object sender, MouseEventArgs e)
         {
             growTimer.Enabled = false;
         }
 
+        // Mouse leavve event for the shrink button
         private void toolStripButtonShrink_MouseLeave(object sender, EventArgs e)
         {
+            // Prevents the user from trying to mouse up outside of the window
+            // Which was causing the universe to contiually shrink
             shrinkTimer.Enabled = false;
         }
 
+        // Mouse leave event for the grow button
         private void toolStripButtonGrow_MouseLeave(object sender, EventArgs e)
         {
+            // Prevents the user from trying to mouse up outside of the window
+            // Which was causing the universe to contiually grow
             growTimer.Enabled = false;
         }
+        #endregion
+
+
     }
 }
