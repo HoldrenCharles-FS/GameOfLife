@@ -2,7 +2,7 @@
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Diagnostics;
+using System.Threading;
 
 namespace GameOfLife
 {
@@ -11,9 +11,9 @@ namespace GameOfLife
         #region Fields and Contructor
         // Fields
         private bool[,] _universe;          // The universe array
-        Timer timer = new Timer();          // The Timer class
-        Timer shrinkTimer = new Timer();    // For mouse down event
-        Timer growTimer = new Timer();      // For mouse down event
+        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();          // The Timer class
+        System.Windows.Forms.Timer shrinkTimer = new System.Windows.Forms.Timer();    // For mouse down event
+        System.Windows.Forms.Timer growTimer = new System.Windows.Forms.Timer();      // For mouse down event
         private int _cellCount = 0;         // Cell count
         private bool _seedFlag = false;     // Keeps track if a seed should be displayed
         private bool _importFlag = false;   // Keeps track if whether or not the user is importing
@@ -2346,6 +2346,8 @@ namespace GameOfLife
 
         private void toolStripButtonShrink_MouseDown(object sender, MouseEventArgs e)
         {
+            Thread.Sleep(200);
+
             if (growTimer.Enabled == true)
             {
                 growTimer.Enabled = false;
@@ -2356,6 +2358,8 @@ namespace GameOfLife
 
         private void toolStripButtonGrow_MouseDown(object sender, MouseEventArgs e)
         {
+            Thread.Sleep(200);
+
             if (shrinkTimer.Enabled == true)
             {
                 shrinkTimer.Enabled = false;
